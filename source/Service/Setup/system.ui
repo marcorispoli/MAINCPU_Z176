@@ -1,0 +1,1047 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>systemUI</class>
+ <widget class="QWidget" name="systemUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgb(0,0,0,0);
+background-image:url(://Service_Setup/Service_Setup/background.png);
+border: 0px;</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="serviceSetupDiagnosticLabel">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>10</y>
+      <width>771</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>DejaVu Sans</family>
+      <pointsize>22</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(/transparent.png);
+color: rgb(248, 248, 54);</string>
+    </property>
+    <property name="text">
+     <string notr="true">FACTORY HARDWARE SYSTEM SETUP</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frameAnodeStarter">
+    <property name="geometry">
+     <rect>
+      <x>105</x>
+      <y>75</y>
+      <width>611</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(://transparent.png);
+background-color:rgb(0,0,0,60);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_4">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>236</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>18</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">ANODE STARTER</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonLeftStarter">
+     <property name="geometry">
+      <rect>
+       <x>255</x>
+       <y>5</y>
+       <width>66</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(://transparent.png);
+border-image: url(:/Service_Setup/Service_Setup/scroll_left.png);
+background-color:rgb(0,0,0,0
+);</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QLabel" name="starter">
+     <property name="geometry">
+      <rect>
+       <x>335</x>
+       <y>10</y>
+       <width>191</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,50);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">HIGH SPEED STARTER</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonRightStarter">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>5</y>
+       <width>66</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(://transparent.png);
+border-image: url(:/Service_Setup/Service_Setup/scroll_right.png);
+background-color:rgb(0,0,0,0
+);</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frameRot">
+    <property name="geometry">
+     <rect>
+      <x>105</x>
+      <y>140</y>
+      <width>611</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(://transparent.png);
+background-color:rgb(0,0,0,60);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_6">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>161</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>18</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">ROTATION</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonRightRotation">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>5</y>
+       <width>66</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(://transparent.png);
+border-image: url(:/Service_Setup/Service_Setup/scroll_right.png);
+background-color:rgb(0,0,0,0
+);</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rotation">
+     <property name="geometry">
+      <rect>
+       <x>335</x>
+       <y>10</y>
+       <width>191</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,50);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">MANUAL ROTATION</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonLeftRotation">
+     <property name="geometry">
+      <rect>
+       <x>255</x>
+       <y>5</y>
+       <width>66</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(://transparent.png);
+border-image: url(:/Service_Setup/Service_Setup/scroll_left.png);
+background-color:rgb(0,0,0,0
+);</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="exitButton">
+    <property name="geometry">
+     <rect>
+      <x>635</x>
+      <y>390</y>
+      <width>81</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(://transparent.png);
+border-image: url(:/Service_Setup/Service_Setup/yes.png);
+background-color:rgb(0,0,0,0
+);</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>200</width>
+      <height>200</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frameTilt">
+    <property name="geometry">
+     <rect>
+      <x>105</x>
+      <y>205</y>
+      <width>611</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(://transparent.png);
+background-color:rgb(0,0,0,60);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_7">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>161</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>18</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">TILT</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonRightTilt">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>5</y>
+       <width>66</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(://transparent.png);
+border-image: url(:/Service_Setup/Service_Setup/scroll_right.png);
+background-color:rgb(0,0,0,0
+);</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QLabel" name="tilt">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>335</x>
+       <y>10</y>
+       <width>191</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,50);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">MANUAL ROTATION</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonLeftTilt">
+     <property name="geometry">
+      <rect>
+       <x>255</x>
+       <y>5</y>
+       <width>66</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(://transparent.png);
+border-image: url(:/Service_Setup/Service_Setup/scroll_left.png);
+background-color:rgb(0,0,0,0
+);</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frameClock">
+    <property name="geometry">
+     <rect>
+      <x>295</x>
+      <y>270</y>
+      <width>421</width>
+      <height>116</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(://transparent.png);
+background-color:rgb(0,0,0,60);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>5</y>
+       <width>76</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255,0);
+background-image: url(:/transparent.png);
+border-image: url(:/Pulsanti/Pulsanti/Clock.png);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="Yedit">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>20</y>
+       <width>60</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>2021</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="Dedit">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>20</y>
+       <width>60</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>22</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="Medit">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>20</y>
+       <width>60</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>01</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="medit">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>75</y>
+       <width>60</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>00</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="hedit">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>75</y>
+       <width>60</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>10</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="sedit">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>75</y>
+       <width>60</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>00</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_8">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>5</y>
+       <width>60</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">DAY</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_12">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>5</y>
+       <width>60</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">MONTH</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_13">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>5</y>
+       <width>60</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">YEAR</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_14">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>60</y>
+       <width>60</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">SEC</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_9">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>60</y>
+       <width>60</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">HOUR</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_15">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>60</y>
+       <width>60</width>
+       <height>14</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(0,0,0,0);
+color:rgb(255,255,255,100);</string>
+     </property>
+     <property name="text">
+      <string notr="true">MIN</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

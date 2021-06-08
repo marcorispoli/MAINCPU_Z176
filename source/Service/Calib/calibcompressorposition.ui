@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>calibCompressorPosition</class>
+ <widget class="QWidget" name="calibCompressorPosition">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgb(0,0,0,0);
+background-image:url(://Service_Calib/Service_Calib/calib_menu.png);
+border: 0px;</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>0</y>
+     <width>800</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QPushButton" name="exitButton">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>111</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="serviceSetupDiagnosticLabel">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>10</y>
+      <width>616</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(/transparent.png);
+color: rgb(248, 248, 54);</string>
+    </property>
+    <property name="text">
+     <string notr="true">Service Panel/Calibrate/Position calibration</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QFrame" name="calibPadFrameDwn">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>310</y>
+      <width>91</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image:url(:/compr_dwn.png);
+background-color: rgba(255, 255, 255,0);
+background-image:url(:/transparent.png);
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="calibPadSequenceLabelDown">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>135</y>
+       <width>146</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(:/transparent.png);
+border-image:url(:/transparent.png);
+
+background-color: rgb(255,255,255,0);
+border-color: rgb(255, 255, 153);
+color: rgb(255,0,0);
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">MOVE DOWN</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="calibPadEditDwn">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>250</y>
+       <width>96</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>22</pointsize>
+       <weight>9</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);
+background-image:url(:/transparent.png);
+border-image:url(:/transparent.png);
+
+color: rgb(79, 79, 79);
+border-left-color: rgb(255, 255, 153);
+border-bottom-color: rgb(255, 255, 153);
+font: 75 22pt &quot;DejaVu Sans&quot;;
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">0</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="calibPadFrameCalibrate">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>120</y>
+      <width>116</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+background-color: rgba(255, 255, 255,0);
+
+background-image:url(:/transparent.png);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="calibPadSequenceLabelDown_3">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>250</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(:/transparent.png);
+border-image:url(:/transparent.png);
+
+background-color: rgb(255,255,255,0);
+border-color: rgb(255, 255, 153);
+color: rgb(255,0,0);
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">PRESS TO
+ CALIBRATE </string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="calibButton">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>30</y>
+       <width>231</width>
+       <height>226</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image:url(:/calibrate.png);
+background-image:url(:/transparent.png);</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="calibPadFrameStore">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>185</y>
+      <width>206</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255,0);
+
+background-image:url(:/transparent.png);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="calibPadSequenceLabelDown_4">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>235</y>
+       <width>91</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(:/transparent.png);
+border-image:url(:/transparent.png);
+
+background-color: rgb(255,255,255,0);
+border-color: rgb(255, 255, 153);
+color: rgb(255,0,0);
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">PRESS
+TO STORE</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="storeButton">
+     <property name="geometry">
+      <rect>
+       <x>55</x>
+       <y>35</y>
+       <width>211</width>
+       <height>226</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255, 255, 255,0);
+border-image:url(:/store.png);
+background-image:url(:/transparent.png);</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="calibPadFrameUp">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>140</y>
+      <width>81</width>
+      <height>86</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image:url(:/compr_up.png);
+background-color: rgba(255, 255, 255,0);
+background-image:url(:/transparent.png);
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLineEdit" name="calibPadEditUp">
+     <property name="geometry">
+      <rect>
+       <x>335</x>
+       <y>185</y>
+       <width>96</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>22</pointsize>
+       <weight>9</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);
+background-image:url(:/transparent.png);
+border-image:url(:/transparent.png);
+
+color: rgb(79, 79, 79);
+border-left-color: rgb(255, 255, 153);
+border-bottom-color: rgb(255, 255, 153);
+font: 75 22pt &quot;DejaVu Sans&quot;;
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">0</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="calibPadSequenceLabelUp">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>10</y>
+       <width>126</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(:/transparent.png);
+border-image:url(:/transparent.png);
+
+background-color: rgb(255,255,255,0);
+border-color: rgb(255, 255, 153);
+color: rgb(255,0,0);
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">MOVE UP</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="calibPadFrameInit">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>245</y>
+      <width>111</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(:/transparent.png);
+background-color: rgba(255, 255, 255,0);
+border-image:url(:/intro_calib_pad2.png);
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="startButton">
+     <property name="geometry">
+      <rect>
+       <x>155</x>
+       <y>130</y>
+       <width>131</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(79, 79, 79,0);
+background-image:url(:/transparent.png);
+border-image:url(:/play.png);
+border-color: rgb(255, 255, 153);
+color: rgb(255, 255, 153);
+font: 80 16pt &quot;DejaVu Sans&quot;;
+border-radius:10px;
+</string>
+     </property>
+     <property name="text">
+      <string notr="true"/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="rawPosition">
+    <property name="geometry">
+     <rect>
+      <x>635</x>
+      <y>150</y>
+      <width>131</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(:/transparent.png);
+border-image:url(:/transparent.png);
+
+color: rgb(79, 79, 79);
+border-left-color: rgb(255, 255, 153);
+border-bottom-color: rgb(255, 255, 153);
+font: 75 24pt &quot;DejaVu Sans&quot;;
+</string>
+    </property>
+    <property name="text">
+     <string notr="true">TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="serviceSetupDiagnosticLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>115</y>
+      <width>121</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(/transparent.png);
+color: rgb(248, 248, 54);</string>
+    </property>
+    <property name="text">
+     <string notr="true">POT</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="serviceSetupDiagnosticLabel_3">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>210</y>
+      <width>121</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(/transparent.png);
+color: rgb(248, 248, 54);</string>
+    </property>
+    <property name="text">
+     <string notr="true">POSITION</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="calibratedPosition">
+    <property name="geometry">
+     <rect>
+      <x>635</x>
+      <y>245</y>
+      <width>131</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+background-image:url(:/transparent.png);
+border-image:url(:/transparent.png);
+
+color: rgb(79, 79, 79);
+border-left-color: rgb(255, 255, 153);
+border-bottom-color: rgb(255, 255, 153);
+font: 75 24pt &quot;DejaVu Sans&quot;;
+</string>
+    </property>
+    <property name="text">
+     <string notr="true">TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="calibPadCancelButton">
+    <property name="geometry">
+     <rect>
+      <x>655</x>
+      <y>370</y>
+      <width>100</width>
+      <height>100</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(79, 79, 79,0);
+background-image:url(:/transparent.png);
+border-image:url(:/stop.png);
+border-color: rgb(255, 255, 153);
+color: rgb(255, 255, 153);
+font: 80 16pt &quot;DejaVu Sans&quot;;
+border-radius:10px;
+</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

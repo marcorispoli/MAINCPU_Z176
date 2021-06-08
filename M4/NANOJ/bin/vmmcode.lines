@@ -1,0 +1,40 @@
+Decoded dump of debug contents of section .debug_line:
+
+CU: C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen/types.h:
+File name                            Line number    Starting address
+
+CU: C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings/vmmcode.cpp:
+File name                            Line number    Starting address
+vmmcode.cpp                                   18           0x8008410
+
+vmmcode.cpp                                   19           0x8008416
+vmmcode.cpp                                   23           0x800841a
+vmmcode.cpp                                   24           0x8008428
+vmmcode.cpp                                   25           0x800843a
+vmmcode.cpp                                   28           0x800843e
+vmmcode.cpp                                   28           0x8008440
+vmmcode.cpp                                   28           0x8008444
+vmmcode.cpp                                   31           0x8008456
+vmmcode.cpp                                   32           0x800846a
+vmmcode.cpp                                   33           0x800846e
+vmmcode.cpp                                   34           0x8008482
+vmmcode.cpp                                   37           0x8008486
+vmmcode.cpp                                   40           0x800848c
+vmmcode.cpp                                   43           0x8008490
+vmmcode.cpp                                   43           0x8008492
+vmmcode.cpp                                   43           0x8008496
+vmmcode.cpp                                   45           0x80084a8
+vmmcode.cpp                                   48           0x80084ae
+vmmcode.cpp                                   48           0x80084b0
+vmmcode.cpp                                   48           0x80084b4
+vmmcode.cpp                                   51           0x80084c6
+vmmcode.cpp                                   52           0x80084d2
+vmmcode.cpp                                   53           0x80084e2
+vmmcode.cpp                                   54           0x80084e6
+vmmcode.cpp                                   56           0x80084ec
+vmmcode.cpp                                   58           0x80084f2
+vmmcode.cpp                                   59           0x80084fe
+vmmcode.cpp                                   63           0x8008502
+vmmcode.cpp                                   64           0x8008508
+vmmcode.cpp                                   43           0x800850a
+

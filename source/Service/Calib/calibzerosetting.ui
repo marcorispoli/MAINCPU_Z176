@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>calibzerosetting</class>
+ <widget class="QWidget" name="calibzerosetting">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgb(0,0,0,0);
+background-image:url(://Service_Zerosetting/Service_Zerosetting/background.png);
+border: 0px;</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="serviceSetupDiagnosticLabel">
+    <property name="geometry">
+     <rect>
+      <x>175</x>
+      <y>10</y>
+      <width>531</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(/transparent.png);
+color: rgb(248, 248, 54);</string>
+    </property>
+    <property name="text">
+     <string notr="true">Service Panel/Calibrate/Zero-setting</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="exitButton">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>111</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="manualModeButton">
+    <property name="geometry">
+     <rect>
+      <x>125</x>
+      <y>175</y>
+      <width>166</width>
+      <height>146</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:url(://Transparent.png);</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="trxZeroButton">
+    <property name="geometry">
+     <rect>
+      <x>565</x>
+      <y>170</y>
+      <width>166</width>
+      <height>146</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:url(://Transparent.png);</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="resetGonioButton">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>175</y>
+      <width>166</width>
+      <height>146</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:url(://Transparent.png);</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelManualButtons">
+    <property name="geometry">
+     <rect>
+      <x>165</x>
+      <y>155</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(/transparent.png);
+color: rgb(16, 161, 16);</string>
+    </property>
+    <property name="text">
+     <string notr="true">TRX</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QFrame" name="attesaFrame">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>800</width>
+      <height>480</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:url(://attesa.png);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

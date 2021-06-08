@@ -1,0 +1,1520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgb(0,0,0,0);
+background-image:url(://Service_Tools/Service_Tools/tools_menu.png);
+border: 0px;</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QPushButton" name="exitButton">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>111</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>115</x>
+      <y>10</y>
+      <width>616</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(/transparent.png);
+color: rgb(248, 248, 54);</string>
+    </property>
+    <property name="text">
+     <string notr="true">Service Panel/Tools/Tube Calibration</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame_4">
+    <property name="geometry">
+     <rect>
+      <x>25</x>
+      <y>120</y>
+      <width>241</width>
+      <height>296</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(0, 0, 0,50);
+background-image: url(:/transparent.png);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>5</y>
+       <width>221</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(0, 0, 0,0);
+color: rgb(255, 255, 85);</string>
+     </property>
+     <property name="text">
+      <string notr="true">KV CALIBRATION</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="shotInstrumentButton">
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>50</y>
+       <width>221</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 85, 0);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string notr="true">INSTRUMENT (28kV)</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="shot25KvButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>105</y>
+       <width>116</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 85, 0);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string notr="true">25KV</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="shot35KvButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>116</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 85, 0);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string notr="true">35KV</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="calibrateKvButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>221</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 85, 0);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string notr="true">CALIBRATE</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="kV25CalibrationMeasure">
+     <property name="geometry">
+      <rect>
+       <x>137</x>
+       <y>105</y>
+       <width>91</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string notr="true">25.7</string>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="kV35CalibrationMeasure">
+     <property name="geometry">
+      <rect>
+       <x>135</x>
+       <y>160</y>
+       <width>91</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string notr="true">25.7</string>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frame_5">
+    <property name="geometry">
+     <rect>
+      <x>275</x>
+      <y>65</y>
+      <width>501</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(0, 0, 0,50);
+background-image: url(:/transparent.png);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>0</y>
+       <width>461</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(0, 0, 0,0);
+color: rgb(255, 255, 85);</string>
+     </property>
+     <property name="text">
+      <string notr="true">FILAMENT CALIBRATION</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>90</y>
+       <width>466</width>
+       <height>256</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="select20KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>5</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">20 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select21KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>5</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">21 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select22KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>5</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">22 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select23KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>5</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">23 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select24KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>5</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">24 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select27KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>55</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">27 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select26KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>55</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">26 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select28KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>55</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">28 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select29KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>55</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">29 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select25KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>55</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">25 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select32KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>105</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">32 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select31KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>105</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">31 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select33KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>105</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">33 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select34KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>105</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">34 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select30KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>105</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">30 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select37KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>155</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">37 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select36KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>155</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">36 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select38KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>155</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">38 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select39KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>155</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">39 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select35KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>155</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">35 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="select40KvFIlament">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>205</y>
+        <width>86</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(0, 0, 255);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">40 kV</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="smallFocusButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>205</y>
+        <width>116</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(170, 85, 0);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">SMALL</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="largeFocusButton">
+      <property name="geometry">
+       <rect>
+        <x>135</x>
+        <y>205</y>
+        <width>116</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Bitstream Charter</family>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string notr="true"/>
+      </property>
+      <property name="statusTip">
+       <string notr="true"/>
+      </property>
+      <property name="whatsThis">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleName">
+       <string notr="true"/>
+      </property>
+      <property name="accessibleDescription">
+       <string notr="true"/>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(170, 85, 0);
+color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string notr="true">LARGE</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="downloadButton">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>35</y>
+       <width>171</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 85, 0);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string notr="true">DOWNLOAD</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="factoryButton">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>35</y>
+       <width>171</width>
+       <height>46</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 85, 0);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string notr="true">FACTORY</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="errorLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>425</y>
+      <width>756</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string notr="true"/>
+    </property>
+    <property name="statusTip">
+     <string notr="true"/>
+    </property>
+    <property name="whatsThis">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleDescription">
+     <string notr="true"/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/transparent.png);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string notr="true">NO ERRORS</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

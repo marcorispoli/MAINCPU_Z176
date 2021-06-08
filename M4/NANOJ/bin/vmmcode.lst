@@ -1,0 +1,309 @@
+ARM GAS  C:\Windows\ccIa9kym.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"mapping.cxx"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	In
+  19              		.section	.inputs,"aw",%progbits
+  20              		.align	2
+  23              	In:
+  24 0000 00000000 		.space	8
+  24      00000000 
+  25              		.global	InOut
+  26              		.section	.inoutputs,"aw",%progbits
+  27              		.align	2
+  30              	InOut:
+  31 0000 00000000 		.space	6
+  31      0000
+  32 0006 0000     		.text
+  33              	.Letext0:
+  34              		.file 1 "C:\\Plug & Drive Studio\\PNDS-1.0.4-x86\\workspace\\TOMOGRAFIA1\\gen\\types.h"
+  35              		.file 2 "C:\\Plug & Drive Studio\\PNDS-1.0.4-x86\\workspace\\TOMOGRAFIA1\\gen\\mapping.h"
+  36              		.file 3 "C:\\Plug & Drive Studio\\PNDS-1.0.4-x86\\workspace\\TOMOGRAFIA1\\gen\\mapping.cxx"
+ARM GAS  C:\Windows\ccIa9kym.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mapping.cxx
+C:\Windows\ccIa9kym.s:23     .inputs:00000000 In
+C:\Windows\ccIa9kym.s:20     .inputs:00000000 $d
+C:\Windows\ccIa9kym.s:30     .inoutputs:00000000 InOut
+C:\Windows\ccIa9kym.s:27     .inoutputs:00000000 $d
+
+NO UNDEFINED SYMBOLS
+ARM GAS  C:\Windows\ccIa9kym.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"vmmcode.cpp"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text._Z4userv,"ax",%progbits
+  19              		.align	2
+  20              		.global	_Z4userv
+  21              		.thumb
+  22              		.thumb_func
+  24              	_Z4userv:
+  25              	.LFB0:
+  26              		.file 1 "C:\\Plug & Drive Studio\\PNDS-1.0.4-x86\\workspace\\TOMOGRAFIA1\\gen\\mappings\\vmmcode.c
+   1:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // In this NanoJ program, we will make the motor turn shortly back and forth.
+   2:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // The language used for NanoJ programs is C, with a few specific extensions,
+   3:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // like the mappings (see below).
+   4:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // Please refer to the product manual for more details about NanoJ and the
+   5:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // object dictionary.
+   6:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 
+   7:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // map U16 ControlWord as inout 0x6040:00
+   8:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // map U32 ExpWin as input 0x60FD:00
+   9:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // map S32 Posizione as input 0x6064:00
+  10:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // map U32 InputActive as inout 0x3240:02
+  11:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 
+  12:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // Include the definition of NanoJ functions and symbols
+  13:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** #include "wrapper.h"
+  14:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 
+  15:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // The user() function is the entry point of the NanoJ program. It is called
+  16:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** // by the firmware of the controller when the NanoJ program is started.
+  17:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** void user()
+  18:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** {
+  27              		.loc 1 18 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 16
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 7, -8
+  34              		.cfi_offset 14, -4
+  35 0002 84B0     		sub	sp, sp, #16
+  36              		.cfi_def_cfa_offset 24
+  37 0004 00AF     		add	r7, sp, #0
+  38              		.cfi_def_cfa_register 7
+  39              	.LBB2:
+  19:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	U08 samples = 0;
+ARM GAS  C:\Windows\ccIa9kym.s 			page 2
+
+
+  40              		.loc 1 19 0
+  41 0006 0023     		movs	r3, #0
+  42 0008 FB73     		strb	r3, [r7, #15]
+  20:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	S32 sample;
+  21:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	
+  22:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	// Impostazione logica invertita per il pin EXP-WIN (DIG1)
+  23:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	U32 logica = InOut.InputActive;
+  43              		.loc 1 23 0
+  44 000a 40F20003 		movw	r3, #:lower16:InOut
+  45 000e C0F20003 		movt	r3, #:upper16:InOut
+  46 0012 D3F80230 		ldr	r3, [r3, #2]	@ unaligned
+  47 0016 BB60     		str	r3, [r7, #8]
+  24:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	InOut.InputActive = logica | 0x1; // Imposta il solo DIG1 a logica negativa
+  48              		.loc 1 24 0
+  49 0018 BB68     		ldr	r3, [r7, #8]
+  50 001a 43F00102 		orr	r2, r3, #1
+  51 001e 40F20003 		movw	r3, #:lower16:InOut
+  52 0022 C0F20003 		movt	r3, #:upper16:InOut
+  53 0026 C3F80220 		str	r2, [r3, #2]	@ unaligned
+  25:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	yield();
+  54              		.loc 1 25 0
+  55 002a FFF7FEFF 		bl	yield
+  26:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	
+  27:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	// Attende attivazione Input 
+  28:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	while((In.ExpWin & 0x10000) != 0x10000) yield();
+  56              		.loc 1 28 0
+  57 002e 01E0     		b	.L2
+  58              	.L3:
+  59              		.loc 1 28 0 is_stmt 0 discriminator 2
+  60 0030 FFF7FEFF 		bl	yield
+  61              	.L2:
+  62              		.loc 1 28 0 discriminator 1
+  63 0034 40F20003 		movw	r3, #:lower16:In
+  64 0038 C0F20003 		movt	r3, #:upper16:In
+  65 003c 1B68     		ldr	r3, [r3]	@ unaligned
+  66 003e 03F48033 		and	r3, r3, #65536
+  67 0042 002B     		cmp	r3, #0
+  68 0044 F4D0     		beq	.L3
+  29:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 
+  30:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	// Partenza braccio	
+  31:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	InOut.ControlWord = 0x2F;							// reset start bit 4, new target position must be acknowledged as 
+  69              		.loc 1 31 0 is_stmt 1
+  70 0046 40F20003 		movw	r3, #:lower16:InOut
+  71 004a C0F20003 		movt	r3, #:upper16:InOut
+  72 004e 0022     		movs	r2, #0
+  73 0050 42F02F02 		orr	r2, r2, #47
+  74 0054 1A70     		strb	r2, [r3]
+  75 0056 0022     		movs	r2, #0
+  76 0058 5A70     		strb	r2, [r3, #1]
+  32:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	yield();
+  77              		.loc 1 32 0
+  78 005a FFF7FEFF 		bl	yield
+  33:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	InOut.ControlWord = 0x3F;							// starts the absolute positioning 	
+  79              		.loc 1 33 0
+  80 005e 40F20003 		movw	r3, #:lower16:InOut
+  81 0062 C0F20003 		movt	r3, #:upper16:InOut
+  82 0066 0022     		movs	r2, #0
+ARM GAS  C:\Windows\ccIa9kym.s 			page 3
+
+
+  83 0068 42F03F02 		orr	r2, r2, #63
+  84 006c 1A70     		strb	r2, [r3]
+  85 006e 0022     		movs	r2, #0
+  86 0070 5A70     		strb	r2, [r3, #1]
+  34:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	yield();
+  87              		.loc 1 34 0
+  88 0072 FFF7FEFF 		bl	yield
+  35:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	
+  36:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	// Debounse 100ms
+  37:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	sleep(100);
+  89              		.loc 1 37 0
+  90 0076 6420     		movs	r0, #100
+  91 0078 FFF7FEFF 		bl	sleep
+  38:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	
+  39:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	// Ciclo di campionamento
+  40:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	samples = 1 ;
+  92              		.loc 1 40 0
+  93 007c 0123     		movs	r3, #1
+  94 007e FB73     		strb	r3, [r7, #15]
+  41:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	while(1){
+  42:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		// Attesa reset EXP-WIN
+  43:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		while((In.ExpWin & 0x10000) == 0x10000) yield();
+  95              		.loc 1 43 0
+  96 0080 01E0     		b	.L4
+  97              	.L5:
+  98              		.loc 1 43 0 is_stmt 0 discriminator 2
+  99 0082 FFF7FEFF 		bl	yield
+ 100              	.L4:
+ 101              		.loc 1 43 0 discriminator 1
+ 102 0086 40F20003 		movw	r3, #:lower16:In
+ 103 008a C0F20003 		movt	r3, #:upper16:In
+ 104 008e 1B68     		ldr	r3, [r3]	@ unaligned
+ 105 0090 03F48033 		and	r3, r3, #65536
+ 106 0094 002B     		cmp	r3, #0
+ 107 0096 F4D1     		bne	.L5
+  44:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		// Debounse 100ms
+  45:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		sleep(100);
+ 108              		.loc 1 45 0 is_stmt 1
+ 109 0098 6420     		movs	r0, #100
+ 110 009a FFF7FEFF 		bl	sleep
+  46:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	
+  47:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		// Attesa set EXP-WIN
+  48:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		while((In.ExpWin & 0x10000) != 0x10000) yield();
+ 111              		.loc 1 48 0
+ 112 009e 01E0     		b	.L6
+ 113              	.L7:
+ 114              		.loc 1 48 0 is_stmt 0 discriminator 2
+ 115 00a0 FFF7FEFF 		bl	yield
+ 116              	.L6:
+ 117              		.loc 1 48 0 discriminator 1
+ 118 00a4 40F20003 		movw	r3, #:lower16:In
+ 119 00a8 C0F20003 		movt	r3, #:upper16:In
+ 120 00ac 1B68     		ldr	r3, [r3]	@ unaligned
+ 121 00ae 03F48033 		and	r3, r3, #65536
+ 122 00b2 002B     		cmp	r3, #0
+ 123 00b4 F4D0     		beq	.L7
+  49:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	
+ARM GAS  C:\Windows\ccIa9kym.s 			page 4
+
+
+  50:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		// Campionamento
+  51:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		sample = In.Posizione;
+ 124              		.loc 1 51 0 is_stmt 1
+ 125 00b6 40F20003 		movw	r3, #:lower16:In
+ 126 00ba C0F20003 		movt	r3, #:upper16:In
+ 127 00be 5B68     		ldr	r3, [r3, #4]	@ unaligned
+ 128 00c0 7B60     		str	r3, [r7, #4]
+  52:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		od_write(0x2500, samples, sample );
+ 129              		.loc 1 52 0
+ 130 00c2 FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 131 00c4 7B68     		ldr	r3, [r7, #4]
+ 132 00c6 4FF41450 		mov	r0, #9472
+ 133 00ca 1146     		mov	r1, r2
+ 134 00cc 1A46     		mov	r2, r3
+ 135 00ce FFF7FEFF 		bl	od_write
+  53:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		yield();
+ 136              		.loc 1 53 0
+ 137 00d2 FFF7FEFF 		bl	yield
+  54:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		samples++;
+ 138              		.loc 1 54 0
+ 139 00d6 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 140 00d8 0133     		adds	r3, r3, #1
+ 141 00da FB73     		strb	r3, [r7, #15]
+  55:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		
+  56:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		if(samples>32){
+ 142              		.loc 1 56 0
+ 143 00dc FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 144 00de 202B     		cmp	r3, #32
+ 145 00e0 07D9     		bls	.L8
+  57:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 			// Raggiunto limite campionamento: fine programma
+  58:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 			od_write(0x2300, 0x00, 0 );
+ 146              		.loc 1 58 0
+ 147 00e2 4FF40C50 		mov	r0, #8960
+ 148 00e6 0021     		movs	r1, #0
+ 149 00e8 0022     		movs	r2, #0
+ 150 00ea FFF7FEFF 		bl	od_write
+  59:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 			yield();
+ 151              		.loc 1 59 0
+ 152 00ee FFF7FEFF 		bl	yield
+ 153              	.L8:
+  60:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		}
+  61:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 
+  62:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		// Debounse 100ms
+  63:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		sleep(100);
+ 154              		.loc 1 63 0
+ 155 00f2 6420     		movs	r0, #100
+ 156 00f4 FFF7FEFF 		bl	sleep
+  64:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 	}
+ 157              		.loc 1 64 0
+ 158 00f8 00BF     		nop
+  43:C:\Plug & Drive Studio\PNDS-1.0.4-x86\workspace\TOMOGRAFIA1\gen\mappings\vmmcode.cpp **** 		// Debounse 100ms
+ 159              		.loc 1 43 0
+ 160 00fa C4E7     		b	.L4
+ 161              	.LBE2:
+ 162              		.cfi_endproc
+ 163              	.LFE0:
+ 165              		.text
+ARM GAS  C:\Windows\ccIa9kym.s 			page 5
+
+
+ 166              	.Letext0:
+ 167              		.file 2 "C:\\Plug & Drive Studio\\PNDS-1.0.4-x86\\workspace\\TOMOGRAFIA1\\gen/types.h"
+ 168              		.file 3 "C:\\Plug & Drive Studio\\PNDS-1.0.4-x86\\workspace\\TOMOGRAFIA1\\gen/mapping.h"
+ARM GAS  C:\Windows\ccIa9kym.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 vmmcode.cpp
+C:\Windows\ccIa9kym.s:19     .text._Z4userv:00000000 $t
+C:\Windows\ccIa9kym.s:24     .text._Z4userv:00000000 _Z4userv
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+InOut
+yield
+In
+sleep
+od_write

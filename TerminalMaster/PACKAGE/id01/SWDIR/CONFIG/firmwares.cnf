@@ -1,0 +1,13 @@
+<PACKAGE,01>  //  Revisione Package corrente
+<FILENAME,PACKAGE_ID01.tar>  //  file package istallato
+<MASTER,1.0>  //  Revisione GUI Master
+<SLAVE,1.0>  //  Revisione GUI Slave
+<M4_MASTER,1.0>  //  Revisione M4 Master
+<M4_SLAVE,1.0>  //  Revisione M4 Slave
+<LANGUAGE,1.0>  //  language package istallato
+<PCB269,1.2>    //  FW269
+<PCB190,1.1>    //  FW190A
+<PCB240,1.2>    //  FW240
+<PCB249U1,3.1>  //  FW249U1
+<PCB249U2,2.1>  //  FW249U2
+<PCB244A,1.1>   //  FW244A

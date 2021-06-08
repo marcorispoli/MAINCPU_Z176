@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>msgBox</class>
+ <widget class="QWidget" name="msgBox">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>420</width>
+    <height>440</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">color: rgb(255, 255, 255);
+background-image:url(/transparent.png);
+background-color: qlineargradient(spread:pad, x1:0.75, y1:0.824, x2:0.037, y2:0.05, stop:0 rgba(30,30,30, 200), stop:1 rgba(200, 200, 200, 120));
+border: 4px solid  rgb(74, 74, 74);
+border-radius:10px;
+border-right-color: rgba(255, 255, 153,0);
+border-left-color: rgba(255, 255, 153,0);
+border-top-color: rgba(255, 255, 153,0);
+</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>420</width>
+     <height>440</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="title">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>5</y>
+      <width>410</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(79, 79, 79);
+border-color: rgb(255, 255, 153);
+font: 80 16pt &quot;DejaVu Sans&quot;;
+color: rgb(255, 255, 153);
+
+</string>
+    </property>
+    <property name="text">
+     <string notr="true">CALIBRAZIONE COLLIMAZIONI 2D</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frameText">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>65</y>
+      <width>401</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0, 0);
+</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>3</number>
+    </property>
+    <widget class="QLabel" name="content">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>381</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(201, 201, 201);
+color: rgb(0, 0, 0);
+font: 80 12pt &quot;DejaVu Sans&quot;;
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">CALIBRAZIONE COLLIMAZIONI 2D</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="buttonFrame">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>396</width>
+      <height>66</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="okButton">
+     <property name="geometry">
+      <rect>
+       <x>265</x>
+       <y>5</y>
+       <width>126</width>
+       <height>56</height>
+      </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(79, 79, 79);
+border-color: rgb(255, 255, 153);
+color: rgb(255, 255, 153);
+font: 80 14pt &quot;DejaVu Sans&quot;;
+
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">OK</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="funcButton">
+     <property name="geometry">
+      <rect>
+       <x>135</x>
+       <y>5</y>
+       <width>126</width>
+       <height>56</height>
+      </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(79, 79, 79);
+border-color: rgb(255, 255, 153);
+color: rgb(255, 255, 153);
+font: 80 14pt &quot;DejaVu Sans&quot;;
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">FUNC</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="cancButton">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>5</y>
+       <width>126</width>
+       <height>56</height>
+      </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(79, 79, 79);
+border-color: rgb(255, 255, 153);
+color: rgb(255, 255, 153);
+font: 80 14pt &quot;DejaVu Sans&quot;;
+</string>
+     </property>
+     <property name="text">
+      <string notr="true">CANC</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>320</y>
+      <width>386</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="value">
+     <number>24</number>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="textVisible">
+     <bool>true</bool>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="editable">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>305</y>
+      <width>113</width>
+      <height>56</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>22</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string notr="true">500</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

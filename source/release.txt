@@ -1,0 +1,69 @@
+
+
+    ---------------  REGOLE GENERALI DI UTILIZZO LIBRERIA GWINDOW ------------------------------
+
+******  COMANDI PER CAMBIO PAGINA
+        GWindowRoot::setNewPage(CODICE,param): Vale in generale per attivare una qualsiasi pagina
+        GWindow::activatePage(param): attiva la pagina chiamante
+
+******  childStatusPage(bool stat,int opt) : notifica di cambio pagina
+        Viene notificato alla sola pagina oggetto del cambio pagina
+
+
+******  buttonActivationNotify() : notifica pressione pulsante di tipo <GPush>
+        Viene inviata in ECHO a meno che il pulsante non sia inizializzato
+        con opzione GPush::setOptions(DBase::_DB_NO_ECHO);
+
+****** OPTIONS
+        _DB_NO_ECHO  -> non viene inviato l'echo del segnale in oggetto
+        _DB_NO_CHG_SGN -> Solo Database: non viene attivato il segnale di valore cambiato (quindi anche il relativo echo)
+
+
+-------------------------------------------------------------------------------------------
+RELEASE 1.1 : 06/08/2020
+
+BUG: corretto bug risalita compressore in biopsia
+BUG: corretto bug gestione bit di combo
+BUG: corretto bug trasferimento files per upgrade software
+BUG: corretto bug per timer non chiusi su service panels
+Aggiunta finestra di visualizzazione percentuale di trasferimento ftp Master Slave
+Modificati tcpClient e Server per tempi di attesa dati inviati
+STRUTTURA: cambiato struttura per PACKAGE
+
+
+RELEASE 1.2 :
+
+- Allarme temperatura della Cuffia: lo stato di allarme viene determinato
+  direttamentente dai Terminali confrontando le soglie. Questo perchè i Terminali+
+  operano una media che risulta meno immediata del valore letto dal sensore
+  ed elaborato dalla PCB249U1.
+
+- Modificata gestione dell'allarme compressione a studio chiuso.
+  Si attiva una volta e si riattiva solo se si rientra in IDLE
+  senza compressione in corso.
+
+
+- Aggiunta gestione doppio firmware per collimatore Vecchio/nuovo
+- Aggiunta disabilitazione warning calib starter se il keeping non è attivo
+
+----------------------------------------------------------------------------------------------
+
+Modifiche comuni a Z175 Z176
+
+serverdebug:
+    sysBackup, sysRestore,
+
+tool calibrazione compressore:
+    Modifica sui controlli in fase mdi calibrazione
+
+IRS: test ciclico sul collimatore
+
+Tool calib filtro: commentato al ricevimento dell'esito la re-impostazione della posizione corrente
+
+cambiato il default della posizione filtri
+_---------------------------------
+
+- Modificato default user.cnf per il TEMPLATE_XM12L40
+- Modificato calib starter
+- modificato vmusic3.c
+- modificato i TEMPLATE dei tubi

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QFrame" name="kvOffsetModifyForm">
+   <property name="geometry">
+    <rect>
+     <x>5</x>
+     <y>5</y>
+     <width>306</width>
+     <height>366</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);
+background-image:url(/transparent.png);
+background-color: qlineargradient(spread:pad, x1:0.75, y1:0.824, x2:0.037, y2:0.05, stop:0 rgba(30,30,30, 250), stop:1 rgba(200, 200, 200, 220));
+border: 1px solid  rgb(74, 74, 74);
+border-radius:10px;
+border-right-color: rgba(255, 255, 153,0);
+border-left-color: rgba(255, 255, 153,0);
+border-top-color: rgba(255, 255, 153,0);
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="testo">
+    <property name="geometry">
+     <rect>
+      <x>15</x>
+      <y>15</y>
+      <width>271</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-image:url(/transparent.png);
+background-color: rgba(255, 251, 123,40);
+border: 2px solid  rgb(74, 74, 74);
+border-radius:4px;
+border-right-color: rgba(255, 255, 153,0);
+border-left-color: rgba(255, 255, 153,0);
+border-top-color: rgba(255, 255, 153,0);
+</string>
+    </property>
+    <property name="text">
+     <string notr="true">TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="display">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>91</width>
+      <height>53</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-image:url(/transparent.png);
+background-color: qrgba(0, 0, 0, 100);
+border: 2px solid  rgb(74, 74, 74);
+border-radius:1px;
+border-right-color: rgba(255, 255, 153,0);
+border-left-color: rgba(255, 255, 153,0);
+border-top-color: rgba(255, 255, 153,0);
+</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushDecButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>205</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>22</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-image:url(/transparent.png);
+background-color: rgba(139, 139, 139, 50);
+border: 2px solid  rgb(0, 0, 0);
+border-radius:4px;
+border-right-color: rgba(0, 0, 0,40);
+border-left-color: rgba(255, 255, 255,100);
+border-top-color: rgba(255, 255, 153,0);
+</string>
+    </property>
+    <property name="text">
+     <string notr="true">-</string>
+    </property>
+    <property name="autoRepeat">
+     <bool>true</bool>
+    </property>
+    <property name="autoRepeatDelay">
+     <number>1000</number>
+    </property>
+    <property name="autoRepeatInterval">
+     <number>500</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushIncButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>150</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>22</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-image:url(/transparent.png);
+background-color: rgba(139, 139, 139, 50);
+border: 2px solid  rgb(0, 0, 0);
+border-radius:4px;
+border-right-color: rgba(0, 0, 0,40);
+border-left-color: rgba(255, 255, 255,100);
+border-top-color: rgba(255, 255, 153,0);
+</string>
+    </property>
+    <property name="text">
+     <string notr="true">+</string>
+    </property>
+    <property name="autoRepeat">
+     <bool>true</bool>
+    </property>
+    <property name="autoRepeatDelay">
+     <number>1000</number>
+    </property>
+    <property name="autoRepeatInterval">
+     <number>500</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushOkButt">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>290</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>22</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);
+background-image:url(/transparent.png);
+background-color: rgba(139, 139, 139, 50);
+border: 2px solid  rgb(0, 0, 0);
+border-radius:4px;
+border-right-color: rgba(0, 0, 0,40);
+border-left-color: rgba(255, 255, 255,100);
+border-top-color: rgba(255, 255, 153,0);
+</string>
+    </property>
+    <property name="text">
+     <string notr="true">OK</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="quadro">
+    <property name="geometry">
+     <rect>
+      <x>135</x>
+      <y>63</y>
+      <width>150</width>
+      <height>276</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:url(:/kv_quadro.png);
+border:0px;
+border-radius:0px;
+</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <zorder>testo</zorder>
+   <zorder>display</zorder>
+   <zorder>pushDecButton</zorder>
+   <zorder>pushIncButton</zorder>
+   <zorder>pushOkButt</zorder>
+   <zorder>quadro</zorder>
+   <zorder>frameSetupDgn</zorder>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
