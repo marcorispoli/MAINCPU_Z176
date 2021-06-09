@@ -40,8 +40,8 @@
 #undef  dGRADsec_TO_ROTmin
 #undef  dGRAD_TO_POS
 
-#define ENABLE_SAFETY_FAULT false
-//#define ENABLE_SAFETY_FAULT true
+//#define ENABLE_SAFETY_FAULT false
+#define ENABLE_SAFETY_FAULT true
 
 #define _PIGNONE_35_PRODU
 //#define _PIGNONE_40_RD
@@ -212,8 +212,8 @@ static const _canopen_ObjectDictionary_t generalMotorProfile[]={
     {OD_607B_02,0 },	// Max Position Range Limit
 
     // Software Position Limit
-    {OD_607D_01,cGRAD_TO_POS(-2700) },	// Min Position Limit
-    {OD_607D_02,cGRAD_TO_POS(2700) },	// Max Position Limit
+    {OD_607D_01,cGRAD_TO_POS(-1600) },	// Min Position Limit
+    {OD_607D_02,cGRAD_TO_POS(1600) },	// Max Position Limit
 
     // Polarity
     {OD_607E_00,0 },	// b7:1-> inverse rotaion
@@ -340,6 +340,8 @@ void CiA402_Trx_Stat(void){
         _EVCLR(_EV0_TRX_CONNECTED);
         driver_stat.connected = false;
         printf("%s: MODULE RESTART...........\n\n",DEVICE);
+
+        printf("VERSIONE CON PATCH PER LIMITARE L'ANGOLO DEL TILT TRA +-16°\n");
 
         printf(_PIGNONE_CONFIG);
 
