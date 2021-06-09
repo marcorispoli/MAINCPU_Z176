@@ -53,6 +53,7 @@
 #endif
 
 
+
 #define SPEED_DENOMINATOR       120
 #define cGRADsec_TO_ROT_min(x)  ((uint32_t) (((float)((long)x)  * (float) RIDUZIONE / 36000) * (float) SPEED_DENOMINATOR))
 
@@ -208,8 +209,8 @@ static const _canopen_ObjectDictionary_t generalMotorProfile[]={
     {OD_607B_02,0 },	// Max Position Range Limit
 
     // Software Position Limit
-    {OD_607D_01,cGRAD_TO_POS(-2700) },	// Min Position Limit
-    {OD_607D_02,cGRAD_TO_POS(2700) },	// Max Position Limit
+    {OD_607D_01,cGRAD_TO_POS(-1600) },	// Min Position Limit
+    {OD_607D_02,cGRAD_TO_POS(1600) },	// Max Position Limit
 
     // Polarity
     {OD_607E_00,0 },	// b7:1-> inverse rotaion
