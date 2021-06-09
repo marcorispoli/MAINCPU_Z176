@@ -9,14 +9,11 @@
 #define M4_SLAVE
 /*______________________________________________________________________________
 
+    1.0 RILASCIO ID01
 
-    REV 1.0 .0
-    FIRMWARE PROCESSORE M4 SLAVE, PROGETTO DMD
+    -----
 
-    - Aggiunto caricamento file NANO-J
-    - Aggiunto salvataggio parametri sia su ARM che su TRX
-    - Aggiunto caricamento principali parametri di funzionamento del LENZE
-_____________________________________________________________________________*/
+_________________________________________________________*/
 
 
 //////////////////////////////////////////////////////////////////////////////

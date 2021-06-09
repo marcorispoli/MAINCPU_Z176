@@ -46,6 +46,9 @@ const TASK_TEMPLATE_STRUCT  MQX_template_list[] =
    { _IDTASK(PCB190),                   pcb190_driver,          1500,   _PRIOTASK(PCB190),              "pcb190_driver",0,                      0,      0 },
    { _IDTASK(PCB244_A),                 pcb244_A_driver,        1500,   _PRIOTASK(PCB244_A),            "pcb244_A_driver",0,                      0,      0 },
    { _IDTASK(BIOPSY),                   BIOPSY_driver,          1500,   _PRIOTASK(BIOPSY),              "BIOPSY_driver",0,                      0,      0 },
+#ifdef __BIOPSY_SIMULATOR
+{ _IDTASK(BIOPSYM),                  BIOPSY_simdriver,       1500,   _PRIOTASK(BIOPSYM),             "BIOPSY_symdriver",0,                      0,      0 },
+#endif
    { _IDTASK(PCB249U1),                 pcb249U1_driver,        1500,   _PRIOTASK(PCB249U1),            "pcb249U1_driver",0,                    0,      0 },
    { _IDTASK(PCB249U2),                 pcb249U2_driver,        1500,   _PRIOTASK(PCB249U2),            "pcb249U2_driver",0,                    0,      0 },
    { _IDTASK(GUI_INTERFACE),            gui_interface_task,     1500,   _PRIOTASK(GUI_INTERFACE),       "gui_task",     0,                      0,      0 },

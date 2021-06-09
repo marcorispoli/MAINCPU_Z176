@@ -221,10 +221,23 @@ typedef struct
 // Configurazione biopsia
 typedef struct
 {
-    unsigned char  offsetZ;                 // Posizione zero cursore (mm)
+    // Configurazione console
+    unsigned short dmm_DXReader;// DX fantoccio
+    unsigned short dmm_DYReader;// DY fantoccio
+    float          readerKX;    // Fattore di conversione unit/dmm
+    float          readerKY;    // Fattore di conversione unit/dmm
+
+    // Dati di calibrazione
+    unsigned char  offsetX;                 // Offset di calibrazione puntamento X (dmm)
+    unsigned char  offsetY;                 // Offset di calibrazione puntamento Y (dmm)
+    unsigned char  offsetZ;                 // Offset di calibrazione puntamento Z (dmm)
+    unsigned char  offsetFibra;           // Distanza Home torretta-Fibra di carbonio (mm)
+
+
+    // Guardie anti impatto con il compressore
     unsigned char  offsetPad;               // Offset meccanico Staffe Pad (mm)
-    unsigned char  margineRisalita;         // Margine di risalita (mm)
-    unsigned char  marginePosizionamento;   // Margine di sicurezza sul posizionamento (mm)
+    unsigned char  margineRisalita;         // Margine di Salita compressore rispetto alla posizione del posizionatore (mm)
+    unsigned char  marginePosizionamento;   // Margine di sicurezza rispetto al compressore sul posizionamento Ago (mm)
 
 }biopsyConf_Str;
 

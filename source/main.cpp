@@ -2,7 +2,6 @@
 #include "application.h"
 #include "appinclude.h"
 #include "globvar.h"
-#include "biopsypage.h"
 #include "startuppage.h"
 #include "audio.h"
 
@@ -16,6 +15,7 @@
 #include "Service/Calib/calibfilter.h"
 #include "Service/Calib/calibpower.h"
 #include "Service/Calib/calibpot.h"
+#include "Service/Calib/calibconsole.h"
 #include "Service/Calib/calibstarter.h"
 #include "Service/Setup/system.h"
 #include "Service/Tools/toolsmenu.h"
@@ -43,6 +43,7 @@ systemPage* pSystem;
 calibfilter* pCalibFilterPage;
 calibpower* pCalibPowerPage;
 calibpot* pCalibPot;
+calibconsole* pCalibConsole;
 calibstarter* pCalibStarter;
 toolsmenu* pToolsMenu;
 tiltingtool* pTiltingTool;
@@ -199,16 +200,23 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((int) 0);            // _DB_T_CUFFIA
     ApplicationDatabase.append((int) 1);            // _DB_HU_ANODE
 
-    ApplicationDatabase.append("");                 // _DB_BIOP_HOLDER
-    ApplicationDatabase.append("");                 // _DB_BIOP_AGO
-    ApplicationDatabase.append("");                 // _DB_BIOP_MARG
-    ApplicationDatabase.append("");                 // _DB_BIOP_MAXZ
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_HOLDER
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_MAX_AGO
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_MIN_AGO
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_AGO
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_MARG
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_ZLIMIT
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_X
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_Y
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_Z
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_X
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_Y
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_Z
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_LES_ZFIBRA
 
-    ApplicationDatabase.append("ND");               // _DB_BIOP_X
-    ApplicationDatabase.append("ND");               // _DB_BIOP_Y
-    ApplicationDatabase.append("ND");               // _DB_BIOP_Z
-    ApplicationDatabase.append((unsigned char) 0);  // _DB_BIOP_UNLOCK_BUTTON
-    ApplicationDatabase.append((unsigned char) 0);  // _DB_BIOP_MANUAL_ENA
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_Z_FIBRA
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_UNLOCK_BUTTON
+    ApplicationDatabase.append((int) 0);            // _DB_BIOP_CONSOLE_BUTTON
 
     ApplicationDatabase.append((unsigned char) 0);  // CAMPO DEMO_MODE
     ApplicationDatabase.append((unsigned char) 0);  // CAMPO DEAD_MEN
@@ -269,7 +277,23 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((int) 0); // _DB_SERVICE31_INT
     ApplicationDatabase.append((int) 0); // _DB_SERVICE32_INT
     ApplicationDatabase.append((int) 0); // _DB_SERVICE33_INT
-
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE34_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE35_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE36_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE37_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE38_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE39_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE40_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE41_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE42_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE43_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE44_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE45_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE46_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE47_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE48_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE49_INT
+    ApplicationDatabase.append((int) 0); // _DB_SERVICE50_INT
 
     //_______________________________________________________________________________________
 
@@ -331,15 +355,12 @@ int main(int argc, char *argv[])
     #define RIGHT_ARROW_FRAME  8,700,0,800,0,800,100,700,100
 
     pagina_language = new PageLanguages( &mainApplication, PageLanguages::_LNG_ENG, true,_BACKGROUND_Y_PG_SELLNG,_BACKGROUND_C_PG_SELLNG,TRUE, 800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_SELLNG,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_MAIN_DIGITAL,(int)_PG_SELLNG);
-    paginaMainDigital = new MainPage(true,QString(_BACKGROUND_Y_PG_MAIN),QString(_BACKGROUND_C_PG_MAIN),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_MAIN_DIGITAL,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_SERVICE_MENU,(int)_PG_MAIN_DIGITAL);
-    paginaBiopsyDigital = new BiopsyPage(true,QString("_BACKGROUND_Y_PG_MAIN"),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_BIOPSY_DIGITAL,(int)_PG_BIOPSY_DIGITAL);
+    paginaMainDigital = new MainPage(true,QString(_BACKGROUND_Y_PG_MAIN),QString(_BACKGROUND_C_PG_MAIN),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_MAIN_DIGITAL,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_SERVICE_MENU,(int)_PG_MAIN_DIGITAL);    
     paginaOpenStudyAnalogic = new AnalogPageOpen(rotView);
     paginaProjections = new ProjectionPage(false,QString(""),QString(""),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_PROJECTIONS,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_OPEN_STUDY_DIGITAL,(int)_PG_PROJECTIONS);
-
-
-    paginaAcr= new PageACR(true,"","",TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int) _PG_OPEN_STUDY_DIGITAL,(int)_PG_ACR);
+    //paginaAcr= new PageACR(true,"","",TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ACR,GWindow::setPointPath(LEFT_ARROW_FRAME),(int) _PG_OPEN_STUDY_DIGITAL,(int)_PG_ACR);
     paginaAllarmi = new PageAlarms(QString(_PG_ALARM_BACKGROUND),TRUE,800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_ALARM,GWindow::setPointPath(LEFT_ARROW_FRAME),(int)_PG_ALARM,(int)_PG_ALARM);
-    paginaImmagine= new ImagePage(QString(""),800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_XRAY_IMG,GWindow::setPointPath(LEFT_ARROW_FRAME),(int) _PG_XRAY_IMG,(int)_PG_XRAY_IMG);
+    //paginaImmagine= new ImagePage(QString(""),800,480,rotView,GWindow::setPointPath(RIGHT_ARROW_FRAME),(int)_PG_XRAY_IMG,GWindow::setPointPath(LEFT_ARROW_FRAME),(int) _PG_XRAY_IMG,(int)_PG_XRAY_IMG);
     pStartupPage= new StartupPage(rotView);
 
     // CREAZIONE DI TUTTI I PANNELLI DI SERVIZIO
@@ -352,6 +373,7 @@ int main(int argc, char *argv[])
     pCalibFilterPage = new calibfilter(rotView) ;
     pCalibPowerPage = new calibpower(rotView) ;
     pCalibPot = new calibpot(rotView) ;
+    pCalibConsole = new calibconsole(rotView) ;
     pCalibStarter = new calibstarter(rotView) ;
     pToolsMenu = new toolsmenu(rotView) ;
     pTiltingTool = new tiltingtool(rotView) ;

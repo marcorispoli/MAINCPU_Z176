@@ -40,10 +40,8 @@ ext void spiInit(void);
 
 // __________________ VMUSIC _____________________________________
 
-#define MAXAUDIOMSG 5
-
-ext unsigned char audioMessagesQueue[MAXAUDIOMSG];
-ext unsigned char audioVolumeQueue[MAXAUDIOMSG];
+ext unsigned char nextAudioMessageCode;
+ext unsigned char nextAudioMessageVol;
 
 
 ext void vmTask(uint32_t initial_data);

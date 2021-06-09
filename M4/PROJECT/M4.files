@@ -1,7 +1,6 @@
 ../M4_MASTER/source/loader.h
 ../M4_MASTER/source/master_can.h
 ../M4_MASTER/source/fault.h
-../M4_MASTER/source/biopsy.h
 ../M4_MASTER/source/gui.h
 ../M4_MASTER/source/ser422.h
 ../M4_MASTER/source/eventi.h
@@ -16,7 +15,6 @@
 ../M4_MASTER/source/fault.c
 ../M4_MASTER/source/master_can.c
 ../M4_MASTER/source/ser422.c
-../M4_MASTER/source/biopsy.c
 ../M4_MASTER/source/pcb215.c
 ../M4_MASTER/source/pcb190.c
 ../M4_MASTER/source/pcb249U1.c
@@ -93,3 +91,9 @@
 ../M4_MASTER/source/rtc.c
 ../M4_MASTER/source/i2c.h
 ../M4_MASTER/source/i2c.c
+../M4_MASTER/source/BIOPSY/biopsy_simulator.h
+../M4_MASTER/source/BIOPSY/biopsy_driver.h
+../M4_MASTER/source/BIOPSY/biopsy.h
+../M4_MASTER/source/BIOPSY/biopsy_simulator.c
+../M4_MASTER/source/BIOPSY/biopsy_driver.c
+../M4_MASTER/source/BIOPSY/biopsy.c

@@ -40,8 +40,7 @@ public slots:
     void setFilterField(int filtro, int automode);
     void setAnode(QString anodo);
     void setReady(bool ready);
-    void xrayPixActivation(bool stat);
-    void setDoseField(float ug);
+    void xrayPixActivation(bool stat);    
     void setArm(int angolo);
 
 

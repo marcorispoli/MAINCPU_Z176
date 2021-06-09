@@ -1,9 +1,9 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.1.0"
+#define REVISIONE "1.2.0"
 #define REVMAJ 1
-#define REVMIN 1
+#define REVMIN 2
 #define REV_BETA 0
 
 #define M4_MASTER
@@ -11,12 +11,11 @@
 /*______________________________________________________________________________
 
 
-RELEASE 1.1 - 17/07/2020
-   BUG: corretta gestione posizione filtro raw in Tomo
+    1.0 RILASCIO ID01
 
-RELEASE 1.2
-    In sviluppo ....
+    -----
 
+    1.1: modifiche gestione Biopsia analogica
 _____________________________________________________________________________*/
 
 //////////////////////////////////////////////////////////////////////////////
@@ -53,9 +52,12 @@ _____________________________________________________________________________*/
 #define CANACTUATORS_TASK            18,7 // Alta priorità
 #define CANRXERR_TASK                19,8 // Alta priorità
 
+
 #define SER422_DRIVER                20,8
 #define FAULT_TASK                   21,7       // Alta priorità
 #define IO_TASK                      23,7       // Alta priorità
+#define BIOPSYM                      24,9      // Simulatore di biosia
+
 
 #define ANALOG_RX_TASK               55,11
 #define VMUSIC3_TASK                 56,11
@@ -79,7 +81,9 @@ _____________________________________________________________________________*/
 #include "pcb215.h"     // Gestore Carrello compressore
 #include "pcb190.h"     // Gestore generatore
 #include "pcb244-A.h"   // Gestore potter + esposimetro Analogico
-#include "biopsy.h"     // Gestore biopsia
+#include "BIOPSY/biopsy.h"     // Gestore biopsia
+#include "BIOPSY/biopsy_driver.h"     // Gestore biopsia
+#include "BIOPSY/biopsy_simulator.h"     // Gestore biopsia
 #include "pcb249U1.h"   // Gestore filtri, lame di collimazione
 #include "pcb249U2.h"   // Gestore filtri, back/front, mirror,light
 #include "actuators.h"  // Gestore movimentazioni

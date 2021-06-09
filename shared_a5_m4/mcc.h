@@ -194,21 +194,97 @@ typedef enum
 
 }_MccPCB249U1Notify_Code;
 
+// _____________________________________________________________________
 // Codici per notifiche Biopsia
 // Contenuto notifica m4-A5 biopsia
-#define _BP_CONNESSIONE 0
-#define _BP_SBLOCCO     1
-#define _BP_ACCESSORIO  2
-#define _BP_ZL          3
-#define _BP_ZH          4
-#define _BP_MOTION      5
-#define _BP_MOTION_END  6
-#define _BP_CHKH        7
-#define _BP_CHKL        8
-#define _BP_REVIS       9
-#define _BP_MAX_Z       10
-#define _BP_DATA_LEN    11
+#define _BP_CONNESSIONE     0 // Stato della connessione
+#define _BP_MOTION          1 // Stato dell'attivazione in corso
+#define _BP_MOTION_END      2 // Risultato del movimento appena terminato
+#define _BP_PUSH_SBLOCCO    3 // Stato del pulsante di sblocco
+#define _BP_ADAPTER_ID      4 // Codice holder riconosciuto
 
+// Posizione torretta in dmm
+#define _BP_XL              5
+#define _BP_XH              6
+#define _BP_YL              7
+#define _BP_YH              8
+#define _BP_ZL              9
+#define _BP_ZH              10
+
+#define _BP_MAX_Z           11 // Massima escursione di Z prima dell'impatto con il compressore
+#define _BP_ZLIMIT          12 // Valore massimo possibile di Z calcolato sullla base di MAX_Z e lunghezza ago
+
+// Posizione lesione in dmm
+#define _BP_JXL             13
+#define _BP_JXH             14
+#define _BP_JYL             15
+#define _BP_JYH             16
+#define _BP_17              17
+#define _BP_18              18
+
+// Stato pulsanti console biopsia
+#define _BP_CONSOLE_PUSH    19
+
+// Dati per la revisione e checksum
+#define _BP_CHKH            20
+#define _BP_CHKL            21
+#define _BP_REVIS           22
+//______________________________
+#define _BP_DATA_LEN        23
+//_____________________________
+
+// Codici relativi al tipo di adapter ID
+#define _BP_ADAPTER_OPEN            0
+#define _BP_ADAPTER_NEEDLE          1
+#define _BP_ADAPTER_A               2
+#define _BP_ADAPTER_B               3
+#define _BP_ADAPTER_SHORT           4
+
+
+// Codici relativi allo stato della connessione
+#define _BP_CONNESSIONE_DISCONNECTED            0
+#define _BP_CONNESSIONE_CONNECTED               1
+
+// Codici relativi allo stato del movimento
+#define _BP_NO_MOTION                     0
+#define _BP_MOTION_ON                     1
+#define _BP_MOTION_TERMINATED             2
+
+// Codici risultato movimento
+#define _BP_TIMEOUT_COMANDO     1
+#define _BP_ERROR_POSITIONINIG  2
+#define _BP_POSITIONINIG_OK     3
+
+// Codici pulsante di sblocco
+#define _BP_PUSH_SBLOCCO_DISATTIVO           0
+#define _BP_PUSH_SBLOCCO_ATTIVO              1
+
+// Codici pulsanti della console di biopsia
+#define _BP_BIOP_PUSH_NO_EVENT  0
+#define _BP_BIOP_PUSH_RESET     0x1
+#define _BP_BIOP_PUSH_AGO_1     0x2
+#define _BP_BIOP_PUSH_AGO_10    0x4
+#define _BP_BIOP_PUSH_SEQ       0x8
+#define _BP_BIOP_PUSH_BACK      0x10
+
+
+// __________________________________________________________
+// CODICI COMANDO BIOPSIA (DA GUI A M4): MCC_BIOPSY_CMD
+#define _MCC_BIOPSY_CMD_MOVE_HOME   1
+#define _MCC_BIOPSY_CMD_MOVE_XYZ    2
+#define _MCC_BIOPSY_CMD_MOVE_INCX   3
+#define _MCC_BIOPSY_CMD_MOVE_DECX   4
+#define _MCC_BIOPSY_CMD_MOVE_INCY   5
+#define _MCC_BIOPSY_CMD_MOVE_DECY   6
+#define _MCC_BIOPSY_CMD_MOVE_INCZ   7
+#define _MCC_BIOPSY_CMD_MOVE_DECZ   8
+#define _MCC_BIOPSY_CMD_SET_STEPVAL 9
+#define _MCC_BIOPSY_CMD_SET_LAGO    10
+
+
+
+
+//________________________________________________________________________
 typedef enum
 {
   BIOP_NOTIFY_STAT=0,           // buffer[0]: 0=NULLA, 1 = ->CONNESSO, 2->NON CONNESSO
@@ -323,7 +399,8 @@ typedef enum
 
     // BIOPSY
     MCC_BIOPSY_DEMO_CMD,     // Comando di attivazione/Disattivazione demo
-    MCC_BIOPSY_XYZ,          // Comando di movimento Biopsia a XYZ
+    MCC_BIOPSY_CMD,          // Comando verso Biopsia
+    MCC_BIOPSY_SIMULATOR,    // Cpomandi per il simulatore se compilato
 
     MCC_GUI_NOTIFY,          // Notifica per l'applicazione da GUI M4
     MCC_CONFIG_NOTIFY,       // Notifica dal configuratore

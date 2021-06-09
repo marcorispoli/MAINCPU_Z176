@@ -349,8 +349,8 @@ public:
     bool handleSetIaRxData(protoConsole* frame, protoConsole* answer);
 
     // GESTIONE BIOPSIA
-    int  handleSetBiopsyData(protoConsole* frame);      // Posizionamento del cursore
-    void handleGetBiopsyZ(protoConsole* answer);        // Richiede i dati di posizione della Biopsia
+
+
     int  handleSetBiopsyHome(protoConsole* frame);      // Aggiorna la configurazione della calibrazione dell' offsetZ biopsia
 
     int  handleSetLingua(protoConsole* frame);          // Impostazione della lingua

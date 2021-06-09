@@ -17,7 +17,7 @@ void AnalogPageOpen::startXraySequence(void){
     Xprofile = pGeneratore->pAECprofiles->getCurrentProfileSymName();
     ApplicationDatabase.setData(_DB_XDMAS,(int) 0);
     ApplicationDatabase.setData(_DB_XDKV,(int) 0);
-    commandPanel->setDoseField(0);
+    ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: ----"));
     saveOptions();
 
     if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_MANUAL) xrayManualSequence();
@@ -58,7 +58,7 @@ void AnalogPageOpen::xrayManualSequence(void){
 
 
     // Impostazione dati di esposizione
-    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL,false, false);
+    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL, false, false);
     if(errcode){
         xrayErrorInCommand(errcode);
         return;
@@ -141,7 +141,7 @@ void AnalogPageOpen::xrayFullAutoSequence(void){
     pGeneratore->setmAs((float) mAs_PRE);
 
     // Impostazione dati di esposizione in funzione della modalità attuale
-    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_AUTO,false,true);
+    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_AUTO, false, true);
     if(errcode){
         xrayErrorInCommand(errcode);
         return;
@@ -217,6 +217,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
     float ldmas;
     float ldose;
     float pre_ldose;
+    float uG;
 
     int offset;
     unsigned char data[25];
@@ -256,55 +257,76 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
 
         ApplicationDatabase.setData(_DB_XDMAS,(int) ldmas);
         ApplicationDatabase.setData(_DB_XDKV,(int) (XselectedkV * 10) );
-        commandPanel->setDoseField(ldose+pre_ldose);
+
+        // Aggiornamento campi dose
+        uG =ldose+pre_ldose;
+        cumulativeXdose += uG;
+
+        if(uG==0) ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: ----"));
+        else if(pConfig->analogCnf.doseFormat == 'u'){
+            ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (uG)").arg(QString::number(uG,'f',1)));
+        }else if(pConfig->analogCnf.doseFormat == 'm'){
+            ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (mG)").arg(QString::number(uG/1000,'f',2)));
+        }else{
+            ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (Zv)").arg(QString::number(uG*50/1000,'f',2)));
+        }
+
 
         // Aggiornamento delle statistiche solo con generazione
         if((rxdata.at(0)==RXOK)||(rxdata.at(0)<LAST_ERROR_WITH_PREP)){
             pGeneratore->notifyStatisticData(pGeneratore->selectedKv, ldmas/10, true);
         }
 
-        if(rxdata.at(0)){
-            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, rxdata.at(0),TRUE); // Self resetting
-            logstring = "EXPOSURE ABORTED. ";
+        if(pBiopsy->connected){
+            logstring = "BIOPSY EXPOSURE: ";
         }else{
-            logstring = "EXPOSURE COMPLETED. ";
+            if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_SEMI) logstring = "(1P) EXPOSURE: ";
+            else if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_AUTO) logstring = "(0P) EXPOSURE: ";
+            else logstring = "MANUAL EXPOSURE: ";
         }
 
-        // reazione stringa di Log
-        if(pGeneratore->selectedFSize == Generatore::FUOCO_LARGE) fuoco_string = "LARGE";
-        else fuoco_string = "SMALL";
+        if(rxdata.at(0)){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_RAGGI, rxdata.at(0),TRUE); // Self resetting
+            logstring += "ABORTED!! ";
+        }else{
+            logstring += "COMPLETED. ";
+        }
 
-        if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_SEMI) exposure_string = "AUTO-1P";
-        else if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_AUTO) exposure_string = "AUTO-0P";
-        else exposure_string = "MANUAL";
+        // kV and mAs
+        if(ApplicationDatabase.getDataI(_DB_TECH_MODE) != ANALOG_TECH_MODE_MANUAL){
+            logstring += "PROFILE:" + Xprofile + ", ";
+            logstring += "pre-kV:" + QString("%1").arg(Xpre_selectedkV) + ", ";
+            logstring += "pre-mAs:" + QString("%1").arg((float)Xpre_selectedDmAs/10) + ", ";
+        }
+        logstring += "kV:" + QString("%1").arg(XselectedkV) + ", ";
+        logstring += "mAs:" + QString("%1").arg(ldmas/10) + ", ";
+        logstring += "Dose(uG):" + QString("%1").arg(ldose+pre_ldose) + ", ";
+        logstring += "TotalDose(uG):" + QString("%1").arg(cumulativeXdose) + ", ";
 
-        if(pConfig->analogCnf.primo_filtro == Collimatore::FILTRO_Mo)   pfilter_string = "Mo";
-        else pfilter_string = "Rh";
-        if(XselectedFiltro == Collimatore::FILTRO_Mo)   Pfilter_string = "Mo";
-        else Pfilter_string = "Rh";
 
-        campi = ApplicationDatabase.getDataI(_DB_CAMPI);
+        // Compressor
+        logstring += "THICK:" + QString("%1").arg(XThick) + ", ";
+        logstring += "FORCE:" + QString("%1").arg(XForce) + ", ";
 
-        if(campi==ANALOG_AECFIELD_FRONT) field_string = "FRONT";
-        else if(campi==ANALOG_AECFIELD_CENTER)  field_string = "CENTER";
-        else  field_string = "BACK";;
+        // Filter
+        if(XselectedFiltro == Collimatore::FILTRO_Mo)   logstring += "FILTER:Mo, ";
+        else logstring += "FILTER:Rh, ";
 
-        logstring += exposure_string + ", ";
-        logstring += "(°):" + QString("%1").arg(getArm()) + ", ";
-        logstring += fuoco_string + ", ";
-        logstring += "(mm):" + QString("%1").arg(XThick) + ", ";
-        logstring += "(N):" + QString("%1").arg(XForce) + ", ";
-        logstring += "p_F:" + pfilter_string + ", ";
-        logstring += "p_kV:" + QString("%1").arg(Xpre_selectedkV) + ", ";
-        logstring += "p_mAs:" + QString("%1").arg((float)Xpre_selectedDmAs/10) + ", ";
-        logstring += "P_F:" + Pfilter_string + ", ";
-        logstring += "P_kV:" + QString("%1").arg(XselectedkV) + ", ";
-        logstring += "P_mAs:" + QString("%1").arg(ldmas/10) + ", ";
-        logstring += "(uG):" + QString("%1").arg(ldose+pre_ldose) + ", ";
-        logstring += "EP:" + Xprofile + ", ";
-        logstring += "EF:" + field_string + ", ";
-        logstring += "Pl:" + QString("%1").arg(XPlog) + ", ";
-        logstring += "Rd:" + QString("%1").arg(XRad) ;
+        // Focus
+        if(pGeneratore->selectedFSize == Generatore::FUOCO_LARGE) logstring += "FOCUS: L, ";
+        else fuoco_string = "FOCUS: S, ";
+
+        // Angolo braccio
+        logstring += "ARM:" + QString("%1").arg(getArm()) + "°, ";
+
+        if(ApplicationDatabase.getDataI(_DB_TECH_MODE) != ANALOG_TECH_MODE_MANUAL){
+            campi = ApplicationDatabase.getDataI(_DB_CAMPI);
+            if(campi==ANALOG_AECFIELD_FRONT) field_string = "DET:FRONT, ";
+            else if(campi==ANALOG_AECFIELD_CENTER)  field_string = "DET:CENTER, ";
+            else  field_string = "DET:BACK, ";
+            logstring += "Pl:" + QString("%1").arg(XPlog) + ", ";
+            logstring += "Rd:" + QString("%1").arg(XRad) ;
+        }
 
 
         // Rilascio Pulsante raggi

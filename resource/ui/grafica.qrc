@@ -77,36 +77,17 @@
         <file>AlarmPage/alarmPix.png</file>
     </qresource>
     <qresource prefix="/Translate">
-        <file>Translate/traduzione_spa.qm</file>
-        <file>Translate/traduzione_rus.qm</file>
-        <file>Translate/traduzione_ita.qm</file>
-        <file>Translate/traduzione_fra.qm</file>
         <file>Translate/traduzione_eng.qm</file>
+        <file>Translate/traduzione_ita.qm</file>
+        <file>Translate/traduzione_rus.qm</file>
     </qresource>
     <qresource prefix="/ServicePanel">
-        <file>ServicePanel/power_menu.png</file>
-        <file>ServicePanel/in_out_menu.png</file>
         <file>ServicePanel/calib_menu.png</file>
         <file>ServicePanel/tools_menu.png</file>
-        <file>ServicePanel/package_menu.png</file>
         <file>ServicePanel/service_panel_menu.png</file>
-        <file>ServicePanel/setup_menu.png</file>
     </qresource>
     <qresource prefix="/Service_Setup">
-        <file>Service_Setup/diagnostic_menu.png</file>
-        <file>Service_Setup/starter_menu.png</file>
-        <file>Service_Setup/general_menu.png</file>
-        <file>Service_Setup/special_menu.png</file>
-        <file>Service_Setup/diagnostic_icon.png</file>
-        <file>Service_Setup/general_icon.png</file>
-        <file>Service_Setup/special_icon.png</file>
-        <file>Service_Setup/starter_icon.png</file>
-        <file>Service_Setup/toggle_right.png</file>
-        <file>Service_Setup/toggle_left.png</file>
-        <file>Service_Setup/yes.png</file>
         <file>Service_Setup/background.png</file>
-        <file>Service_Setup/scroll_right.png</file>
-        <file>Service_Setup/scroll_left.png</file>
     </qresource>
     <qresource prefix="/Service_Power">
         <file>Service_Power/power_icon.png</file>
@@ -140,6 +121,8 @@
         <file>Service_Calib/calibPower.png</file>
         <file>Service_Calib/background_calib_starter.png</file>
         <file>Service_Calib/ColliCalib.png</file>
+        <file>Service_Calib/selezione_pulsante_console.png</file>
+        <file>Service_Calib/background_calibconsole.png</file>
     </qresource>
     <qresource prefix="/Service_Tools">
         <file>Service_Tools/tools_icon.png</file>
@@ -152,25 +135,26 @@
         <file>Service_Tools/audioPix.png</file>
     </qresource>
     <qresource prefix="/BiopsyPage">
-        <file>BiopsyPage/allarme_holder.png</file>
-        <file>BiopsyPage/biopsy_holder.png</file>
-        <file>BiopsyPage/biopsy_manual_dwn_C.png</file>
-        <file>BiopsyPage/biopsy_manual_dwn_Y.png</file>
-        <file>BiopsyPage/biopsy_manual_up_C.png</file>
-        <file>BiopsyPage/biopsy_manual_up_Y.png</file>
-        <file>BiopsyPage/biopsy_demo.png</file>
-        <file>BiopsyPage/biopsy_xray.png</file>
-        <file>BiopsyPage/imageIcon.png</file>
-        <file>BiopsyPage/calib_pix.png</file>
-        <file>BiopsyPage/rotPixY.png</file>
-        <file>BiopsyPage/rotPixC.png</file>
-        <file>BiopsyPage/linea_margine.png</file>
-        <file>BiopsyPage/buttonsY.png</file>
-        <file>BiopsyPage/buttonsC.png</file>
-        <file>BiopsyPage/background_biopsy_Y.png</file>
-        <file>BiopsyPage/background_biopsy_C.png</file>
-        <file>BiopsyPage/buttonsCnoHome.png</file>
-        <file>BiopsyPage/buttonsYnoHome.png</file>
+        <file>BiopsyPage/trxCenterDisabled.png</file>
+        <file>BiopsyPage/trxLeftDisabled.png</file>
+        <file>BiopsyPage/trxRightDisabled.png</file>
+        <file>BiopsyPage/armEnabled.png</file>
+        <file>BiopsyPage/backgroundBiopsia.png</file>
+        <file>BiopsyPage/backgroundBiopsia_LES15.png</file>
+        <file>BiopsyPage/backgroundBiopsia_LESm15.png</file>
+        <file>BiopsyPage/backgroundBiopsia_POINT_LESION.png</file>
+        <file>BiopsyPage/backgroundBiopsia_REF15.png</file>
+        <file>BiopsyPage/backgroundBiopsia_REFm15.png</file>
+        <file>BiopsyPage/backgroundBiopsia_SELECT_NEEDLE.png</file>
+        <file>BiopsyPage/backgroundBiopsia_SHOT_RIGHT.png</file>
+        <file>BiopsyPage/backgroundBiopsia_WRONG_CALC.png</file>
+        <file>BiopsyPage/backgroundNeedleLength.png</file>
+        <file>BiopsyPage/backgroundBiopsia_MOVING.png</file>
+        <file>BiopsyPage/backgroundBiopsia_INIT.png</file>
+        <file>BiopsyPage/backgroundBiopsia_MOVE_BYM.png</file>
+        <file>BiopsyPage/remoteKeyboard.png</file>
+        <file>BiopsyPage/tubePositioner.png</file>
+        <file>BiopsyPage/backgroundBiopsia_CHECK_POSITION.png</file>
     </qresource>
     <qresource prefix="/StartupPage">
         <file>StartupPage/startup_tc.png</file>
@@ -345,5 +329,8 @@
         <file>Sym/ColliBack.png</file>
         <file>Sym/AutoColliSym.png</file>
         <file>Sym/ManualColliSym.png</file>
+        <file>Sym/POTTER-BUCKY-EXPOSED.png</file>
+        <file>Sym/Consolle.png</file>
+        <file>Sym/puntatore_console.png</file>
     </qresource>
 </RCC>

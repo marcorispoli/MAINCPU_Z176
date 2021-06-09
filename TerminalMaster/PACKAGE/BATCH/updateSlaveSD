@@ -1,0 +1,5 @@
+cp /nfs_chimera/TerminalMaster/PACKAGE/id12/PACKAGE_ID12.tar /home/user/Desktop/sd_slave/
+cp /nfs_chimera/TerminalMaster/PACKAGE/id12/PACKAGE_ID12.tar /media/slaveSD/
+cp /home/user/Desktop/sd_master/sd_prog_slave.sh /media/slaveSD/
+sync
+

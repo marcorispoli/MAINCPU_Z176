@@ -58,6 +58,7 @@ AnalogPageOpen::AnalogPageOpen(int rotview, QWidget *parent) :
     optionPanel = new pannelloOpzioni(ui->options);
     projPanel = new pannelloProiezioni(ui->proiezioni);
     colliPanel = new pannelloColli(ui->manualColliPanel,parent);
+    biopsyPanel = new pannelloBiopsia(ui->biopsia);
 
 
     // Ready not ready
@@ -95,6 +96,8 @@ AnalogPageOpen::AnalogPageOpen(int rotview, QWidget *parent) :
     ui->frameInvalidPad->setGeometry(710,5,91,71);
     ui->frameMissingCassette->setGeometry(630,0,76,76);
     ui->frameExposedCassette->setGeometry(630,0,76,76);
+    ui->frameNotExposedCassette->setGeometry(630,0,76,76);
+
     ui->frameOpenDoor->setGeometry(570,0,66,76);
 
 
@@ -108,6 +111,7 @@ AnalogPageOpen::AnalogPageOpen(int rotview, QWidget *parent) :
     ui->frameInvalidPad->hide();
     ui->frameMissingCassette->hide();
     ui->frameExposedCassette->hide();
+    ui->frameNotExposedCassette->hide();
     ui->frameOpenDoor->hide();
     ui->frameMissingCompression->hide();
     ui->frameDetNotCalibrated->hide();
@@ -127,7 +131,8 @@ AnalogPageOpen::AnalogPageOpen(int rotview, QWidget *parent) :
     data_ready=true;
     timer_attesa_dati = 0;
 
-    connect(this, SIGNAL( queuedExecution(int, int, QString )), this, SLOT(queuedExecutionSlot(int, int,QString )),Qt::QueuedConnection);
+    // Solo il Master effettuerà tale comando
+    if(isMaster) connect(this, SIGNAL( queuedExecution(int, int, QString )), this, SLOT(queuedExecutionSlot(int, int,QString )),Qt::QueuedConnection);
 
 }
 
@@ -151,7 +156,12 @@ void AnalogPageOpen::changePage(int pg, int opt)
             EXIT_BUTTON->hide();
             changePageTimer = startTimer(DISABLE_EXIT_TMO);
             view->show();
-            initPage();
+
+            // DBase::_DB_INIT_PAGE
+            if(opt & DBase::_DB_INIT_PAGE) initPage();
+            else if(isMaster){
+                if(pBiopsy->connected) biopsyPanel->manageAfterAlarmActions();
+            }
         }
         else view->hide();
         return;
@@ -161,7 +171,7 @@ void AnalogPageOpen::changePage(int pg, int opt)
         // Disattivazione pagina
         paginaAllarmi->alarm_enable = true;
         view->hide();
-        exitPage();
+        if(opt & DBase::_DB_EXIT_PAGE) exitPage();
     }
 
 }
@@ -169,8 +179,9 @@ void AnalogPageOpen::changePage(int pg, int opt)
 // Reazione alla pressione del pulsante di uscita
 void AnalogPageOpen::onExitButton(void)
 {
-    if(!commandPanel->isOpen()) return; //Consentito solo con il pannello comandi aperto
-    ApplicationDatabase.setData(_DB_CLOSE_STUDY_INT,(int) 1,DBase::_DB_FORCE_SGN);
+
+    //Consentito solo con il pannello comandi aperto
+    if((commandPanel->isOpen()) ||(biopsyPanel->isOpen()))   closePageRequest();// ApplicationDatabase.setData(_DB_CLOSE_STUDY_INT,(int) 1,DBase::_DB_FORCE_SGN);
 }
 
 
@@ -217,35 +228,24 @@ void AnalogPageOpen::updateAlarmField(void){
 
 }
 
+// Ingresso pagina da cambio Pagina generale
 void AnalogPageOpen::initPage(void){
 
-    // Aggiornamento comune a Maste e Slave_______________________________________________________________________________________________________________________
-    gradi=0;
-
-   // connect(pagina_language,SIGNAL(changeLanguageSgn()), this,SLOT(languageChanged()),Qt::UniqueConnection);
     connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
     connect(&GWindowRoot,SIGNAL(pushActivationSgn(int,bool,int)), this,SLOT(buttonActivationNotify(int,bool,int)),Qt::UniqueConnection);
-    connect(ui->sblocco_compressore,SIGNAL(released()),this,SLOT(onSblocco_compressore()),Qt::UniqueConnection);
-    connect(ui->manualColliButton,SIGNAL(released()),this,SLOT(onManualColliButt()),Qt::UniqueConnection);
-
-    connect(ui->alarm_butt,SIGNAL(released()),this,SLOT(onAlarmButt()),Qt::UniqueConnection);
-    //connect(ui->info_butt,SIGNAL(released()),this,SLOT(onAlarmButt()),Qt::UniqueConnection);
     connect(pConsole,SIGNAL(mccGuiNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(guiNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
-
-
-    // Aggiorna l'angolo delle viste
+    connect(ui->alarm_butt,SIGNAL(released()),this,SLOT(onAlarmButt()),Qt::UniqueConnection);
+    gradi=0;
     int angolo = getArm();
     rotView(angolo);
-
     thicknessPanel->init();     // Inizializzazione pannello di visualizzazione Spessore seno
     compressionPanel->init();   // Inizializzazione pannello di visualizzazione Forza di compressione
     setPad();                   // Visualizza icona del PAD rilevato
     //updateAlarmField();         // Aggiornamento icona di allarme / info
     commandPanel->xrayPixActivation(false); // Spegnimento pixamap raggi in corso
-
+    biopsyPanel->xrayPixActivation(false); // Spegnimento pixamap raggi in corso
     if(timerDisable==0)  timerDisable=startTimer(500);
     stopAttesaDati();
-
 
     if(ApplicationDatabase.getDataU(_DB_NALLARMI_ATTIVI)) ui->alarm_frame->show();
     else ui->alarm_frame->hide();
@@ -253,8 +253,81 @@ void AnalogPageOpen::initPage(void){
     // Imposta l'icona di collimazione automatica
     ui->manColliFrame->setStyleSheet("border-image: url(:/Sym/Sym/AutoColliSym.png);background-image: url(:/transparent.png);");
 
-    // INIZIALIZZAZIONE DATI (SOLO MASTER) _______________________________________________________________________________________________________________________
+
+    // Aggiornamento comune a Maste e Slave_______________________________________________________________________________________________________________________
+    connect(ui->sblocco_compressore,SIGNAL(released()),this,SLOT(onSblocco_compressore()),Qt::UniqueConnection);
+    connect(ui->manualColliButton,SIGNAL(released()),this,SLOT(onManualColliButt()),Qt::UniqueConnection);
+
     if(!isMaster) return;
+    emit queuedExecution(QUEUED_INIT_PAGE,0,"");
+
+}
+void AnalogPageOpen::initializeBiopsyPage(void){
+    if(!isMaster) return;
+
+    // Impostazione Tipologia di Rotazione
+    ApplicationDatabase.setData(_DB_ROT_MODE, (int) pConfig->sys.armMotor, DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+
+    // Impostazione del Workflow
+    ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_INIT,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+
+    // Impostazione dati per collimazione manuale
+    ApplicationDatabase.setData(_DB_ANALOG_MANUAL_COLLI_STAT, (int) _AN_COLLI_AUTO,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_LEFT, (int) pCollimatore->customL,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_RIGHT, (int) pCollimatore->customR,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_BACK, (int) pCollimatore->customB,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_FRONT, (int) pCollimatore->customF,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+
+    ApplicationDatabase.setData(_DB_INFO_ALARM_MODE, (int) 0,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+
+    ApplicationDatabase.setData(_DB_COMPRESSOR_UNLOCK, (unsigned char) 0,DBase::_DB_FORCE_SGN); // Compressione bloccata in biopsia
+    ApplicationDatabase.setData(_DB_XRAY_SYM, (unsigned char) 0,DBase::_DB_FORCE_SGN);
+
+    // Inizializzazione dei flags di pannello
+    int flags = 0;
+    if(pConfig->sys.armMotor) flags = _DB_ARM_WITH_MOTOR;
+    ApplicationDatabase.setData(_DB_ANALOG_FLAGS,(int) flags ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+
+    // Impostazione fuoco corrente
+    emit queuedExecution(QUEUED_SELECTED_FUOCO,0,""); // Impostazione Anodo/Fuoco
+
+    // Imposta tecnica manuale
+    ApplicationDatabase.setData(_DB_TECH_MODE,(int) ANALOG_TECH_MODE_MANUAL ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+
+    // Imposta i range difunzionamento e corregge i valori impostati se necessario
+    ApplicationDatabase.setData(_DB_DKV,(int) pConfig->analogCnf.selectedDkV ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+    pGeneratore->setkV(pConfig->analogCnf.selectedDkV/10); // Necessario per poter impostare i limiti sui mAs
+    ApplicationDatabase.setData(_DB_DMAS,(int) pConfig->analogCnf.selectedDmas,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+    optionPanel->setExpositionRange(DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+
+    // Impostazione Primo filtro come filtro corrente
+    ApplicationDatabase.setData(_DB_PRIMO_FILTRO,(int) pConfig->analogCnf.primo_filtro ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_SECONDO_FILTRO,(int) pConfig->analogCnf.secondo_filtro ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_FILTER_MODE,(int) ANALOG_FILTRO_FISSO ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_SELECTED_FILTER,(int) pConfig->analogCnf.primo_filtro ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+    emit queuedExecution(QUEUED_SELECTED_FILTER,0,""); // Impostazione Filtro
+
+    // Imposta il collimatore in automatico e aggiorna la collimazione se necessario
+    pCollimatore->manualCollimation = false;
+    emit queuedExecution(QUEUED_UPDATE_COLLI,0,""); // Impostazione Collimazione automatica
+
+
+    // Azzera la diagnostica sul ready/no ready
+    ApplicationDatabase.setData(_DB_INFO_ALARM_MODE, (int) 0, DBase::_DB_FORCE_SGN);
+
+    // Inizializza lunghezza Ago
+    ApplicationDatabase.setData(_DB_BIOP_AGO, (int) 0, DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+
+    // Apertura differita dei pannelli per consentire al database di aggiornarsi correttamente
+    ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_COMANDI,DBase::_DB_FORCE_SGN);
+
+    // Attivazione Timer ready
+    if(!timerReady) timerReady = startTimer(1000);
+
+}
+void AnalogPageOpen::initializeStandardPage(void){
+    if(!isMaster) return;
+
 
     // Impostazione Tipologia di Rotazione
     ApplicationDatabase.setData(_DB_ROT_MODE, (int) pConfig->sys.armMotor, DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
@@ -301,7 +374,6 @@ void AnalogPageOpen::initPage(void){
     ApplicationDatabase.setData(_DB_SELECTED_PROJECTION, (int) PROJ_UNDEF,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
     currentBreast = BREAST_R;
     ApplicationDatabase.setData(_DB_CURRENT_LAT, (int) currentBreast,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
-
 
     // ____________    Acquisizione del profilo AEC corrente (se presente)
     AEC::profileCnf_Str* profilePtr = pGeneratore->pAECprofiles->getCurrentProfilePtr();    
@@ -370,9 +442,13 @@ void AnalogPageOpen::initPage(void){
     pCollimatore->manualCollimation = false;
     emit queuedExecution(QUEUED_UPDATE_COLLI,0,""); // Impostazione Collimazione automatica
 
+    // Azzera la diagnostica sul ready/no ready
+    ApplicationDatabase.setData(_DB_INFO_ALARM_MODE, (int) 0, DBase::_DB_FORCE_SGN);
+
     // Apertura differita dei pannelli per consentire al database di aggiornarsi correttamente
-    ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_COMANDI,DBase::_DB_FORCE_SGN);
-    timerReady = startTimer(1000);
+    ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_COMANDI, DBase::_DB_FORCE_SGN);
+
+    if(!timerReady) timerReady = startTimer(1000);
     return;
 }
 
@@ -382,8 +458,10 @@ void AnalogPageOpen::onSblocco_compressore(void){
     if(timerDisable) return;
     timerDisable=startTimer(500);
 
-    unsigned char stato = ApplicationDatabase.getDataU(_DB_COMPRESSOR_UNLOCK);
+    // Con la Biopsia connessa non deve sbloccare!
+    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) return;
 
+    unsigned char stato = ApplicationDatabase.getDataU(_DB_COMPRESSOR_UNLOCK);
     if(stato) ApplicationDatabase.setData(_DB_COMPRESSOR_UNLOCK, (unsigned char) 0);
     else ApplicationDatabase.setData(_DB_COMPRESSOR_UNLOCK, (unsigned char) 1);
 
@@ -422,7 +500,7 @@ void AnalogPageOpen::setSbloccoCompressore(void){
          ui->sblocco->setStyleSheet("background-image: url(:/paginaOperativaAnalogica/paginaOperativaAnalogica/blocco.png);");
      }
 
-     if(isMaster){
+     if((isMaster)&&(pConfig->userCnf.enableSblocco != stato)){
          pConfig->userCnf.enableSblocco = stato;
          pConfig->saveUserCfg();
      }
@@ -450,11 +528,13 @@ void AnalogPageOpen::exitPage(void){
     commandPanel->exit();
     optionPanel->exit();
     colliPanel->exit();
+    biopsyPanel->exit();
 
     if(!isMaster) return;
     if(timerReady) killTimer(timerReady);
     timerReady = 0;
     ApplicationDatabase.setData(_DB_STUDY_STAT, (unsigned char) _CLOSED_STUDY_STATUS,DBase::_DB_FORCE_SGN);
+
     return;
 }
 
@@ -478,7 +558,8 @@ void AnalogPageOpen::timerEvent(QTimerEvent* ev)
     if(isMaster){
         if(ev->timerId()==timerReady)
         {
-            verifyReady();
+            if(pBiopsy->connected) verifyBiopsyReady();
+            else verifyStandardReady();
             return;
         }
 
@@ -573,12 +654,13 @@ void AnalogPageOpen::valueChanged(int index,int opt)
     case _DB_DANGOLO:
         angolo = getArm();
         commandPanel->setArm(angolo);
+        biopsyPanel->setArm(angolo);
         rotView(angolo);  // Corregge la visualizzazione di tutto il pannello conseguentemente
         if(!isMaster) return;
 
-        // Questa sezione viene eseguita solo nel caso in cui la rotazione sia Motorizzata
+        // Questa sezione viene eseguita solo nel caso in cui la rotazione sia Motorizzata e non ci sia la biopsia connessa
         if(!pConfig->sys.armMotor) return;
-
+        if(pBiopsy->connected) return;
         if(ApplicationDatabase.getDataI(_DB_SELECTED_PROJECTION)==PROJ_UNDEF) return;
         flags = ApplicationDatabase.getDataI(_DB_ANALOG_FLAGS);
 
@@ -608,7 +690,7 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         manageCallbacks(ApplicationDatabase.getDataI(index));
         break;
 
-    case _DB_CURRENT_LAT:
+    case _DB_CURRENT_LAT:        
         currentBreast = ApplicationDatabase.getDataI(index);
         if(projPanel->isOpen()) projPanel->setLat(ApplicationDatabase.getDataI(index));
         break;
@@ -617,9 +699,12 @@ void AnalogPageOpen::valueChanged(int index,int opt)
     case _DB_COMPRESSOR_PAD_CODE:
         setPad();
         break;
+
     case _DB_ACCESSORIO:
+
         if(!isMaster) return;
-        emit queuedExecution(QUEUED_SELECTED_FUOCO,0,""); // Impostazione Anodo/Fuoco
+        emit queuedExecution(QUEUED_INIT_PAGE,0,"");
+
         break;
     case _DB_COMPRESSOR_UNLOCK:
             setSbloccoCompressore();
@@ -639,37 +724,7 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         }
         break;
     case _DB_INFO_ALARM_MODE:
-
-        flags = ApplicationDatabase.getDataI(index);
-        ui->frameInvalidPotter->hide();
-        ui->frameInvalidPad->hide();
-        ui->frameMissingCassette->hide();
-        ui->frameExposedCassette->hide();
-        ui->frameOpenDoor->hide();
-        ui->frameMissingCompression->hide();
-        ui->frameDetNotCalibrated->hide();
-        ui->frameProfileNotCalibrated->hide();
-        ui->frameTubeTempAlarm->hide();
-
-        // Gruppo Invalid Potter
-        if( flags & 0x1) ui->frameInvalidPotter->show();
-        else  if( flags & 0x2) ui->frameInvalidPad->show();
-        else  if( flags & 0x4) ui->frameMissingCompression->show();
-
-        // Gruppo Cassette
-        if( flags & 0x10) ui->frameMissingCassette->show();
-        else  if( flags & 0x20) ui->frameExposedCassette->show();
-
-        // Gruppo OpenDoor
-        if( flags & 0x100) ui->frameOpenDoor->show();
-
-        // Detector
-        if( flags & 0x200) ui->frameDetNotCalibrated->show();
-        else if ( flags & 0x400) ui->frameProfileNotCalibrated->show();
-
-        // Tube temp alarm
-        if( flags & 0x2000) ui->frameTubeTempAlarm->show();
-
+        setInfoReadyFields(ApplicationDatabase.getDataI(index));
         break;
 
     case _DB_XRAY_PUSH_BUTTON:
@@ -726,9 +781,11 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         if(ApplicationDatabase.getDataU(_DB_XRAY_SYM)){
             data_ready = false;
             commandPanel->xrayPixActivation(true);
+            biopsyPanel->xrayPixActivation(true);
         }else{
             if(!data_ready) startAttesaDati(5000);
             commandPanel->xrayPixActivation(false);
+            biopsyPanel->xrayPixActivation(false);
         }
         break;
 
@@ -739,6 +796,8 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         PageAlarms::activateNewAlarm(_DB_ALLARME_INFO_STAT,0);
         pConfig->selectMainPage();
         break;
+
+
 
     case _DB_CLOSE_STUDY_INT:       // Richiesta di chiusura studio eseguita da pulsante di uscita
        if(!isMaster) return;
@@ -765,6 +824,7 @@ not_ready_bits|=4;   // Not compressed
 GRUPPO ICONA CASSETTA
 not_ready_bits|=10;   // Missing Cassette
 not_ready_bits|=20;   // Exposed Cassette
+not_ready_bits|=40;   // Not Exposed Cassette
 
 GRUPPO ICON DOOR
 not_ready_bits|=100;  // Open Door
@@ -778,13 +838,13 @@ not_ready_bits|=2000;  // TEmperatura cuffia
 
  */
 
-void AnalogPageOpen::verifyReady(void){
+void AnalogPageOpen::verifyStandardReady(void){
 
     int flags = ApplicationDatabase.getDataI(_DB_ANALOG_FLAGS);
     int not_ready_bits=0;
 
     // Gruppo Invalid Potter
-    if((!pPotter->isValid())&&(pBiopsy->connected==FALSE)){
+    if(!pPotter->isValid()){
          not_ready_bits|=1;   // Invalid potter
     }else if(!pCompressore->isValidPad()) {
         not_ready_bits|=2;   // Invalid Pad
@@ -836,6 +896,56 @@ void AnalogPageOpen::verifyReady(void){
         flags |=_DB_ANFLG_EXP_READY;
         ApplicationDatabase.setData(_DB_ANALOG_FLAGS, (int) flags);
         if(!ApplicationDatabase.getDataU(_DB_READY_EXPOSURE)) pAudio->playAudio(AUDIO_READY_FOR_EXPOSURE  );
+        ApplicationDatabase.setData(_DB_READY_EXPOSURE,(unsigned char) 1);
+    }else {
+        flags &=~_DB_ANFLG_EXP_READY;
+        ApplicationDatabase.setData(_DB_ANALOG_FLAGS, (int) flags); // NOT READY
+        ApplicationDatabase.setData(_DB_READY_EXPOSURE,(unsigned char) 0);
+
+    }
+
+}
+
+void AnalogPageOpen::verifyBiopsyReady(void){
+    int not_ready_bits=0;
+    int flags = ApplicationDatabase.getDataI(_DB_ANALOG_FLAGS);
+
+    // Allarme attivo
+    if(ApplicationDatabase.getDataU(_DB_NALLARMI_ATTIVI))  not_ready_bits|=0x1000;
+
+    // Temperatura tubo
+    if((pCollimatore->alrCuffia) || (pCollimatore->alrSensCuffia)) not_ready_bits|=0x2000;
+
+    // Gruppo OpenDoor
+    if(ApplicationDatabase.getDataU(_DB_CLOSED_DOOR)==0){ // Verifica che la porta dello studio sia chiusa
+        not_ready_bits|=0x100;   // Open Door
+    }
+
+    // Gruppo Compressione sempre
+    if(!pCompressore->isValidPad()) {
+        not_ready_bits|=2;   // Invalid Pad
+    }else if(!pCompressore->isCompressed()) {
+        not_ready_bits|=4;   // Not compressed
+    }
+
+    // NOT READY SEMPRE
+    if((biopsyPanel->workflow != _BIOPSY_SHOT_RIGHT) && (biopsyPanel->workflow != _BIOPSY_SHOT_LEFT)&& (biopsyPanel->workflow != _BIOPSY_CHECK_POSITION)){
+        flags &=~_DB_ANFLG_EXP_READY;
+        ApplicationDatabase.setData(_DB_ANALOG_FLAGS, (int) flags); // NOT READY
+        ApplicationDatabase.setData(_DB_READY_EXPOSURE,(unsigned char) 0);
+        ApplicationDatabase.setData(_DB_INFO_ALARM_MODE,(int) not_ready_bits);// Aggiorna iconografia
+        return;
+
+    }
+
+
+    ApplicationDatabase.setData(_DB_INFO_ALARM_MODE,(int) not_ready_bits);
+
+    // READY
+    if(!not_ready_bits){
+        flags |=_DB_ANFLG_EXP_READY;
+        ApplicationDatabase.setData(_DB_ANALOG_FLAGS, (int) flags);
+        // if(!ApplicationDatabase.getDataU(_DB_READY_EXPOSURE)) pAudio->playAudio(AUDIO_READY_FOR_EXPOSURE  );
         ApplicationDatabase.setData(_DB_READY_EXPOSURE,(unsigned char) 1);
     }else {
         flags &=~_DB_ANFLG_EXP_READY;
@@ -918,6 +1028,7 @@ void AnalogPageOpen::rotView(int ang){
     ui->mAs->rotate(new_angolo);
     ui->options->rotate(new_angolo);
     ui->manualColliPanel->rotate(new_angolo);
+    ui->biopsia->rotate(new_angolo);
 
     currentAngolo=angolo;
     ui->comandi->update();
@@ -938,6 +1049,7 @@ void AnalogPageOpen::changePanel(int panel){
     commandPanel->exit();
     optionPanel->exit();
     colliPanel->exit();
+    biopsyPanel->exit();
 
     switch(panel){
     case PANNELLO_PROIEZIONI:
@@ -947,7 +1059,8 @@ void AnalogPageOpen::changePanel(int panel){
         optionPanel->open();
         break;
     case PANNELLO_COMANDI:
-        commandPanel->open();
+        if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) biopsyPanel->open();
+        else commandPanel->open();
         break;
     case PANNELLO_KV:
         kvPanel->open();
@@ -958,6 +1071,7 @@ void AnalogPageOpen::changePanel(int panel){
     case PANNELLO_COLLI:
         colliPanel->open();
         break;
+
     }
 
 }
@@ -1062,7 +1176,9 @@ void AnalogPageOpen::manageCallbacks(int opt){
         case CALLBACK_OPTIONEXIT_SELECTION:           
             changePanel(PANNELLO_COMANDI);
             break;
-
+        case CALLBACK_BIOPSIAEXIT_SELECTION:
+            changePanel(PANNELLO_COMANDI);
+        break;
 
         case CALLBACK_KVEXIT_SELECTION:
             // Ricalcola i mAs nel range dei kV selezionati
@@ -1178,7 +1294,16 @@ bool AnalogPageOpen::openPageRequest(void){
     if(ApplicationDatabase.getDataU(_DB_NALLARMI_ATTIVI)) return false; //Nessun allarme ammesso
     ApplicationDatabase.setData(_DB_EXPOSURE_MODE,(unsigned char) _EXPOSURE_MODE_OPERATING_MODE);
     ApplicationDatabase.setData(_DB_STUDY_STAT,(unsigned char) _OPEN_STUDY_ANALOG);
+    biopsyPanel->workflow = _BIOPSY_NO_STATUS;; // inizializza lo stato della biopsia
+    cumulativeXdose = 0; // Azzera la dose accumulata nelo studio corrente
+    pSysLog->log("OPEN STUDY __________________________________________________________________");
     pConfig->selectOperatingPage();
+    return true;
+}
+
+bool AnalogPageOpen::closePageRequest(void){
+    ApplicationDatabase.setData(_DB_CLOSE_STUDY_INT,(int) 1,DBase::_DB_FORCE_SGN);
+    pSysLog->log("CLOSE STUDY __________________________________________________________________");
     return true;
 }
 
@@ -1205,6 +1330,11 @@ bool AnalogPageOpen::openPageRequest(void){
          break;
      case QUEUED_LOG:
          pSysLog->log(str);
+         break;
+     case QUEUED_INIT_PAGE:
+         // Con la Biopsia il campio pagina viene gestito a parte
+         if(pBiopsy->connected) initializeBiopsyPage();
+         else initializeStandardPage();
          break;
      }
  }
@@ -1286,3 +1416,38 @@ void  AnalogPageOpen::setCurrentCollimation(void){
      }
  }
 
+// Aggiorna lo stato delle icone di Ready/Not ready
+void  AnalogPageOpen::setInfoReadyFields(int flags){
+
+    ui->frameInvalidPotter->hide();
+    ui->frameInvalidPad->hide();
+    ui->frameMissingCassette->hide();
+    ui->frameExposedCassette->hide();
+    ui->frameNotExposedCassette->hide();
+    ui->frameOpenDoor->hide();
+    ui->frameMissingCompression->hide();
+    ui->frameDetNotCalibrated->hide();
+    ui->frameProfileNotCalibrated->hide();
+    ui->frameTubeTempAlarm->hide();
+
+    // Gruppo Invalid Potter
+    if( flags & 0x1) ui->frameInvalidPotter->show();
+    else  if( flags & 0x2) ui->frameInvalidPad->show();
+    else  if( flags & 0x4) ui->frameMissingCompression->show();
+
+    // Gruppo Cassette
+    if( flags & 0x10) ui->frameMissingCassette->show();
+    else  if( flags & 0x20) ui->frameExposedCassette->show();
+    else  if( flags & 0x40) ui->frameNotExposedCassette->show();
+
+    // Gruppo OpenDoor
+    if( flags & 0x100) ui->frameOpenDoor->show();
+
+    // Detector
+    if( flags & 0x200) ui->frameDetNotCalibrated->show();
+    else if ( flags & 0x400) ui->frameProfileNotCalibrated->show();
+
+    // Tube temp alarm
+    if( flags & 0x2000) ui->frameTubeTempAlarm->show();
+
+}

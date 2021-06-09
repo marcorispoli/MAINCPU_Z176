@@ -341,9 +341,13 @@ void actuatorsManualArmMove(unsigned char mode){
 
 
     if(mode==_MANUAL_ACTIVATION_ARM_STANDARD){
+        int target;
+        if(generalConfiguration.biopsyCfg.connected) target = 90;
+        else target = 180;
+
         // Verifica quale input è attivo
-        if(SystemInputs.CPU_ROT_CW) angolo = 180;
-        else if(SystemInputs.CPU_ROT_CCW) angolo = -180;
+        if(SystemInputs.CPU_ROT_CW) angolo = target;
+        else if(SystemInputs.CPU_ROT_CCW) angolo = -target;
         else return;
     }else if(mode==_MANUAL_ACTIVATION_ARM_CALIB){
         // Verifica quale input è attivo
@@ -668,28 +672,12 @@ void actuatorsManageEnables(void){
     if(!generalConfiguration.gantryCfg.trxMotor) SystemOutputs.CPU_PEND_ENA = 0;
     else SystemOutputs.CPU_PEND_ENA = 1;
 
-    // Durante
-    // Durante la fase di Startup l'enable viene attivato per alimentare la logica
-    // dei drivers..
-    if(generalConfiguration.biopsyCfg.connected){
-
+    if((generalConfiguration.biopsyCfg.connected) && (!generalConfiguration.biopsyCfg.armEna)){
         // In caso di Biopsia connessa, ogni attivazione del braccio
         // e del Lenze deve essere autorizzata dallo sblocco
-        if(generalConfiguration.biopsyCfg.armEna){
-            SystemOutputs.CPU_ROT_ENA=1;
-            /*
-            if(generalConfiguration.gantryCfg.armMotor){
-                SystemOutputs.CPU_ROT_ENA=1;
-            }else{
-                // Freno Elettromagnetico
-                if((SystemInputs.CPU_ROT_CCW)||(SystemInputs.CPU_ROT_CW)) SystemOutputs.CPU_ROT_ENA=1;
-                else   SystemOutputs.CPU_ROT_ENA=0;
-            }*/
-            SystemOutputs.CPU_LIFT_ENA=1;
-        }else{
-            SystemOutputs.CPU_ROT_ENA=0;
-            SystemOutputs.CPU_LIFT_ENA=0;
-        }
+        SystemOutputs.CPU_ROT_ENA=0;
+        SystemOutputs.CPU_LIFT_ENA=0;
+
     }else{
 
         // Rotazione e Alto/Basso dipendono dallo stato della compressione
@@ -704,15 +692,7 @@ void actuatorsManageEnables(void){
                 SystemOutputs.CPU_LIFT_ENA=0;
 
             }else{
-                SystemOutputs.CPU_ROT_ENA=1;
-                /*
-                if(generalConfiguration.gantryCfg.armMotor){
-                    SystemOutputs.CPU_ROT_ENA=1;
-                }else{
-                    // Freno Elettromagnetico
-                    if((SystemInputs.CPU_ROT_CCW)||(SystemInputs.CPU_ROT_CW)) SystemOutputs.CPU_ROT_ENA=1;
-                    else   SystemOutputs.CPU_ROT_ENA=0;
-                }*/
+                SystemOutputs.CPU_ROT_ENA=1;                
                 SystemOutputs.CPU_LIFT_ENA=1;
             }
         }

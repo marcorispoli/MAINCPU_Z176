@@ -90,7 +90,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="HVCalibButton">
     <property name="geometry">
      <rect>
-      <x>195</x>
+      <x>185</x>
       <y>260</y>
       <width>120</width>
       <height>120</height>
@@ -107,7 +107,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="PositionCalibButton">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>25</x>
       <y>110</y>
       <width>120</width>
       <height>120</height>
@@ -124,7 +124,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="CompressionCalibButton">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>185</x>
       <y>110</y>
       <width>120</width>
       <height>120</height>
@@ -141,7 +141,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="FilterCalibButton">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>335</x>
       <y>110</y>
       <width>120</width>
       <height>120</height>
@@ -158,7 +158,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="StarterCalibButton">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>345</x>
       <y>260</y>
       <width>120</width>
       <height>120</height>
@@ -175,7 +175,7 @@ border: 0px;</string>
    <widget class="QPushButton" name="ColliCalibButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>500</x>
       <y>105</y>
       <width>120</width>
       <height>120</height>
@@ -223,7 +223,7 @@ color: rgb(248, 248, 54);</string>
    <widget class="QPushButton" name="lenzePotCalibButton">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>505</x>
       <y>265</y>
       <width>111</width>
       <height>111</height>
@@ -240,7 +240,7 @@ background-image:url(//transparent.png);</string>
    <widget class="QFrame" name="frameDetector">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>250</y>
       <width>156</width>
       <height>136</height>
@@ -364,7 +364,7 @@ background-image:url(://Service_Calib/Service_Calib/zerosetting_menu.png);
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>635</x>
+      <x>495</x>
       <y>210</y>
       <width>136</width>
       <height>16</height>
@@ -399,6 +399,66 @@ background-image: url(:/transparent.png);</string>
     </property>
     <property name="text">
      <string notr="true">Collimation</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="consoleButton">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>110</y>
+      <width>91</width>
+      <height>96</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/Sym/Sym/Consolle.png);
+background-image:url(//transparent.png);</string>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelConsole">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>210</y>
+      <width>106</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>DejaVu Sans</family>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string notr="true"/>
+    </property>
+    <property name="statusTip">
+     <string notr="true"/>
+    </property>
+    <property name="whatsThis">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleDescription">
+     <string notr="true"/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(248, 248, 54);
+background-image: url(:/transparent.png);</string>
+    </property>
+    <property name="text">
+     <string notr="true">Console</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

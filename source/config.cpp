@@ -224,17 +224,10 @@ void Config::configSlave(void)
 void Config::selectOperatingPage(){
     if(!isMaster) return;
 
-    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO)==BIOPSY_DEVICE){
-         GWindowRoot.setNewPage(_PG_BIOPSY_ANALOG,GWindowRoot.curPage,0);
+    if(ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE) == _EXPOSURE_MODE_OPERATING_MODE){
+        GWindowRoot.setNewPage(_PG_OPEN_STUDY_ANALOG,GWindowRoot.curPage,DBase::_DB_INIT_PAGE);
     }else{
-        if(ApplicationDatabase.getDataU(_DB_EXPOSURE_MODE) == _EXPOSURE_MODE_OPERATING_MODE){
-            GWindowRoot.setNewPage(_PG_OPEN_STUDY_ANALOG,GWindowRoot.curPage,DBase::_DB_INIT_PAGE);
-        }else{
-
-            // L'inizializzazione della pagina è svincolata dall'apertura della grafica
-            // perchè se poi si apre la pagina degli allarmi si resetta tutta l'info della pagina stessa
-            GWindowRoot.setNewPage(_PG_CALIB_ANALOG,GWindowRoot.curPage,DBase::_DB_INIT_PAGE);
-        }
+        GWindowRoot.setNewPage(_PG_CALIB_ANALOG,GWindowRoot.curPage,DBase::_DB_INIT_PAGE);
     }
 }
 
@@ -526,13 +519,11 @@ bool Config::openUserCfg(void)
 
     }
 
-
     // Con lo Starter si forza il parametro relativo allo stop
     if(sys.highSpeedStarter) {
         userCnf.starter_off_after_exposure = false;
         userCnf.starter_brake = false;
     }
-
     file2.close();
     return TRUE;
 }
@@ -1982,12 +1973,12 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
         break;
         case CONFIG_BIOPSY:
             /*
-                buffer[0]: offsetZ
+                buffer[0]: offsetFibra
                 buffer[1]: offsetPad
                 buffer[2]: margine risalita compressore
                 buffer[3]: margine posizionamento
             */
-            pData[0] = pBiopsy->config.offsetZ;
+            pData[0] = pBiopsy->config.offsetFibra;
             pData[1] = pBiopsy->config.offsetPad;
             pData[2] = pBiopsy->config.margineRisalita;
             pData[3] = pBiopsy->config.marginePosizionamento;

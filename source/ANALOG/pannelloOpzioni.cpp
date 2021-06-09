@@ -457,6 +457,7 @@ void pannelloOpzioni::setProfileIndex(int index){
 // Questa funzione deve essere lanciata dal Master ad ogni cambio
 // di modalita di funzionamento oppure all'apertura della finestra operativa
 void pannelloOpzioni::setExpositionRange(int options){
+
     int min, max;
     if(!isMaster) return;
 
@@ -479,10 +480,10 @@ void pannelloOpzioni::setExpositionRange(int options){
     }
 
     // Impostazione kV e range selezionabile da tastierino (se applicabile)
-    if(pConfig->analogCnf.tech_mode == ANALOG_TECH_MODE_MANUAL){
+    if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_MANUAL){
         min = _MIN_KV*10;
         max = pGeneratore->getMaxKv()*10;
-    }else if(pConfig->analogCnf.tech_mode == ANALOG_TECH_MODE_SEMI){
+    }else if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_SEMI){
         if(profilePtr->plateType == ANALOG_PLATE_FILM){
             min = pConfig->analogCnf.minKvFilm*10;
             max = pConfig->analogCnf.maxKvFilm*10;

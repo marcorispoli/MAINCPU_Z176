@@ -2,15 +2,21 @@
 #define _DEFINES_H
   
 
-#define __PRODUCTION_COMPILATION
+//#define __PRODUCTION_COMPILATION
+
 
 //_________________________________________________________________________________
 // DIRETTIVE DI COMPILAZIONE GENERALI
 #ifndef __PRODUCTION_COMPILATION
+
+//#define _PIGNONE_35_PRODU
+#define _PIGNONE_40_RD
+
+//#define __BIOPSY_SIMULATOR
 //#define __ROT_WITH_COMPRESSION
 //#define __NO_SLAVE_STUB
 //#define  __NO_CANBUS
-//#define __PRINT   "192.168.30.10" // Attiva le Print di debug sulle GUI
+#define __PRINT   "192.168.30.10" // Attiva le Print di debug sulle GUI
 
 //#define __FORCE_DIGITAL // Effettua lo stub per la PCB244-A
 //#define _CANDEVICE_SIMULATION // Stub per mancanza CAN BUS su m4_slave
@@ -20,6 +26,8 @@
 //#define __NO_AUDIO_MSG
 //#define __MCCTEST_ENA
 //#define __ANALOG_CALIB_SMALL_FOCUS
+#else
+    #define _PIGNONE_35_PRODU
 #endif
 //_________________________________________________________________________________
 

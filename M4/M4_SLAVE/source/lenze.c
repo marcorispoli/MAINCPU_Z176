@@ -29,7 +29,7 @@
 #include "dbt_m4.h"
 #include "i510.h"
 #include "lenze.h"
-#include "math.h"
+//#include "math.h"
 
 // Context to be used with the canopen SDO functions (compliance with CANOPEN_CONTEXT_DEC)
 #define CANOPEN_LENZE_CONTEXT  MB_TX_TO_LENZE, &txmb_to_lenze, CANOPEN_LENZE_NODE, MB_RX_FROM_LENZE, &driver_stat.tmo_sdo_tk

@@ -19,9 +19,15 @@ class PageAlarms : public GWindow
     #define ERROR_POWER_DOWN_WARNING_BLITERS_ON 4
 
     // Elenco errori per categoria: _DB_ALLARMI_BIOPSIA ____________________________________________________________________
-    #define ERROR_BIOP_MOVE_X                    1    // Errore raggiungimento target X
-    #define ERROR_BIOP_MOVE_Y                    2    // Errore raggiungimento target Y
-    #define ERROR_BIOP_MOVE_Z                    3    // Errore raggiungimento target Z
+    #define ERROR_BIOP_MOVE_XYZ                  1    // Errore raggiungimento target X
+    #define ERROR_BIOP_APPLY_COMPRESSION         2    // Applicare compressione per proseguire
+    #define ERROR_BIOP_MISSING_COMPRESSION       3    // La compressione è venuta a mancare
+    #define ERROR_BIOP_TIMEOUT                   4    // Timeout durante il movimento
+    #define ERROR_BIOP_BUSY                      5    // Comando in corso
+    #define ERROR_BIOP_INVALID_REFERENCES        6    // Valori reader console acquisiti non corretti
+    #define ERROR_BIOP_LESION_TOO_LOWER          7    // Margine inferiore a 4mm rispetto alla fibra di carbonio
+    #define ERROR_BIOP_LESION_TOO_HIGH           8    // Lesione prossima al bordo pelle
+
 
     // Allarmi relativi al pad _DB_ALLARMI_ALR_PAD ____________________________________________________________________
     #define _ALR_NONE                      0
@@ -159,7 +165,7 @@ class PageAlarms : public GWindow
 
         _alarmStruct* getErrorInfo(int code); // Restituisce il blocco descrittivo dell'errore di codice 00XXX
         _alarmStruct* getErrorInfo(int classe, int code); // Restituisce il blocco descrittivo dell'errore CLASSE/CODICE
-
+        QString getErrorString(int classe, int code);
 
         void createMessageList(void);
 

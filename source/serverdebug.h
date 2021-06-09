@@ -3,9 +3,9 @@
 
 #include "application.h"
 
-#define IRS_MAJ  1
-#define IRS_MIN  6
-#define IRS_BETA 1
+#define IRS_MAJ  2
+#define IRS_MIN  0
+#define IRS_BETA 0
 
 /*___________________________________________________________________________________
                 DESCRIZIONE REVISIONI INTERFACCIA IRS
@@ -54,6 +54,7 @@ public slots:
     void configurationSlot(void);
     void serviceRxHandler(QByteArray data); // Handler ricezione frame IRS
 
+    void handleBiopsySimulator(QByteArray data);
 
 
     void handleMasterShell(QByteArray data);
@@ -130,12 +131,8 @@ public slots:
     void handleMoveTrx(QString tag, QByteArray data);
     void handleMoveArm(QString tag, QByteArray data);
 
-    void handleBiopsy(QByteArray data);
-        void handleBiopsyMoveX(QByteArray data);
-        void handleBiopsyMoveY(QByteArray data);
-        void handleBiopsyMoveZ(QByteArray data);
-        void handleBiopsyStepZ(QByteArray data);
-        void handleBiopsyMoveXYZ(QByteArray data);
+    void handleBiopsy(QByteArray data);        
+
 
     void handleSetAlarm(QByteArray data, bool selfreset);
 

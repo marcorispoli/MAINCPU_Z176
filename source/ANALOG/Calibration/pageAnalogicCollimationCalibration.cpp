@@ -242,8 +242,8 @@ void AnalogCalibPageOpen::startCollimationCalibrationXraySequence(void){
     unsigned char data[18];
 
 
-    // Impostazione dati di esposizione   
-    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL, true, false);
+    // Impostazione dati di esposizione
+    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL,true, false);
     if(errcode){
         xrayErrorInCommand(errcode);
         return;

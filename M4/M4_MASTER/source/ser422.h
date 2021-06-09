@@ -138,6 +138,7 @@ Data Ultima Modifica:6/09/2014
     _Ser422CmdCodes_Enum cmd;           // Comando
     _Ser422RetCodes_Enum retcode;       // Codice risposta
     
+    unsigned char rxdata[4];            // Dati raw ricevuti
     unsigned char data1;                // Data 1
     unsigned char data2;                // Data 2
     unsigned char ret_attempt;          // Ripetizioni residue (diagnostica)

@@ -71,7 +71,6 @@ public:
         void readStarterFile(void);
 
         bool isStarterCalibrated(void); // Verifica se lo starter è stato calibrato
-
         int getIminIndex(int kV, QString anodo, int fsize);
         int getImaxIndex(int kV, QString anodo, int fsize);
 

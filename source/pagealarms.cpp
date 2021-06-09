@@ -489,6 +489,18 @@ QString PageAlarms::FormatExcel(QString stringa,char separatore){
 }
 
 
+QString PageAlarms::getErrorString(int classe, int code){
+    unsigned short index=classe-FIRST_ALR_CLASS;
+    if(index>=errors.size()) return "";
+
+    for(int i=0; i<errors[index].errlist.size(); i++){
+        if(code==errors[index].errlist[i].codeval){
+            // Impostazione stringa errore
+            return Format(errors[index].errlist[i].codestr,errors[index].errlist[i].errmsg);
+        }
+    }
+    return "";
+}
 
 /*
  *
@@ -743,25 +755,62 @@ void PageAlarms::createMessageList(void){
     classitem.errlist.clear();
 
     erritem.codestr = QString("00001");
-    erritem.codeval = ERROR_BIOP_MOVE_X;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO ASSE X", 0, QApplication::UnicodeUTF8));
+    erritem.codeval = ERROR_BIOP_MOVE_XYZ;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO CURSORE", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
-    erritem.errdescr= QString("The X  didn't complete the activation properly");
+    erritem.errdescr= QString("The cursor  didn't complete the activation properly");
     classitem.errlist.append(erritem);
 
     erritem.codestr = QString("00002");
-    erritem.codeval = ERROR_BIOP_MOVE_Y;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO ASSE Y", 0, QApplication::UnicodeUTF8));
+    erritem.codeval = ERROR_BIOP_APPLY_COMPRESSION;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:APPLICARE COMPRESSIONE", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
-    erritem.errdescr= QString("The Y  didn't complete the activation properly");
+    erritem.errdescr= QString("The sequence cannot proceed without a valid compression");
     classitem.errlist.append(erritem);
 
     erritem.codestr = QString("00003");
-    erritem.codeval = ERROR_BIOP_MOVE_Z;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:ERRORE MOVIMENTO ASSE Z", 0, QApplication::UnicodeUTF8));
+    erritem.codeval = ERROR_BIOP_MISSING_COMPRESSION;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA:MANCA COMPRESSIONE", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
-    erritem.errdescr= QString("The Z  didn't complete the activation properly");
+    erritem.errdescr= QString("The sequence cannot proceed without a valid compression");
     classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("00004");
+    erritem.codeval = ERROR_BIOP_TIMEOUT;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA: TIMEOUT MOVIMENTO", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("Timeout during Biopsy activation");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("00005");
+    erritem.codeval = ERROR_BIOP_BUSY;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","BIOPSIA: BUSY", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("A command is pending or the system queue is busy");
+    classitem.errlist.append(erritem);
+
+
+    erritem.codestr = QString("00006");
+    erritem.codeval = ERROR_BIOP_INVALID_REFERENCES;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","INVALID READER POINTS", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("The reader points are invalid. Check the reader calibration or repeat the measuring.");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("00007");
+    erritem.codeval = ERROR_BIOP_LESION_TOO_LOWER;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","LESION MEASURED TOO CLOSED TO THE POTTER PLANE", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("The measured lesion is closed (less than 4mm) to the potter plane.");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("00008");
+    erritem.codeval = ERROR_BIOP_LESION_TOO_HIGH;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-BIOPSIA","LESION MEASURED TOO CLOSED TO THE SKIN SURFACE", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("The measured lesion is closed to the skin surface.");
+    classitem.errlist.append(erritem);
+
 
     errors.replace(_DB_ALLARMI_BIOPSIA-FIRST_ALR_CLASS,classitem);
     //___________________________________________________________________________________________________________________________________________________________________

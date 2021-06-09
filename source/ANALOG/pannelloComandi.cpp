@@ -499,21 +499,6 @@ void pannelloComandi::valueChanged(int index,int opt)
 
 }
 
-void pannelloComandi::setDoseField(float ug){
-    if(!isMaster) return;
-
-    if(ug==0){
-        ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: ----"));
-        return;
-    }
-    if(pConfig->analogCnf.doseFormat == 'u'){
-        ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (uG)").arg(QString::number(ug,'f',1)));
-    }else if(pConfig->analogCnf.doseFormat == 'm'){
-        ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (mG)").arg(QString::number(ug/1000,'f',2)));
-    }else{
-        ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (Zv)").arg(QString::number(ug*50/1000,'f',2)));
-    }
-}
 
 void pannelloComandi::xrayPixActivation(bool stat){
     if (stat) xrayPix->show();

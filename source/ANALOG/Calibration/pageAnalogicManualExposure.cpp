@@ -399,7 +399,7 @@ void AnalogCalibPageOpen::startManualExposureXraySequence(void){
     unsigned char data[18];
 
 
-    // Impostazione dati di esposizione    
+    // Impostazione dati di esposizione
     unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL, true, false);
     if(errcode){
         xrayErrorInCommand(errcode);
@@ -424,7 +424,7 @@ void AnalogCalibPageOpen::startManualExposureXraySequence(void){
 
     // Alta velocità
     data[7]|=4;
-    pGeneratore->starterHS = TRUE;
+    pGeneratore->starterHS = true;
 
     // Tensione Griglia
     data[8] =  0;

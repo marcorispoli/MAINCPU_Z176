@@ -54,7 +54,7 @@ Compressor::Compressor(QObject *parent) :
     battery_low = false;
     safety_fault = false;
 
-    enable_compressione_closed_study = false;
+    enable_compressione_closed_study = true;
 
 
 }
@@ -313,18 +313,18 @@ void Compressor::pcb215Notify(unsigned char id, unsigned char notifyCode, QByteA
                 }
             }
 
-            // Allarme compressione a studio chiuso: attivato solo la prima volta
-            // L'allarme si riattiva alla prima volta che si richiude lo studio
-            // Tuttavia, per evitare strane condizioni, durante lo startup non viene considerata..                        
-            if(pConfig->startupCompleted==false){
-                if(isCompressed()) enable_compressione_closed_study=true;
-                else enable_compressione_closed_study=false;
+            /*
+            // Se non in compressione e lo studio è chiuso allora riabilita l'allarme di compressione a studio chiuso
+            if((!isCompressed()) && ( ApplicationDatabase.getDataU(_DB_STUDY_STAT)==_CLOSED_STUDY_STATUS)){
+                enable_compressione_closed_study=false;
             }
+
 
             if((isCompressed())&&(!enable_compressione_closed_study)&&(ApplicationDatabase.getDataU(_DB_STUDY_STAT)==_CLOSED_STUDY_STATUS)){
                 enable_compressione_closed_study=true;
                 PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_PAD,_ALR_COMPR_CLOSED_STUDY,TRUE);
-            }
+            }*/
+
         break;
 
         case PCB215_NOTIFY_ERRORS:

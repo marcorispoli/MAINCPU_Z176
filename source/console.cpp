@@ -189,10 +189,8 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         return;
     }else if(comando==GET_POTTER)
     {
-        if(pBiopsy->connected) emit consoleTxHandler(answ.answToQByteArray(QString("BP %1").arg(pBiopsy->accessorio)));
-        else if(pPotter->getPotId()==POTTER_2D)  emit consoleTxHandler(answ.answToQByteArray("2D 0"));
-        else if(pPotter->getPotId()==POTTER_TOMO)  emit consoleTxHandler(answ.answToQByteArray("3D 0"));
-        else if(pPotter->getPotId()==POTTER_MAGNIFIER)  emit consoleTxHandler(answ.answToQByteArray(QString("MG %1").arg(pCompressore->config.fattoreIngranditore[pPotter->getPotFactor()])));        
+        if(pPotter->getPotId()==POTTER_2D)  emit consoleTxHandler(answ.answToQByteArray("2D 0"));
+        else if(pPotter->getPotId()==POTTER_MAGNIFIER)  emit consoleTxHandler(answ.answToQByteArray(QString("MG %1").arg(pCompressore->config.fattoreIngranditore[pPotter->getPotFactor()])));
         else  emit consoleTxHandler(answ.answToQByteArray("ND 0"));
         return;
     }
@@ -497,20 +495,9 @@ void console::consoleRxHandler(QByteArray rxbuffer)
     {
         if(handleSetIaRxData(&protocollo, &answ)==FALSE) emit consoleTxHandler(answ.cmdToQByteArray("NOK"));
         else emit consoleTxHandler(answ.cmdToQByteArray("OK"));
-    }else if(comando==SET_BIOPSY_DATA)
-    {
-        code = handleSetBiopsyData(&protocollo);
-        if(code>0)
-        {
-            answ.addParam(QString("%1").arg((int) code));
-            emit consoleTxHandler(answ.cmdToQByteArray("NOK"));
-        }else
-        {
-            emit consoleTxHandler(answ.cmdToQByteArray("OK 30"));
-        }
     }else if(comando==GET_BIOPSY_Z)
     {
-        handleGetBiopsyZ(&answ);
+        //handleGetBiopsyZ(&answ);
     }else if(comando==SET_BIOPSY_HOME)
     {
         code = handleSetBiopsyHome(&protocollo);
@@ -631,13 +618,6 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         unsigned char data;
         pGuiMcc->sendFrame(MCC_TEST,1,&data,0);
         emit consoleTxHandler( answ.cmdToQByteArray("OK 0"));
-    }else if(comando==GET_ACR){
-        unsigned short acr = paginaAcr->getAcrView();
-        unsigned char suffix = paginaAcr->getAcrSuffix();
-        answ.addParam(QString("%1").arg((unsigned int) acr));
-        answ.addParam(QString("%1").arg((unsigned char) suffix));
-        emit consoleTxHandler(answ.cmdToQByteArray("OK"));
-
     }else if(comando==RESET_ALARMS){
         paginaAllarmi->resetOneShotAlarms();
         emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
@@ -2610,7 +2590,6 @@ void console::handleSetCalibKvRead(protoConsole* frame, protoConsole* answer)
     return;
 }
 
-
 /*_____________________________________________________________________________________________
  *
  *          IMPOSTAZIONE DATI PER CALIBRAZIONE AIR KERMA
@@ -2684,10 +2663,10 @@ bool console::handleSetAnalogKvCalibTubeData(protoConsole* frame, protoConsole* 
         emit consoleTxHandler( answ->answToQByteArray("NOK 5 INVALID-MAS-VALUE"));
         return false;
     }
-
     // Si seleziona sempre il valore pi˘ piccolo della corrente relativa (e solo per il fuoco grande!)
-    if(pGeneratore->getIdacForKvCalibration(paginaCalibAnalogic->pc_selected_kV, pGeneratore->selectedAnodo, &paginaCalibAnalogic->pc_selected_Idac, &paginaCalibAnalogic->pc_selected_Ia)==false) return false;
-
+    if(pGeneratore->getIdacForKvCalibration(paginaCalibAnalogic->pc_selected_kV, pGeneratore->selectedAnodo,
+                                            &paginaCalibAnalogic->pc_selected_Idac,
+                                            &paginaCalibAnalogic->pc_selected_Ia)==false) return false;
 
     emit consoleTxHandler( answ->answToQByteArray("OK 0"));
 
@@ -3376,75 +3355,8 @@ bool console::handleSetIaRxData(protoConsole* frame, protoConsole* answer)
     return TRUE;
 }
 
-/*
-    Stringa di comando	<ID LEN %SetBiopsyData PAR0 .. PAR7%>
-    PARAMETRI:	Tipo    dato                        Valore
-    PAR0        Int     Posizione X                 Valore in decimi di millimetro
-    PAR1        Int     Posizione Y                 Valore in decimi di millimetro
-    PAR2        Int     Posizione Z                 Valore in decimi di millimetro
-    PAR3        Int     Posizione Z Limite          Valore in  millimetro
-    PAR4        Int     POsizione Z Lesione         Valore in  millimetro
-    PAR5    	Int     Lunghezza effettiva Ago     Valore in  millimetro
-
-    PAR6        String	Nome descrittore Accessorio	Descrizione dell'accessorio da utilizzare
-    PAR7        blank  SPARE
-    PAR8        String	Nome descrittore Ago        Descrizione simbolica Ago utilizzato
 
 
-    Frame di risposta: <ID LEN %OK/NOK PAR0%>
-        OK	Torretta si muove verso XYZ
-        NOK	Errore formato comando
-        PARAMETRI	Tipo    dato                Valore
-        PAR0        Int     Timeout Comando     Indica quanto tempo in secondi dovrebbe impiegare al massimo il posizionamento
-
-     A questo comando seguir√  l'invio di un messaggio asincrono per notificare
-     il completamento:
-    Stringa di comando	<ID LEN %OK/NOK PAR0%>
-    PARAMETRI	Tipo dato	Valore	Note
-    OK/NOK	Stringa	Risultato	OK = Posizionamento corretto
-    NOK = Errore posizionamento
-    PAR0	Stringa	Stringa di errore	Se OK: == "" Nessuna stringa;
-    Se NOK: Se l'operazione non √® andata a buon fine (NOK) questa √® la stringa di errore generata dalla CPU
-
- */
-int console::handleSetBiopsyData(protoConsole* frame)
-{
-
-     // Check numero parametri
-    if(frame->parametri.size()!=9) return -1;
-
-    // Prepara i target di movimento
-    unsigned short targetX = frame->parametri[0].toUInt(); // dam
-    unsigned short targetY = frame->parametri[1].toUInt(); // dam
-    unsigned short targetZ = frame->parametri[2].toUInt(); // dam
-
-    unsigned short Zlimit = (unsigned char) frame->parametri[3].toUInt(); // mm
-    unsigned short Zlesione = (unsigned char) frame->parametri[4].toUInt(); // mm
-    unsigned short Lago = (unsigned char) frame->parametri[5].toUInt(); // mm
-    unsigned short holder = (unsigned char) frame->parametri[6].toUInt();
-    // spare frame->parametri[7];
-    QString codiceAgo = frame->parametri[8];
-
-
-    return pBiopsy->setBiopsyData(targetX, targetY, targetZ, // Posizione da raggiungere
-                              Zlimit,        // Massima Z calcolata dalla AWS
-                              Zlesione,      // Posizione rilevata della lesione
-                              Lago,          // Lunghezza dell'ago
-                              holder,        // Codice holder utilizzato dalla AWS
-                              codiceAgo,     // Nome dellk'accessorio montato da AWS
-                              frame->id      // Id del comando richiesto
-                              );
-
-}
-
-/* 
-  Restituisce la corsa massima prima di impattare con ili compressore
- */
-void console::handleGetBiopsyZ(protoConsole* answer)
-{   
-    answer->addParam(QString("%1").arg(pBiopsy->maxZ*10));    
-    emit consoleTxHandler(answer->answToQByteArray());
-}
 
 /*
     Stringa di comando	<ID LEN %handleSetBiopsyHome PAR0%>
@@ -3456,21 +3368,6 @@ void console::handleGetBiopsyZ(protoConsole* answer)
  */
 int console::handleSetBiopsyHome(protoConsole* frame)
 {
-
-    // Check presenza
-    if(pBiopsy->connected == FALSE) return 1;
-
-    // Check numero parametri
-    if(frame->parametri.size()!=1) return 2;
-
-    // Calcolo il nuovo offset
-    pBiopsy->config.offsetZ = frame->parametri[0].toInt();
-
-    // Salva il file di configurazione
-    pBiopsy->storeConfig();
-
-    // Effettua l'update della configurazione verso M4
-    pBiopsy->updateConfig();
 
     return 0;
 

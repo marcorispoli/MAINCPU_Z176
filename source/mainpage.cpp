@@ -580,15 +580,14 @@ void MainPage::changePannello(int newpanel){
     pulsanteOperatingMode->setVisible(true);
 
     // Controllo sulla correttezza della configurazione
-    if(isMaster){
-        pConfig->testConfigError(true,false);
+   if(isMaster){
+       pConfig->testConfigError(true,false);
 
-        // Controllo sulla fermata dello starter
-        if(pGeneratore->timerStarter){
-            pGeneratore->stopStarterSlot();
-        }
-    }
-
+       // Controllo sulla fermata dello starter
+       if(pGeneratore->timerStarter){
+           pGeneratore->stopStarterSlot();
+       }
+   }
 
     pannello=newpanel;
 

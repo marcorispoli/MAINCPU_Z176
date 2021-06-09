@@ -299,8 +299,8 @@ void AnalogCalibPageOpen::startTubeCalibrationXraySequence(void){
         if(pGeneratore->SWB) data[7]|=2;
 
         // Gestione dello Starter:
-        data[7]|=4;  // Starter HS always ON
-        pGeneratore->starterHS = TRUE;
+        data[7]|=4;        // Alta VelocitÃ
+        pGeneratore->starterHS = true;
 
         data[8] =  0; // Tensione Griglia da aggiungere
         data[9] =  pGeneratore->maxV;
@@ -325,8 +325,9 @@ void AnalogCalibPageOpen::startTubeCalibrationXraySequence(void){
         data[7]=0;
         if(SWA) data[7]|=1;
         if(SWB) data[7]|=2;
+
         data[7]|=4; // Starter HS always ON
-        pGeneratore->starterHS = TRUE;
+        pGeneratore->starterHS = true;
 
         // Tensione Griglia
         data[8] =  0;

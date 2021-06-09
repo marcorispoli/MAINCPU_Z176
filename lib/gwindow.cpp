@@ -735,3 +735,13 @@ void GLabel::setVisible(bool stat)
     if(stat) this->show();
     else this->hide();
 }
+
+void GLabel::setPos(int x, int y){
+    labelBound.moveTopLeft(QPoint(x,y));
+    update();
+}
+
+void GLabel::setColor(QColor color){
+    labelColor= color;
+    update();
+}

@@ -74,7 +74,7 @@ Generatore::Generatore(QObject *parent) :
     v15ext_warning = false;
 
     dgn_fault = false;
-    starterHS=FALSE;
+    starterHS = false;
 
 }
 
@@ -1510,10 +1510,9 @@ void Generatore::timerEvent(QTimerEvent* ev)
 
 }
 
-// Comando di Stop Starter
 void Generatore::stopStarterSlot(void)
 {
-    unsigned char data;
+unsigned char data;
 
     // Azzera la condizione di starter ad alta velocit‡
     starterHS = false;
@@ -1529,7 +1528,6 @@ void Generatore::stopStarterSlot(void)
     pConsole->pGuiMcc->sendFrame(MCC_STARTER,1,&data, 1);
 
 }
-
 
 bool Generatore::readKvFile(unsigned char kV, QString path)
 {
@@ -1902,6 +1900,8 @@ int Generatore::getITabIndex(unsigned char kV)
 
 }
 
+
+
 // Restituisce il valore di VDAC come interpolazione lineare tra i valore pi√π prossimi
 // disponibili nel file di configurazione
 // val rappresenta la selezione corrente;
@@ -1955,6 +1955,7 @@ bool  Generatore::getValidKv(float val, unsigned char* kv, unsigned short* vdac)
 }
 
 
+
 // Restituisce Idac da utilizzare per esposizione di Kv nominali
 // BUG-KV
 bool Generatore::getIdacForKvCalibration(int kV, QString anodo, int* Idac, int* Inom){
@@ -1972,6 +1973,7 @@ bool Generatore::getIdacForKvCalibration(int kV, QString anodo, int* Idac, int* 
     return true;
 
 }
+
 
 // Questa funzione calcola i valori dei DAC sulla base delle
 // impostazioni correnti.
@@ -2173,7 +2175,6 @@ int Generatore::getImaxIndex(int kV, QString anode, int fsize){
     return i;
 }
 
-// Validazione esposizione analogica
 // Attenzione: con isPre==true bisogna considerare la corrente a bassa velocit‡
 unsigned char Generatore::validateAnalogData(unsigned char modo, bool calibMode, bool isPre)
 {
@@ -2244,7 +2245,6 @@ unsigned char Generatore::validateAnalogData(unsigned char modo, bool calibMode,
     }
     if(i<0) return ERROR_INVALID_MAS; // Nessun intervallo disponibile
 
-
     // Carica i valori di corrente cercati e controllo valori
     float derivata;
     selectedIn = tube[kV-_MIN_KV].iTab.at(i).In;    // Corrente nominale
@@ -2253,6 +2253,7 @@ unsigned char Generatore::validateAnalogData(unsigned char modo, bool calibMode,
     if(selectedIdac > genCnf.pcb190.IFIL_MAX_SET) return ERROR_INVALID_GEN_CONFIG;
     if(selectedIdac == 0) return ERROR_NOT_CALIBRATED_I;
     derivata = tube[kV-_MIN_KV].iTab.at(i).derivata;
+
 
 
     // Conversione di dmAs per il driver PCB190
@@ -2279,7 +2280,6 @@ unsigned char Generatore::validateAnalogData(unsigned char modo, bool calibMode,
     validated=TRUE;
     return 0; // Nessun errore rilevato
 }
-
 
 bool Generatore::setmAs(double mAs)
 {

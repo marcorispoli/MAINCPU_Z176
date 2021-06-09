@@ -120,7 +120,7 @@ color:rgb(255,255,255,100);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image:url(://transparent.png);
-border-image: url(:/Service_Setup/Service_Setup/scroll_left.png);
+border-image: url(:/Pulsanti/Pulsanti/scroll_left.png);
 background-color:rgb(0,0,0,0
 );</string>
      </property>
@@ -173,7 +173,7 @@ color:rgb(255,255,255,100);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image:url(://transparent.png);
-border-image: url(:/Service_Setup/Service_Setup/scroll_right.png);
+border-image: url(:/Pulsanti/Pulsanti/scroll_right.png);
 background-color:rgb(0,0,0,0
 );</string>
      </property>
@@ -243,7 +243,7 @@ color:rgb(255,255,255,100);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image:url(://transparent.png);
-border-image: url(:/Service_Setup/Service_Setup/scroll_right.png);
+border-image: url(:/Pulsanti/Pulsanti/scroll_right.png);
 background-color:rgb(0,0,0,0
 );</string>
      </property>
@@ -296,7 +296,7 @@ color:rgb(255,255,255,100);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image:url(://transparent.png);
-border-image: url(:/Service_Setup/Service_Setup/scroll_left.png);
+border-image: url(:/Pulsanti/Pulsanti/scroll_left.png);
 background-color:rgb(0,0,0,0
 );</string>
      </property>
@@ -322,7 +322,7 @@ background-color:rgb(0,0,0,0
     </property>
     <property name="styleSheet">
      <string notr="true">background-image:url(://transparent.png);
-border-image: url(:/Service_Setup/Service_Setup/yes.png);
+border-image: url(:/yes.png);
 background-color:rgb(0,0,0,0
 );</string>
     </property>
@@ -394,7 +394,7 @@ color:rgb(255,255,255,100);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image:url(://transparent.png);
-border-image: url(:/Service_Setup/Service_Setup/scroll_right.png);
+border-image: url(:/Pulsanti/Pulsanti/scroll_right.png);
 background-color:rgb(0,0,0,0
 );</string>
      </property>
@@ -450,7 +450,7 @@ color:rgb(255,255,255,100);</string>
      </property>
      <property name="styleSheet">
       <string notr="true">background-image:url(://transparent.png);
-border-image: url(:/Service_Setup/Service_Setup/scroll_left.png);
+border-image: url(:/Pulsanti/Pulsanti/scroll_left.png);
 background-color:rgb(0,0,0,0
 );</string>
      </property>

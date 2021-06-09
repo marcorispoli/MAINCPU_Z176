@@ -656,7 +656,7 @@ bool Collimatore::readConfigFile(void)
     QList<QString> dati;
     int i=0;
     int pad;
-    int fileRevision;
+    int fileRevision = 0;
 
     filename =  QString("/resource/config/collimazione_analogica.cnf");
     QFile file(filename.toAscii());
@@ -802,6 +802,11 @@ bool Collimatore::storeConfigFile(void)
     filename =  QString("/resource/config/collimazione_analogica.cnf");
     QFile filecpy(filename.toAscii());
     if (!filecpy.open(QIODevice::WriteOnly | QIODevice::Text)) return false;
+
+    // Salva la revisione
+    data = QString("<REV,%1>\n").arg(COLLI_CNF_REV);
+    filecpy.write(data.toAscii().data());
+
 
     data = QString("<FILTRI,%1,%2,%3,%4>\n").arg(getFilterTag(colliConf.filterType[0])).arg(getFilterTag(colliConf.filterType[1])).arg(getFilterTag(colliConf.filterType[2])).arg(getFilterTag(colliConf.filterType[3]));
     filecpy.write(data.toAscii().data());

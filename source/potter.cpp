@@ -21,8 +21,6 @@ void Potter::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data)
 {
     unsigned char i,ii;
     unsigned char potter;
-    static unsigned char flag_potter = POTTER_UNDEFINED;
-    static unsigned char flag_potterFactor = 0;
 
 #ifdef __APPLICATION_DISABLE_POTTER
 return;
@@ -30,24 +28,20 @@ return;
 
     if(mcccode==MCC_POTTER_ID)
     {
+        if(data.size()>3){
+            cassette = data[2];
+            cassetteExposed = data[3];
+        }
+        if(pBiopsy->connected) return; // Con la biopsia non servono altre info dall'esposimetro
+
         potterId = data.at(0);
         potterValidFactor = FALSE;
-
         // Se la Biopsia è presente allora il codice accessorio è impostato dalla biopsia
-        if((data.at(0)==POTTER_UNDEFINED)&&(pBiopsy->connected==FALSE)) {
-            ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
-            ApplicationDatabase.setData(_DB_ACCESSORY_NAME,QString(QApplication::translate("POTTER","ACCESSORIO NON DEFINITO", 0, QApplication::UnicodeUTF8)),0);
-            potter = POTTER_UNDEFINED;
-        }else if(data.at(0)==POTTER_2D){
+        if(data.at(0)==POTTER_2D){
             ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
             ApplicationDatabase.setData(_DB_ACCESSORY_NAME,QString(QApplication::translate("POTTER","POTTER_2D", 0, QApplication::UnicodeUTF8)),0);
             potter = POTTER_2D;
-        } else if(data.at(0)==POTTER_TOMO){
-            ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
-            ApplicationDatabase.setData(_DB_ACCESSORY_NAME,QString(QApplication::translate("POTTER","POTTER_3D", 0, QApplication::UnicodeUTF8)),0);
-            potter = POTTER_TOMO;
-        }
-        else if(data.at(0)==POTTER_MAGNIFIER)
+        } else if(data.at(0)==POTTER_MAGNIFIER)
         {
             ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
             // Verifica se l'ingranditore Ã¨ definito
@@ -82,19 +76,12 @@ return;
             }
 
 
+        }else{
+            ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
+            ApplicationDatabase.setData(_DB_ACCESSORY_NAME,QString(QApplication::translate("POTTER","ACCESSORIO NON DEFINITO", 0, QApplication::UnicodeUTF8)),0);
+            potter = POTTER_UNDEFINED;
         }
 
-        if(data.size()>3){
-            cassette = data[2];
-            cassetteExposed = data[3];
-        }
-
-        // Notifies the AWS with Async message
-        if((flag_potter!=potter)||(potterFactor!=flag_potterFactor)){
-            pToConsole->setConfigChanged(pToConsole->ACCESSORIO);
-            flag_potter = potter;
-            flag_potterFactor = potterFactor;
-        }
 
     }
 

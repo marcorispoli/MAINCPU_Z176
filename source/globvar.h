@@ -18,12 +18,11 @@ ext TcpIpClient*     slaveTcp;
 ext EchoDisplay      echoDisplay;  // Sviluppa il protocollo di mirroring tra i display
 ext MainPage*        paginaMainDigital;
 //ext OpenStudyPage*   paginaOpenStudyDigital;
-ext BiopsyPage*      paginaBiopsyDigital;
 ext ProjectionPage*  paginaProjections;
 ext PageLanguages*   pagina_language;
-ext PageACR*         paginaAcr;
+//ext PageACR*         paginaAcr;
 ext PageAlarms*      paginaAllarmi;
-ext ImagePage*       paginaImmagine;
+//ext ImagePage*       paginaImmagine;
 
 ext mccMasterCom*    pMasterRxMcc;  // Comunicazione da Master M4 Core
 ext mccSlaveCom*     pSlaveRxMcc;  // Comunicazione da Master M4 Core

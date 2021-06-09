@@ -1086,10 +1086,10 @@ void pcb215VerifyComprData(void)
   // Verificase se c'è la torretta ed è cambiata la z corrente
   if(generalConfiguration.biopsyCfg.connected==TRUE)
   {
-    int dif = biopsyZ - generalConfiguration.biopsyCfg.needleZ;
+    int dif = biopsyZ - generalConfiguration.biopsyCfg.Z;
     if((dif>=10) || (dif<= -10))
     {
-      biopsyZ=generalConfiguration.biopsyCfg.needleZ;
+      biopsyZ=generalConfiguration.biopsyCfg.Z;
       updateLimitPos = TRUE;
     }
   }
@@ -1133,7 +1133,7 @@ void pcb215VerifyComprData(void)
   {
       if(generalConfiguration.biopsyCfg.connected==TRUE)
       {
-        padLimitPosition = generalConfiguration.biopsyCfg.conf.offsetPad +  generalConfiguration.biopsyCfg.conf.offsetZ - generalConfiguration.biopsyCfg.conf.margineRisalita - generalConfiguration.biopsyCfg.needleZ/10;
+        padLimitPosition = generalConfiguration.biopsyCfg.conf.offsetPad +  generalConfiguration.biopsyCfg.conf.offsetFibra - generalConfiguration.biopsyCfg.conf.margineRisalita - generalConfiguration.biopsyCfg.Z/10;
       }
       else if(IS_VALID_PAD)
       {

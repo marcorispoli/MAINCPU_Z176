@@ -408,7 +408,7 @@ bool pcb249U2ColliCmd(unsigned char back, unsigned char front)
 
     // Invio comando speciale
     Ser422SendRaw(0x55, back, front, buffer, 10);  
-    if(buffer[0]!=0x15) continue;                       // Errore 
+    if((buffer[0]&0x1F)!=0x15) continue;                       // Errore
     if((buffer[1]==255)&&(buffer[2]==0)) 
     {
       // Busy

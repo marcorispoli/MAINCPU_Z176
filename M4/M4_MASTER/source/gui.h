@@ -51,9 +51,9 @@ void mcc_service_commands(int id, int subcmd, unsigned char* data,int len);
 void mcc_loader_commands(int id, int subcmd, unsigned char* data,int len);
 void mcc_pcb215_calibration(void);
 void mccSetFiltro(void);
-void mccBiopsyXYZ(void);
+void mccBiopsyCmd(void);
 void mccBiopsyConfig(void);
-
+void mccBiopsySimulator();
 
 void mccSetCalibFiltro(void);
 void mcc_calib_zero(void);

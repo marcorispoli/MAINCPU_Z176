@@ -61,4 +61,12 @@ int nearest(float v){
   if((v-(float) val)>0.5) return val+1;
   else return val;    
 }
-/* EOF */
+
+float absF(float f){
+    if(f>=0) return f;
+    else return -f;
+}
+int absI(int i){
+    if(i>=0) return i;
+    else return -i;
+}

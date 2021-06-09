@@ -67,28 +67,22 @@ void vmTask(uint32_t taskRegisters)
    }
 
 
-   // Azzeramento coda
-   for(int i=0; i<MAXAUDIOMSG; i++)
-       audioMessagesQueue[i]=0;
-
+   // Azzeramento messaggi in attesa
+   nextAudioMessageCode = 0;
    _EVCLR(_EV0_VMUSIC_EVENT);
+
    while(1)
    {
+        // Attende un messaggio
         _EVWAIT_ALL(_EV0_VMUSIC_EVENT);
-
-        // Analizza l'evento
-        for(int i=0; i<MAXAUDIOMSG; ){
-            if(audioMessagesQueue[i]!=0){
-                unsigned char msg= audioMessagesQueue[i];
-                unsigned char vol= audioVolumeQueue[i];
-                printf("AUDIO MESSAGE:%d\n", msg);
-                audioMessagesQueue[i] = 0;
-                vmPlay(msg,vol);
-                i=-1;
-            }
-            i++;
-        }
+        unsigned char msg= nextAudioMessageCode;
+        unsigned char vol= nextAudioMessageVol;
+        nextAudioMessageCode = 0;
         _EVCLR(_EV0_VMUSIC_EVENT);
+
+        // Esegue in modo bloccante la gestione del messaggio vocale
+        printf("AUDIO MESSAGE:CODE=%d VOL=%d\n", msg, vol);
+        vmPlay(msg,vol);
 
    }
 }

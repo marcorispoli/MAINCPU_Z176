@@ -222,6 +222,8 @@ public:
 
     void setPlainText(char* testo);
     void setVisible(bool stat);
+    void setPos(int x, int y);
+    void setColor(QColor color);
 
 
    // Determina il Bound Dell'Item

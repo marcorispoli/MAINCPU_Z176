@@ -6,9 +6,7 @@
 #include "mainpage.h"
 
 #include "projectionPage.h"
-#include "biopsypage.h"
 #include "pagelanguages.h"
-#include "pageacr.h"
 #include "pagealarms.h"
 #include "ImagePage.h"
 #include "console.h"

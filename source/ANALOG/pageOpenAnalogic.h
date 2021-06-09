@@ -10,6 +10,7 @@
 #include "pannelloOpzioni.h"
 #include "pannelloProiezioni.h"
 #include "pannelloColli.h"
+#include "pannelloBiopsia.h"
 #include <QWidget>
 #include <QGraphicsScene>
 
@@ -40,9 +41,12 @@ public slots:
     #define QUEUED_START_XRAY_SEQ       4
     #define QUEUED_LOG                  5
     #define QUEUED_LOG_FLUSH            6
+    #define QUEUED_INIT_PAGE            7
+
 
 
     bool openPageRequest(void);
+    bool closePageRequest(void);
     void queuedExecutionSlot(int code, int val, QString str);
     // Per i moduli esterni alla classe corrente
     void emitQueuedExecution(int code, int val, QString str){
@@ -101,6 +105,7 @@ private:
     pannelloOpzioni* optionPanel;
     pannelloProiezioni* projPanel;
     pannelloColli* colliPanel;
+    pannelloBiopsia* biopsyPanel;
 
     // Vettore per agevolare la gestione delle proiezioni
     int currentProjection;
@@ -116,7 +121,9 @@ private:
     void  setCurrentFuoco(void);
     void  setPad(void);
     void  setSbloccoCompressore(void);
-    void  verifyReady(void);
+    void  verifyBiopsyReady(void);
+    void  verifyStandardReady(void);
+
     void  updateAlarmField(void);
     void  setCurrentCollimation(void);
 
@@ -126,6 +133,11 @@ private:
     void  xrayFullAutoSequence(void);
     void  xrayReleasePushButton(void);
     void  xrayErrorInCommand(unsigned char code);
+
+    // Inizializzazione pagina relkativa (solo master esegue!)
+    void  initializeBiopsyPage(void);
+    void  initializeStandardPage(void);
+    void  setInfoReadyFields(int flags);
 
 
     // Dati di esposizione
@@ -144,6 +156,8 @@ private:
     float   XmAs;
     int     XThick;
     int     XForce;
+
+    float   cumulativeXdose; // Dose accumulata nello studio in uG
 
 
 };

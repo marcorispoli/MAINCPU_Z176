@@ -47,6 +47,7 @@ CalibMenu::CalibMenu(int rotview, QWidget *parent) :
     connect(ui->lenzePotCalibButton,SIGNAL(released()),this,SLOT(onLenzePotCalibButton()),Qt::UniqueConnection);
     connect(ui->detectorButton,SIGNAL(released()),this,SLOT(onDetectorCalibButton()),Qt::UniqueConnection);
     connect(ui->ColliCalibButton,SIGNAL(released()),this,SLOT(onColliCalibButton()),Qt::UniqueConnection);
+    connect(ui->consoleButton,SIGNAL(released()),this,SLOT(onConsoleButton()),Qt::UniqueConnection);
 
 
 }
@@ -103,8 +104,9 @@ void CalibMenu::initPage(void){
     if(architettura & _ARCH_HIGH_SPEED_STARTER) ui->StarterCalibButton->hide();
     else ui->StarterCalibButton->show();
 
-    // CAlibrazione detector solo se macchina analogica
-
+    // Calibrazione Console solo se Biopsia connessa
+    ui->labelConsole->show();
+    ui->consoleButton->show();
     ui->frameDetector->show();
 
     return;
@@ -181,3 +183,8 @@ void CalibMenu::onColliCalibButton(void)
 
 }
 
+void CalibMenu::onConsoleButton(void)
+{
+    GWindowRoot.setNewPage(_PG_SERVICE_CALIB_CONSOLE,GWindowRoot.curPage,0);
+
+}

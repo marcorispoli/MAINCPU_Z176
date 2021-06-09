@@ -43,9 +43,8 @@ void gui_interface_task(uint32_t initial_data)
   // La gestione operativa avviene solo se i dispositivi sono configurati
   while(1){
     if(mccRxFrame(&ep, &mcc_cmd)){
-#ifdef __MCCTEST_ENA
+
       if(mcc_cmd.cmd == MCC_TEST) mcc_test();
-#endif
 
       if((mcc_cmd.cmd == MCC_LOADER) || (generalConfiguration.loaderOn)) manageMccLoader();
       else if(mcc_cmd.cmd == MCC_CONFIG) manageMccConfig();
@@ -501,8 +500,11 @@ void manageMccConfig(){
           case MCC_BIOPSY_DEMO_CMD:
           break;
 
-          case MCC_BIOPSY_XYZ:
-            mccBiopsyXYZ();
+          case MCC_BIOPSY_SIMULATOR:
+            mccBiopsySimulator();
+            break;
+          case MCC_BIOPSY_CMD:
+            mccBiopsyCmd();
           break;
 
 
@@ -940,10 +942,6 @@ void mcc_test(void)
     unsigned char data;
     char cdata;
 
-#ifndef __MCCTEST_ENA
-      return;
-#endif
-
 
       switch(mcc_cmd.buffer[0]){
       case 0:
@@ -958,7 +956,7 @@ void mcc_test(void)
 
       case 2:
           printf("SCARICA LE SCRITTE");
-          vmPrint(true,100);
+          vmPrint(true,1000);
           break;
       case 3:
           printf("SHORT MSG MODE... ");
@@ -974,21 +972,20 @@ void mcc_test(void)
           break;
 
       case 5:
-          printf("SET MOSI TO:%d\n", mcc_cmd.buffer[1]);
-          setMosi(mcc_cmd.buffer[1]);
+
           break;
       case 6:
-          if(spiRead( &cdata)) printf("LETTO:'%c' 0x%x STATUS = 1\n",cdata,cdata);
-          else printf("LETTO:'%c' 0x%x STATUS = 0\n",cdata,cdata);
+
           break;
       case 7:
-          cdata = (char) mcc_cmd.buffer[1];
-           if(spiWrite(&cdata)) printf("SCRITTO:'%c' 0x%x STATUS = 1\n",cdata,cdata);
-           else printf("SCRITTO:'%c' 0x%x STATUS = 0\n",cdata,cdata);
+
            break;
 
       case 8:
-          pulseMosi();
+
+          break;
+
+      case 9:
 
           break;
 
@@ -1201,65 +1198,62 @@ void mcc_pcb215_calibration(void)
 
 
 /*
-  Questa funzione imposta il movimento della Biopsia (se presente) 
-  nei suoi tre assi XYZ (opzionali)
-
-Buffer Dati:
-  mcc_cmd.buffer[0]: XGO (1=muove X)
-  mcc_cmd.buffer[1]: X L
-  mcc_cmd.buffer[2]: X H
-  mcc_cmd.buffer[3]: YGO (1=muove X)
-  mcc_cmd.buffer[4]: Y L
-  mcc_cmd.buffer[5]: Y H
-  mcc_cmd.buffer[6]: ZGO (1=muove X)
-  mcc_cmd.buffer[7]: Z L
-  mcc_cmd.buffer[8]: Z H
-
-  mcc_cmd.buffer[9]: ZlimitGO 
-  mcc_cmd.buffer[10]: Zl L
-
-  mcc_cmd.buffer[11]: ZlesioneGO 
-  mcc_cmd.buffer[12]: Zles L
-  
-  mcc_cmd.buffer[13]: ZlagoGO 
-  mcc_cmd.buffer[14]: Zlago L
+CODICI COMANDO BIOPSIA (DA GUI A M4): MCC_BIOPSY_CMD
+#define _MCC_BIOPSY_CMD_MOVE_HOME   1
+#define _MCC_BIOPSY_CMD_MOVE_XYZ    2
+#define _MCC_BIOPSY_CMD_MOVE_INCX   3
+#define _MCC_BIOPSY_CMD_MOVE_DECX   4
+#define _MCC_BIOPSY_CMD_MOVE_INCY   5
+#define _MCC_BIOPSY_CMD_MOVE_DECY   6
+#define _MCC_BIOPSY_CMD_MOVE_INCZ   7
+#define _MCC_BIOPSY_CMD_MOVE_DECZ   8
+#define _MCC_BIOPSY_CMD_SET_STEPVAL 9
+#define _MCC_BIOPSY_CMD_SET_LAGO    10
 
 */
-void mccBiopsyXYZ(void)
+void mccBiopsyCmd(void)
 {
+  unsigned short X,Y,Z,val;
+
   if(generalConfiguration.biopsyCfg.connected==FALSE) return;
-  
-  // Verifica se si tratta del comando di incremento
-  if(mcc_cmd.len==2)
-  {
-    biopsyStepZ(mcc_cmd.buffer[0],mcc_cmd.buffer[1]);
-    printf("BIOP STEPS");
-    return;
-  }
-  unsigned short X=mcc_cmd.buffer[1]+256*mcc_cmd.buffer[2];
-  unsigned short Y=mcc_cmd.buffer[4]+256*mcc_cmd.buffer[5];
-  unsigned short Z=mcc_cmd.buffer[7]+256*mcc_cmd.buffer[8];
-  
-  if(mcc_cmd.buffer[9]) // ZlimitGO
-  {
-    // <TBD> aggiungere risposta in caso di comando fallito
-    biopsySetZLimit(mcc_cmd.buffer[10]);
+
+  switch(mcc_cmd.buffer[0]){
+  case _MCC_BIOPSY_CMD_MOVE_HOME:
+      biopsyMoveHome();
+      break;
+  case _MCC_BIOPSY_CMD_MOVE_XYZ:
+      X=mcc_cmd.buffer[1]+256*mcc_cmd.buffer[2];
+      Y=mcc_cmd.buffer[3]+256*mcc_cmd.buffer[4];
+      Z=mcc_cmd.buffer[5]+256*mcc_cmd.buffer[6];
+      biopsyMoveXYZ(X, Y,Z);
+      break;
+  case _MCC_BIOPSY_CMD_MOVE_INCX:
+      biopsyStepIncX();
+      break;
+  case _MCC_BIOPSY_CMD_MOVE_DECX:
+      biopsyStepDecX();
+      break;
+  case _MCC_BIOPSY_CMD_MOVE_INCY:
+      biopsyStepIncY();
+      break;
+  case _MCC_BIOPSY_CMD_MOVE_DECY:
+      biopsyStepDecY();
+      break;
+  case _MCC_BIOPSY_CMD_MOVE_INCZ:
+      biopsyStepIncZ();
+      break;
+  case _MCC_BIOPSY_CMD_MOVE_DECZ:
+      biopsyStepDecZ();
+      break;
+  case _MCC_BIOPSY_CMD_SET_STEPVAL:
+      generalConfiguration.biopsyCfg.stepVal =  mcc_cmd.buffer[1];
+      break;
+  case _MCC_BIOPSY_CMD_SET_LAGO:
+      generalConfiguration.biopsyCfg.lunghezzaAgo =  mcc_cmd.buffer[1];
+      break;
+
   }
 
-  if(mcc_cmd.buffer[11]) // Zlesione
-  {
-    // <TBD> aggiungere risposta in caso di comando fallito
-    biopsySetZLesione(mcc_cmd.buffer[12]);
-  }
-
-  if(mcc_cmd.buffer[13]) // ZLago
-  {
-    // <TBD> aggiungere risposta in caso di comando fallito
-    biopsySetLago(mcc_cmd.buffer[14]);
-  }
-
-  // Movimento
-  biopsySetXYZ(X,mcc_cmd.buffer[0], Y, mcc_cmd.buffer[3], Z, mcc_cmd.buffer[6]);
   return;
 }
 
@@ -1694,6 +1688,34 @@ void mcc_xray_analog_calib_tube(void){
 
 }
 
+
+void mccBiopsySimulator(void){
+#ifdef __BIOPSY_SIMULATOR
+    unsigned short X, Y;
+
+    if(mcc_cmd.buffer[0]== 1){ // Impostazione stato della connessione
+        printf("EXEC SIM CONNECTION\n");
+        if(mcc_cmd.buffer[1]==1) SimConnessione(true);
+        else SimConnessione(false);
+    }else if(mcc_cmd.buffer[0]== 2){ // Impostazione stato del pulsante di sblocco
+        printf("EXEC SIM SBLOCCO\n");
+        if(mcc_cmd.buffer[1]==1) SimSetPush(true);
+        else SimSetPush(false);
+    }else if(mcc_cmd.buffer[0]== 3){ // Impostazione Adapter Id
+        printf("EXEC SIM ADAPTER\n");
+        SimSetAdapter(mcc_cmd.buffer[1]);
+    }else if(mcc_cmd.buffer[0]== 4){ // Simulazione pulsanti console
+        printf("EXEC CONSOLE PUSH\n");
+        SimSetConsolePush(mcc_cmd.buffer[1]);
+    }else if(mcc_cmd.buffer[0]== 5){ // Simulazione pulsanti console
+        printf("EXEC CONSOLE XY\n");
+        // Il dato deve essere in millimetri rispetto al vertice in alto a sinistra (dmm)
+        SimSetJXY(XtoJoysticX(mcc_cmd.buffer[1] + 256 * mcc_cmd.buffer[2]),YtoJoysticY(mcc_cmd.buffer[3] + 256 * mcc_cmd.buffer[4]));
+    }
+#endif
+    return;
+}
+
 /*
  *  MESSAGGI AUDIO
  *  mcc_cmd.buffer[0] == 0 -> Impostazioni
@@ -1723,14 +1745,14 @@ void mcc_audio(void){
 
     case 1: // Riproduzione messaggi vocali
         // Cerca uno spazio libero nella coda
-        for(int i=0; i<MAXAUDIOMSG; i++){
-            if(audioMessagesQueue[i]==0){
-                audioMessagesQueue[i] = mcc_cmd.buffer[1];
-                audioVolumeQueue[i] = mcc_cmd.buffer[2];
-                _EVSET(_EV0_VMUSIC_EVENT);
-                return;
-            }
+        if(nextAudioMessageCode !=0) {
+            printf("VM MESSAGE %d BUSY\n",mcc_cmd.buffer[1] );
+            return;
         }
+
+        nextAudioMessageCode = mcc_cmd.buffer[1];
+        nextAudioMessageVol =mcc_cmd.buffer[2];
+        _EVSET(_EV0_VMUSIC_EVENT);
 
         break;
     }

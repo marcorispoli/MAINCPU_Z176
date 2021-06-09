@@ -151,7 +151,6 @@ void calibstarter::initPage(void){
         ApplicationDatabase.setData(_DB_SERVICE7_INT,(int) 0,DBase::_DB_FORCE_SGN);  // ABILITAZIONE PULSANTE STORE
         ApplicationDatabase.setData(_DB_SERVICE8_INT,(int) 0,DBase::_DB_FORCE_SGN);  // VISUALIZZAZIONE WARNING
         ApplicationDatabase.setData(_DB_SERVICE9_INT,(int) 0,DBase::_DB_FORCE_SGN);  // VISUALIZZAZIONE DATA STORED
-        ApplicationDatabase.setData(_DB_SERVICE10_INT,(int)0,DBase::_DB_FORCE_SGN);  // Pulsante Start
 
         // Configurazione per lo spegnimento dello starter
         if(pConfig->userCnf.starter_off_after_exposure) ApplicationDatabase.setData(_DB_SERVICE12_INT,(int) 0,DBase::_DB_FORCE_SGN);
@@ -164,7 +163,7 @@ void calibstarter::initPage(void){
         pSysLog->log("SERVICE PANEL: CALIB STARTER");
     }
 
-
+    ApplicationDatabase.setData(_DB_SERVICE10_INT,(int)0,DBase::_DB_NO_CHG_SGN|DBase::_DB_NO_ECHO); // Pulsante Start
     ApplicationDatabase.setData(_DB_SERVICE11_INT,(int)0,DBase::_DB_NO_CHG_SGN|DBase::_DB_NO_ECHO); // Pulsante Store
 
     timerDisable = startTimer(1000);
@@ -264,17 +263,18 @@ void calibstarter::valueChanged(int index,int opt)
             if(!timerStored) timerStored = startTimer(3000);
         }else  ui->msgstored->hide();
         break;
+
     case _DB_SERVICE10_INT:
         if(!isMaster) return;
         if(ApplicationDatabase.getDataI(index)==0) return;
         activateTest();
-        break;
+    break;
 
     case _DB_SERVICE11_INT:
         if(ApplicationDatabase.getDataI(index)==0) return;
         ApplicationDatabase.setData(_DB_SERVICE7_INT,(int) 0); // Disabilita il pulsante di store immediatamente
         if(isMaster) storeData();
-        break;
+    break;
 
     case _DB_SERVICE12_INT:
         if(ApplicationDatabase.getDataI(index))  ui->afterExposure->setStyleSheet("background-image:url(:/transparent.png);border-image:url(:/Pulsanti/Pulsanti/but_on.png);");
@@ -312,6 +312,7 @@ void calibstarter::onStoreButton(void){
     timerDisable = startTimer(1000);
     ApplicationDatabase.setData(_DB_SERVICE11_INT,(int) 1,DBase::_DB_FORCE_SGN);
 }
+
 
 void calibstarter::onAfterExposure(void){
     if(timerDisable) return;

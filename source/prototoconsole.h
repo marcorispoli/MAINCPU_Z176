@@ -97,7 +97,7 @@ public slots:
     // Slot di ricezione fine aggiornamento
     void fineSystemUpdate(bool ris, QString errstr);
     void systemUpdateStatus(int perc, QString filename);
-    void setConfigChanged(_configCode config);
+
 
 private:
     TcpIpClient*        notificheTcp;      // Socket Client per invio notifiche asincrone

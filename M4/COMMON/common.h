@@ -140,35 +140,27 @@ typedef struct
 
 typedef struct
 {
+  // API esterne al driver
   biopsyConf_Str conf;        // Configurazione
-  bool needlePresent;         // Presenza needle
-  bool connected;             // Dispositivo collegato
-  unsigned char adapterId;    // Identificazione adattatore
-  bool sbloccoReq ;           // Pulsante di sblocco premuto
+  bool connected;             // Dispositivo collegato  
   bool armEna;                // braccio abilitato ai movimenti (lift ARM)        
-   
-  unsigned short needleZ;     // Posizione corrente Z
-  unsigned short needleX;     // Posizione corrente X
-  unsigned short needleY;     // Posizione corrente Y
 
-  bool movimento;             // Flag generale di movimento in corso
-  bool movimento_x;           // Un comando di movimento su asse X è in esecuzione
-  bool movimento_y;           // Un comando di movimento su asse X è in esecuzione
-  bool movimento_z;           // Un comando di movimento su asse X è in esecuzione
-  bool stepUp_z;              // Muove uno step su
-  bool stepDwn_z;             // Muove uno step giu
-  bool z_up;                  // Il movimento di z è UP/DOWN
-  
-  unsigned short target_x;
-  unsigned short target_y;
-  unsigned short target_z;
-  
-  // Valori da passare alla torretta
-  unsigned char zlimit;
-  unsigned char zlesione;
-  unsigned char lago; 
-    
-  // Dati firmware remoto
+  // Registri interni al driver
+  unsigned char  statusL;        // Registro di stato L
+  unsigned char  statusH;        // Registro di stato H
+  unsigned short adapterId;      // Identificazione adattatore
+  unsigned short lunghezzaAgo;   // Lunghezza dell'ago selezionato dall'operatore in millimetri
+  unsigned char  stepVal;        // Quantità di dm per step
+  unsigned short Z;              // Posizione corrente Z
+  unsigned short X;              // Posizione corrente X
+  unsigned short Y;              // Posizione corrente Y
+  unsigned short TGZ;            // Posizione corrente Z
+  unsigned short TGX;            // Posizione corrente X
+  unsigned short TGYY;           // Posizione corrente Y
+  unsigned short JX, JY;         // Campionamento joystic
+  unsigned short dmmJX, dmmJY;   // Campionamento calibrato in decimi di millimetro
+
+  // Revisione e checksum della perifierica
   unsigned char checksum_h;
   unsigned char checksum_l;
   unsigned char revisione;
@@ -370,5 +362,7 @@ ext bool msEventWaitAny(int mask, LWEVENT_STRUCT* ev, unsigned int ms);
 ext void setOutputs(_SystemOutputs_Str* pSet, _SystemOutputs_Str* pMask); // Impostazione degli Outputs di sistema
 
 ext int nearest(float v);
+ext float absF(float f);
+ext int absI(int i);
 
 #endif

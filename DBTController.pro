@@ -26,7 +26,6 @@ HEADERS += \
     source/mainpage.h \
     lib/dbase.h \
     source/pagelanguages.h \
-    source/pageacr.h \
     source/pagealarms.h \
     source/application.h \
     source/console.h \
@@ -51,7 +50,6 @@ HEADERS += \
     shared_a5_m4/shared.h \
     source/Service/servicepanelmenu.h \
     source/Service/Calib/calibmenu.h \
-    source/biopsypage.h \
     source/startuppage.h \
     source/Service/Calib/calibcompressorposition.h \
     lib/numericpad.h \
@@ -90,7 +88,9 @@ HEADERS += \
     source/Service/Tools/audioTool.h \
     source/systemlog.h \
     source/ANALOG/pannelloColli.h \
-    source/Service/Tools/pottertool.h
+    source/Service/Tools/pottertool.h \
+    source/ANALOG/pannelloBiopsia.h \
+    source/Service/Calib/calibconsole.h
 
 SOURCES += \
     source/main.cpp \
@@ -102,7 +102,6 @@ SOURCES += \
     source/mainpage.cpp \
     lib/dbase.cpp \
     source/pagelanguages.cpp \
-    source/pageacr.cpp \
     source/pagealarms.cpp \
     source/console.cpp \
     source/generatore.cpp \
@@ -121,7 +120,6 @@ SOURCES += \
     source/biopsy.cpp \
     source/Service/servicepanelmenu.cpp \
     source/Service/Calib/calibmenu.cpp \
-    source/biopsypage.cpp \
     source/startuppage.cpp \
     source/Service/Calib/calibcompressorposition.cpp \
     lib/numericpad.cpp \
@@ -161,7 +159,9 @@ SOURCES += \
     source/systemlog.cpp \
     source/ANALOG/Calibration/pageAnalogicCollimationCalibration.cpp \
     source/ANALOG/pannelloColli.cpp \
-    source/Service/Tools/pottertool.cpp
+    source/Service/Tools/pottertool.cpp \
+    source/ANALOG/pannelloBiopsia.cpp \
+    source/Service/Calib/calibconsole.cpp
 
 
 FORMS += \
@@ -188,7 +188,8 @@ FORMS += \
     source/Service/Tools/inverter.ui \
     source/Service/Tools/audio.ui \
     source/Service/Tools/potter.ui \
-    source/Service/Tools/toolCalibTube.ui
+    source/Service/Tools/toolCalibTube.ui \
+    source/Service/Calib/calibconsole.ui
 
 
 

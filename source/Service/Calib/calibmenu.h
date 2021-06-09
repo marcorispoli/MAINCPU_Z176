@@ -32,7 +32,8 @@ public slots:
      void onTiltCalibButton(void); // Attiva il menu setup
      void onLenzePotCalibButton(void); // Calibrazione potenziometro lenze
      void onDetectorCalibButton(void);
-     void onColliCalibButton(void);
+     void onColliCalibButton(void); // Calibrazione collimazione
+     void onConsoleButton(void);    // Calibrazione cursore console
 
 private:
     Ui::CalibMenuObject *ui;

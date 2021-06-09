@@ -32,9 +32,22 @@ public:
     #define AUDIO_NOT_READY_INVALID_POTTER                              14
     #define AUDIO_NOT_READY_INVALID_COMPRESSOR                          15
     #define AUDIO_NOT_READY_DETECTOR_NOT_CALIBRATED                     16
-
     #define AUDIO_NOT_READY_TUBE_TEMP_ALARM                             17
-    #define AUDIO_MAX_NUM_MESSAGES                                      17
+
+    #define AUDIO_BIOPSY_EXPOSE_RIGHT                                   18
+    #define AUDIO_BIOPSY_EXPOSE_LEFT                                    19
+    #define AUDIO_BIOPSY_INIT_POINTING                                  20
+    #define AUDIO_BIOPSY_LEFT_REFERENCE                                 21
+    #define AUDIO_BIOPSY_LEFT_LESION                                    22
+    #define AUDIO_BIOPSY_RIGHT_REFERENCE                                23
+    #define AUDIO_BIOPSY_RIGHT_LESION                                   24
+    #define AUDIO_BIOPSY_SELECT_NEEDLE                                  25
+    #define AUDIO_BIOPSY_READY_TO_MOVE                                  26
+
+    #define AUDIO_BIOPSY_INVALID_COMPRESSION_RELEASE                    27
+    #define AUDIO_BIOPSY_INVALID_NEEDLE_SELECTED                        28
+    #define AUDIO_MAX_NUM_MESSAGES                                      28
+
 public slots:
     void playAudio(unsigned char msg);
     void setMute(bool state);
