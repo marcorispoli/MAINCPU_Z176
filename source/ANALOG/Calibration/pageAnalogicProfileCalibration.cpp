@@ -362,7 +362,7 @@ void AnalogCalibPageOpen::startProfileCalibrationXraySequence(void){
     pGeneratore->setmAs((float) mAs_PRE);
 
     // Impostazione dati di esposizione
-    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL);
+    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL,true, true);
     if(errcode){
         xrayErrorInCommand(errcode);
         return;
@@ -383,7 +383,8 @@ void AnalogCalibPageOpen::startProfileCalibrationXraySequence(void){
     data[7]=0;
     if(pGeneratore->SWA) data[7]|=1;
     if(pGeneratore->SWB) data[7]|=2;
-    if(pGeneratore->starterHS) data[7]|=4;
+    data[7]|=4; // Starter sempre attivo
+    pGeneratore->starterHS = TRUE;
 
     // Tensione Griglia
     data[8] =  0;
@@ -522,7 +523,7 @@ void AnalogCalibPageOpen::profileGuiNotify(unsigned char id, unsigned char mccco
         }
 
         // Impostazione dati di esposizione
-        unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL);
+        unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL,true, false);
         if(errcode){
             xrayErrorInCommand(errcode);
             return;

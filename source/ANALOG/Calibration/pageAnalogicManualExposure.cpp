@@ -36,7 +36,7 @@ void AnalogCalibPageOpen::exitManualExposure(void){
 void AnalogCalibPageOpen::updateExposureData(int opt){
     if(!isMaster) return;
 
-    int errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL);
+    int errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL,true, false);
     if(errcode==0){
         ApplicationDatabase.setData(_DB_INVALID_FRAME, (int)  0, opt);
         ApplicationDatabase.setData(_DB_MANUAL_VDAC, (int)  pGeneratore->selectedVdac, opt);
@@ -399,8 +399,8 @@ void AnalogCalibPageOpen::startManualExposureXraySequence(void){
     unsigned char data[18];
 
 
-    // Impostazione dati di esposizione
-    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL);
+    // Impostazione dati di esposizione    
+    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL, true, false);
     if(errcode){
         xrayErrorInCommand(errcode);
         return;
@@ -424,6 +424,7 @@ void AnalogCalibPageOpen::startManualExposureXraySequence(void){
 
     // Alta velocità
     data[7]|=4;
+    pGeneratore->starterHS = TRUE;
 
     // Tensione Griglia
     data[8] =  0;

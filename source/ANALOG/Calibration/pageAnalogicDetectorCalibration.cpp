@@ -333,7 +333,7 @@ void AnalogCalibPageOpen::startDetectorCalibrationXraySequence(void){
     pGeneratore->setmAs((float) 50);
 
     // Impostazione dati di esposizione
-    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL);
+    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL, true, true);
     if(errcode){
         xrayErrorInCommand(errcode);
         return;
@@ -354,7 +354,9 @@ void AnalogCalibPageOpen::startDetectorCalibrationXraySequence(void){
     data[7]=0;
     if(pGeneratore->SWA) data[7]|=1;
     if(pGeneratore->SWB) data[7]|=2;
-    if(pGeneratore->starterHS) data[7]|=4;
+
+    data[7]|=4; // Starter Alta Velocita sempre
+    pGeneratore->starterHS = TRUE;
 
     // Tensione Griglia
     data[8] =  0;

@@ -58,7 +58,7 @@ void AnalogPageOpen::xrayManualSequence(void){
 
 
     // Impostazione dati di esposizione
-    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL);
+    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL,false, false);
     if(errcode){
         xrayErrorInCommand(errcode);
         return;
@@ -141,7 +141,7 @@ void AnalogPageOpen::xrayFullAutoSequence(void){
     pGeneratore->setmAs((float) mAs_PRE);
 
     // Impostazione dati di esposizione in funzione della modalità attuale
-    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_AUTO);
+    unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_AUTO,false,true);
     if(errcode){
         xrayErrorInCommand(errcode);
         return;
@@ -355,7 +355,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
             XselectedFiltro = rxfiltro;
 
             // Impostazione dati di esposizione           
-            errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_AUTO);
+            errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_AUTO, false, false);
             if(errcode){
                 logstring += QString(" ERR:%1").arg(errcode);
                 emit queuedExecution(QUEUED_LOG_FLUSH,0,logstring);

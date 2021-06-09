@@ -74,7 +74,7 @@ Generatore::Generatore(QObject *parent) :
     v15ext_warning = false;
 
     dgn_fault = false;
-
+    starterHS=FALSE;
 
 }
 
@@ -1514,8 +1514,14 @@ void Generatore::timerEvent(QTimerEvent* ev)
 void Generatore::stopStarterSlot(void)
 {
     unsigned char data;
-    if(!pConfig->userCnf.starter_off_after_exposure) return;
 
+    // Azzera la condizione di starter ad alta velocit‡
+    starterHS = false;
+
+    if(timerStarter){
+        killTimer(timerStarter);
+        timerStarter = 0;
+    }
 
     // Comando a M4 per gestione Starter
     if(pConfig->userCnf.starter_brake) data = 0;
@@ -1896,8 +1902,6 @@ int Generatore::getITabIndex(unsigned char kV)
 
 }
 
-
-
 // Restituisce il valore di VDAC come interpolazione lineare tra i valore pi√π prossimi
 // disponibili nel file di configurazione
 // val rappresenta la selezione corrente;
@@ -1952,35 +1956,19 @@ bool  Generatore::getValidKv(float val, unsigned char* kv, unsigned short* vdac)
 
 
 // Restituisce Idac da utilizzare per esposizione di Kv nominali
-// durante il processo di kV calibration
+// BUG-KV
 bool Generatore::getIdacForKvCalibration(int kV, QString anodo, int* Idac, int* Inom){
     int i;
-    int idac,in;
 
     // Azzera inizialmente
     *Idac = 0;
     *Inom = 0;
 
-    if(tube[kV-_MIN_KV].mAs.isEmpty()) return false; // Nessun intervallo disponibile
 
-    // Cerca la corrente pi√π grande disponibile su uno dei fuochi grandi
-    for(i=0; i<tube[kV-_MIN_KV].mAs.size(); i++)
-    {
-        // Seleziona solo gli intervalli associati al fuoco grande all'anodo richiesto
-        if(tube[kV-_MIN_KV].mAs.at(i).anode!=anodo) continue;
-        if(tube[kV-_MIN_KV].mAs.at(i).fsize!=FUOCO_LARGE) continue;
-        in = tube[kV-_MIN_KV].iTab.at(i).In;    // Corrente nominale
-        idac = tube[kV-_MIN_KV].iTab.at(i).Idac;    // Corrente nominale
-        if(idac > genCnf.pcb190.IFIL_MAX_SET) idac= genCnf.pcb190.IFIL_MAX_SET;
-
-        if(idac > *Idac){
-            *Idac = idac;
-            *Inom = in;
-        }
-
-    }
-
-    if(*Idac==0) return false;
+    i=getIminIndex(kV,anodo,FUOCO_LARGE); // Corrente low speed
+    if(i<0) return false; // Nessun intervallo disponibile
+    *Idac = tube[kV-_MIN_KV].iTab.at(i).Idac;
+    *Inom =  tube[kV-_MIN_KV].iTab.at(i).In;
     return true;
 
 }
@@ -2151,10 +2139,43 @@ unsigned char Generatore::validateData(void)
     return 0; // Nessun errore rilevato
 }
 
+// Cerca l'indice corrispondente alla corrente minima
+// per i parametri indicati
+int Generatore::getIminIndex(int kV, QString anode, int fsize){
 
+    int imin=255;
+    int i=-1;
+    for(int j=0; j<tube[kV-_MIN_KV].iTab.size(); j++){
+        if(tube[kV-_MIN_KV].iTab.at(j).fsize != fsize) continue;
+        if(tube[kV-_MIN_KV].iTab.at(j).anode!= anode) continue;
+        if(tube[kV-_MIN_KV].iTab.at(j).In <= imin){
+            imin = tube[kV-_MIN_KV].iTab.at(j).In;
+            i = j;
+        }
+    }
+    return i;
+}
+
+// Cerca l'indice corrispondente alla corrente massima
+// per i parametri indicati
+int Generatore::getImaxIndex(int kV, QString anode, int fsize){
+
+    int imax=0;
+    int i=-1;
+    for(int j=0; j<tube[kV-_MIN_KV].iTab.size(); j++){
+        if(tube[kV-_MIN_KV].iTab.at(j).fsize != fsize) continue;
+        if(tube[kV-_MIN_KV].iTab.at(j).anode != anode) continue;
+        if(tube[kV-_MIN_KV].iTab.at(j).In >= imax){
+            imax = tube[kV-_MIN_KV].iTab.at(j).In;
+            i = j;
+        }
+    }
+    return i;
+}
 
 // Validazione esposizione analogica
-unsigned char Generatore::validateAnalogData(unsigned char modo)
+// Attenzione: con isPre==true bisogna considerare la corrente a bassa velocit‡
+unsigned char Generatore::validateAnalogData(unsigned char modo, bool calibMode, bool isPre)
 {
     int i;
     unsigned char kV;
@@ -2174,8 +2195,53 @@ unsigned char Generatore::validateAnalogData(unsigned char modo)
     SWA = tube[kV-_MIN_KV].vRef.SWA;
     SWB = tube[kV-_MIN_KV].vRef.SWB;
 
-    // Cerca la corrente anodica disponibile per l'intervallo mAs richiesto
-    i=getITabIndex(kV);
+    // Impostazione Starter Alta velocit‡
+    if(pConfig->sys.highSpeedStarter == FALSE) starterHS=FALSE;
+    else{
+
+        if(calibMode){
+            // In calibrazione lo starter Ë sempre attivo
+            starterHS = TRUE;
+        }else{
+            // In modalit‡ operativa lo starter si decide sulla base delle regole di attivazione
+            if(selectedFSize==FUOCO_SMALL) starterHS=TRUE;
+            else if(modo!=ANALOG_TECH_MODE_MANUAL){
+                // La decisione sullo starter avviene solo nel pre impulso:
+                // Se perÚ l'alta velocit‡ Ë gi‡ attiva, rimane in HS
+                if((isPre)&&(!starterHS)){
+                    // In Automatico lo starter viene selezionato sulla base dello spessore
+                    if(!pCompressore->isCompressed()) starterHS=TRUE; // Se non Ë compresso allora Ë sempre attivo per sicurezza
+                    else if(pCompressore->breastThick >= 50) starterHS=TRUE; // Per seni molto spessi
+                    else starterHS=FALSE;
+                }
+            }else{
+                // Modalit‡ manuale: se si trova gi‡ in alta velocit‡, ci rimane
+                if(!starterHS){
+                    if(pGeneratore->selectedDmAs >= 400*10) starterHS=TRUE;
+                    else starterHS=FALSE;
+                }
+            }
+        }
+    }
+
+    // Impostazione delle correnti di esercizio
+
+    // Tubi a bassa velocit‡
+    if(pConfig->sys.highSpeedStarter == FALSE){
+        i=getITabIndex(kV); // Correnti determinate dall'intervallo mAs selezionato
+    }else if(isPre){
+        // Se si tratta di un pre impulso seleziona sempre la corrente a bassa velocit‡
+        i=getIminIndex(kV,selectedAnodo,selectedFSize); // Corrente low speed
+    }else if(calibMode){
+        // In calibrazione per risparmiare il tubo meglio usare correnti basse
+        i=getIminIndex(kV,selectedAnodo,selectedFSize); // Corrente low speed
+    }else if(!starterHS){
+        // Per una corrente di impulso, con bassa velocit‡ seleziona la corrente minore
+        i=getIminIndex(kV,selectedAnodo,selectedFSize); // Corrente low speed
+    }else{
+        // Per una corrente di impulso, con alta velocit‡ seleziona la corrente maggiore
+        i=getImaxIndex(kV,selectedAnodo,selectedFSize); // Corrente high speed
+    }
     if(i<0) return ERROR_INVALID_MAS; // Nessun intervallo disponibile
 
 
@@ -2188,13 +2254,6 @@ unsigned char Generatore::validateAnalogData(unsigned char modo)
     if(selectedIdac == 0) return ERROR_NOT_CALIBRATED_I;
     derivata = tube[kV-_MIN_KV].iTab.at(i).derivata;
 
-    // Carica le impostazioni relative allo starter:
-    if(pConfig->sys.highSpeedStarter == FALSE) starterHS=FALSE;
-    else{
-        if(selectedFSize==FUOCO_SMALL) starterHS=TRUE;        // Alta sempre attiva con fuoco piccolo
-        else if((modo==ANALOG_TECH_MODE_MANUAL)&&(pGeneratore->selectedDmAs>=400*10)) starterHS=TRUE;    // Alta in manuale com mAs > 400
-        else starterHS=FALSE;
-    }
 
     // Conversione di dmAs per il driver PCB190
     selectedmAsDac = selectedDmAs * 5;
@@ -2220,6 +2279,7 @@ unsigned char Generatore::validateAnalogData(unsigned char modo)
     validated=TRUE;
     return 0; // Nessun errore rilevato
 }
+
 
 bool Generatore::setmAs(double mAs)
 {

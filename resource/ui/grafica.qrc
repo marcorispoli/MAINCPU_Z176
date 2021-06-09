@@ -77,9 +77,11 @@
         <file>AlarmPage/alarmPix.png</file>
     </qresource>
     <qresource prefix="/Translate">
-        <file>Translate/traduzione_eng.qm</file>
-        <file>Translate/traduzione_ita.qm</file>
+        <file>Translate/traduzione_spa.qm</file>
         <file>Translate/traduzione_rus.qm</file>
+        <file>Translate/traduzione_ita.qm</file>
+        <file>Translate/traduzione_fra.qm</file>
+        <file>Translate/traduzione_eng.qm</file>
     </qresource>
     <qresource prefix="/ServicePanel">
         <file>ServicePanel/power_menu.png</file>

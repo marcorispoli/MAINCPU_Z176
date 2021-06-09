@@ -100,10 +100,11 @@ void AnalogCalibPageOpen::setTubeData(void){
         pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
         pGeneratore->setkV(pc_selected_kV);
         pGeneratore->setmAs(pc_selected_mAs);
-        pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL);
+        pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL, true, false);
 
         pc_selected_vdac = pGeneratore->selectedVdac;
         pc_selected_Idac = pGeneratore->selectedIdac;
+        pc_selected_Ia = pGeneratore->selectedIn;
 
     }
 
@@ -298,7 +299,8 @@ void AnalogCalibPageOpen::startTubeCalibrationXraySequence(void){
         if(pGeneratore->SWB) data[7]|=2;
 
         // Gestione dello Starter:
-        if(pGeneratore->starterHS) data[7]|=4;        // Alta VelocitÃ
+        data[7]|=4;  // Starter HS always ON
+        pGeneratore->starterHS = TRUE;
 
         data[8] =  0; // Tensione Griglia da aggiungere
         data[9] =  pGeneratore->maxV;
@@ -324,6 +326,7 @@ void AnalogCalibPageOpen::startTubeCalibrationXraySequence(void){
         if(SWA) data[7]|=1;
         if(SWB) data[7]|=2;
         data[7]|=4; // Starter HS always ON
+        pGeneratore->starterHS = TRUE;
 
         // Tensione Griglia
         data[8] =  0;

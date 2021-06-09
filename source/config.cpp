@@ -527,6 +527,12 @@ bool Config::openUserCfg(void)
     }
 
 
+    // Con lo Starter si forza il parametro relativo allo stop
+    if(sys.highSpeedStarter) {
+        userCnf.starter_off_after_exposure = false;
+        userCnf.starter_brake = false;
+    }
+
     file2.close();
     return TRUE;
 }

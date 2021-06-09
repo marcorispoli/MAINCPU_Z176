@@ -72,16 +72,19 @@ public:
 
         bool isStarterCalibrated(void); // Verifica se lo starter è stato calibrato
 
+        int getIminIndex(int kV, QString anodo, int fsize);
+        int getImaxIndex(int kV, QString anodo, int fsize);
 
 
     unsigned char validateData(void) ;       // Validazione dei dati del generatore per modelli digitali
-    unsigned char validateAnalogData(unsigned char modo);// Validazione dei dati del generatore per modelli analogici
+    unsigned char validateAnalogData(unsigned char modo, bool calibMode, bool isPre);// Validazione dei dati del generatore per modelli analogici
 
     bool setmAs(double mAs);           // Imposta i mAs
     bool setMasTomo(unsigned short index, double mAs);           // Imposta i mAs
 
     bool setkV(float kV);   // Imposta i kV
-    bool getIdacForKvCalibration(int kV, QString anodo, int* Idac, int* Inom);
+
+    bool getIdacForKvCalibration(int kV,  QString anodo, int* Idac, int* Inom);
 
     void manualShot(QString filename);
     bool manualShot(void);

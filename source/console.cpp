@@ -452,10 +452,6 @@ void console::consoleRxHandler(QByteArray rxbuffer)
     {
         if(protocollo.parametri.size()!=30) emit consoleTxHandler(answ.cmdToQByteArray("NOK"));
         else handleSetKvMonitorData(&protocollo, &answ);
-    }else if(comando==SET_KV_RX_DATA)
-    {
-        if(handleSetKvRxData(&protocollo, &answ)==FALSE) emit consoleTxHandler(answ.cmdToQByteArray("NOK"));
-        else emit consoleTxHandler(answ.cmdToQByteArray("OK"));
     }else if(comando==GET_IA_INFO)
     {
         handleGetIaInfo(&protocollo, &answ);
@@ -2299,8 +2295,9 @@ void console::handleGetTubes(protoConsole* answer)
     // Costruisce la risposta scandendo i nomi dei tubi configurati
     int n=list.count()-2;
 
-    // Filtra i tubi non abilitati per la bassa velocità
+
     if(!pConfig->sys.highSpeedStarter){
+       // Filtra i tubi abilitati per la bassa velocità
        for(i=2; i< list.count(); i++){
            if(list.at(i).contains("TEMPLATE")){
                if(list.at(i).contains("H")){
@@ -2308,7 +2305,17 @@ void console::handleGetTubes(protoConsole* answer)
                }
            }
        }
+    }else{
+        // Filtra i tubi abilitati per la alta velocità
+        for(i=2; i< list.count(); i++){
+            if(list.at(i).contains("TEMPLATE")){
+                if(!list.at(i).contains("H")){
+                    n--;
+                }
+            }
+        }
     }
+
     if(n==0) {
         // Nessun file configurato
         emit  consoleTxHandler(answer->cmdToQByteArray("OK 0"));
@@ -2319,6 +2326,7 @@ void console::handleGetTubes(protoConsole* answer)
     for(i=2; i< list.count(); i++){
        // Non aggiunge i files Template che non sono abilitati
        if( (!pConfig->sys.highSpeedStarter) && (list.at(i).contains("TEMPLATE")) &&  (list.at(i).contains("H"))) continue;
+       else if( (pConfig->sys.highSpeedStarter) && (list.at(i).contains("TEMPLATE")) &&  (!list.at(i).contains("H"))) continue;
        answer->addParam(list.at(i));
     }
 
@@ -2601,81 +2609,6 @@ void console::handleSetCalibKvRead(protoConsole* frame, protoConsole* answer)
     emit  consoleTxHandler(answer->cmdToQByteArray("OK"));
     return;
 }
-/*
- *	<ID LEN %SetKvRxData PAR0 PAR1 PAR2 PAR3 PAR4 PAR5 PAR6%>
-    PARAMETRI:	Tipo        dato        Valore
-    PAR0        Stringa     Filtro      Rh/Al/Ag/Us
-    PAR1        Int         VDAC        [1:4095]
-    PAR2        Int         KVI         Indica i KVI nominali attesi
-    PAR3        Int         IDAC        [1:4095]
-    PAR4        Int         Inom        Valore corrente in mA attesa
-    PAR5        Int         mAs         mAs richiesti dall'esposizione
-
-    RISPOSTA:    <ID LEN %OK/NOK%>
-
- *
- */
-bool console::handleSetKvRxData(protoConsole* frame, protoConsole* answer)
-{
-
-        // In ogni caso toglie la validazione a quanto c'Ã¨ giÃ  in memoria
-        kvCalibData.validated = FALSE;
-
-        // Solo in calibrazione KV Ã¨ consentito
-        if(xSequence.workingMode!=_EXPOSURE_MODE_CALIB_MODE_KV) return FALSE;
-
-        // Imposta l'anodo usato per la sequenza e il fuoco grande
-        pGeneratore->setFuoco(pGeneratore->getKvCalibAnode());
-        pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
-        if(pGeneratore->updateFuoco()==FALSE) return FALSE;
-        kvCalibData.anodo = pGeneratore->getKvCalibAnode();
-
-        // Verifica e selezione filtro
-        if(pCollimatore->setFilterTag(frame->parametri[0])==FALSE) return FALSE;
-        if(pCollimatore->setFiltro()==FALSE) return FALSE;
-        kvCalibData.filtro = frame->parametri[0];
-
-        // Valore analogico tensione
-        kvCalibData.Vdac = frame->parametri[1].toInt();
-        if((kvCalibData.Vdac == 0) || (kvCalibData.Vdac > 4095) ) return FALSE;
-
-        // Valore atteso tensione
-        kvCalibData.Vnom = frame->parametri[2].toInt();
-        if((kvCalibData.Vnom<_MIN_KV) ||(kvCalibData.Vnom>_MAX_KV)) return FALSE;
-
-        // La corrente anodica viene derivata dal template se non viene passata da parametro
-        if(frame->parametri.size()>3){
-
-            // Valore analogico corrente anodica
-            int idac = frame->parametri[3].toInt();
-            if(idac > pGeneratore->genCnf.pcb190.IFIL_MAX_SET) return false;
-            if(idac < pGeneratore->genCnf.filData.IFILdac) return false;
-            kvCalibData.Idac = idac;
-
-            // Valore atteso corrente anodica
-            kvCalibData.Inom = frame->parametri[4].toInt();
-            if((kvCalibData.Inom==0) ||(kvCalibData.Inom>199)) return FALSE;
-
-        }else{
-            // Valore della corrente Idac viene caricata dal Tubo stesso
-            if(pGeneratore->getIdacForKvCalibration(kvCalibData.Vnom, kvCalibData.anodo, &kvCalibData.Idac, &kvCalibData.Inom)==false) return false;
-
-        }
-
-        // Valore mAs da utilizzare durante la sequenza
-        kvCalibData.mAs  = 640;
-
-        // Impostazione scambio primari
-        kvCalibData.SWA = pGeneratore->tube[kvCalibData.Vnom-_MIN_KV].vRef.SWA;
-        kvCalibData.SWB = pGeneratore->tube[kvCalibData.Vnom-_MIN_KV].vRef.SWB;
-
-        // Dati validati e caricati in memoria
-        kvCalibData.validated = TRUE;
-
-
-        return TRUE;
-
-}
 
 
 /*_____________________________________________________________________________________________
@@ -2745,13 +2678,16 @@ bool console::handleSetAnalogKvCalibTubeData(protoConsole* frame, protoConsole* 
         return false;
     }
 
-    if(pGeneratore->getIdacForKvCalibration(paginaCalibAnalogic->pc_selected_kV, pGeneratore->selectedAnodo, &paginaCalibAnalogic->pc_selected_Idac, &paginaCalibAnalogic->pc_selected_Ia)==false) return false;
-
+    // BUG-KV
     paginaCalibAnalogic->pc_selected_mAs = frame->parametri[3].toInt();
     if(paginaCalibAnalogic->pc_selected_mAs > 400) {
         emit consoleTxHandler( answ->answToQByteArray("NOK 5 INVALID-MAS-VALUE"));
         return false;
     }
+
+    // Si seleziona sempre il valore più piccolo della corrente relativa (e solo per il fuoco grande!)
+    if(pGeneratore->getIdacForKvCalibration(paginaCalibAnalogic->pc_selected_kV, pGeneratore->selectedAnodo, &paginaCalibAnalogic->pc_selected_Idac, &paginaCalibAnalogic->pc_selected_Ia)==false) return false;
+
 
     emit consoleTxHandler( answ->answToQByteArray("OK 0"));
 

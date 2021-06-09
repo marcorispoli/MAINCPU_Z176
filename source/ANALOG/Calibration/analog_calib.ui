@@ -4536,7 +4536,7 @@ color: rgb(255, 255, 255);</string>
        <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
-       <string>MIRROR POSITION</string>
+       <string notr="true">MIRROR POSITION</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -4579,7 +4579,7 @@ color: rgb(255, 255, 255);</string>
 border-image: url(:/transparent.png);</string>
       </property>
       <property name="text">
-       <string>1560</string>
+       <string notr="true">1560</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

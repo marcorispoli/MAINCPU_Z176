@@ -339,7 +339,6 @@ public:
     void handleSetKvVdacData(protoConsole* frame, protoConsole* answer); // Imposta i valori dac dei kV
     void handleSetKvMonitorData(protoConsole* frame, protoConsole* answer); // Imposta i valori di calibrazione della lettura kV
     void handleSetCalibKvRead(protoConsole* frame, protoConsole* answer);
-    bool handleSetKvRxData(protoConsole* frame, protoConsole* answer); // Imposta i parametri per la sequenza raggi di calibrazione detector
 
     // CALIBRAZIONE CORRENTE ANODICA
     bool handleSetIaCalibMode(void);
