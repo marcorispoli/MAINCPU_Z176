@@ -4,9 +4,7 @@
 #include "application.h"
 #include <QWidget>
 
-namespace Ui {
-class Loader;
-}
+
 
 class Loader : public QWidget
 {
@@ -83,11 +81,7 @@ private:
     bool mccLoader(void);// Utilizza i dati dell'ultima emissione
     bool onDownloadErr(QString error);
 
-    Ui::Loader *ui;
 
-    QGraphicsScene *scene;
-    QGraphicsView *view;
-    QGraphicsProxyWidget *proxy;
     _pic16FhexFileStr pic16Fhex;
 
     // Sezione di variabili per il trasferimento dati
@@ -106,7 +100,7 @@ private:
     _itemDownload curItem;    // Dati download in corso
 
     int download_cur_perc;    // Totale percentuale di aggiornamento
-    int download_delta_perc;  // Delta aggiornamento per unit√† di download
+    int download_delta_perc;  // Delta aggiornamento per unit√  di download
     int prev_cur_perc;        // utilizzato per inviare solo a cambio numero
 
     bool manualMode;          // download manuale di un singolo file

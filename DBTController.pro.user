@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by Qt Creator 2.6.2, 2021-05-28T09:18:37. -->
+<!-- Written by Qt Creator 2.6.2, 2021-06-10T12:46:44. -->
 <qtcreator>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -105,7 +105,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4BuildConfiguration</value>
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">0</value>
-    <value type="QString" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory">/home/user/Desktop/CHIMERA/Workspace/DBT/Target</value>
+    <value type="QString" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildDirectory">/home/user/Desktop/CHIMERA/Workspace/DBT/DBTController</value>
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.BuildConfigurationCount">1</value>
@@ -181,7 +181,7 @@
     </valuelist>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">DBTController (on Remote Device)</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinuxRunConfiguration:/data/CHIMERA/Workspace/DBT/DBTController.pro</value>
+    <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinuxRunConfiguration:/mnt/hgfs/DBT/DBTController.pro</value>
     <value type="QString" key="Qt4ProjectManager.MaemoRunConfiguration.Arguments"></value>
     <value type="int" key="Qt4ProjectManager.MaemoRunConfiguration.BaseEnvironmentBase">1</value>
     <value type="QString" key="Qt4ProjectManager.MaemoRunConfiguration.ProFile">DBTController.pro</value>
@@ -331,7 +331,7 @@
     </valuelist>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">DBTController (on Remote Device)</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinuxRunConfiguration:/data/CHIMERA/Workspace/DBT/DBTController.pro</value>
+    <value type="QByteArray" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinuxRunConfiguration:/mnt/hgfs/DBT/DBTController.pro</value>
     <value type="QString" key="Qt4ProjectManager.MaemoRunConfiguration.Arguments"></value>
     <value type="int" key="Qt4ProjectManager.MaemoRunConfiguration.BaseEnvironmentBase">1</value>
     <value type="QString" key="Qt4ProjectManager.MaemoRunConfiguration.ProFile">DBTController.pro</value>

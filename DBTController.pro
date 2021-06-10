@@ -193,10 +193,10 @@ FORMS += \
 
 
 
-unix:!macx: LIBS += -L$$PWD/../../../../home/user/Desktop/CHIMERA/ltib/rootfs/usr/lib/ -lmcc
+unix:!macx: LIBS += -L$$/home/user/Desktop/CHIMERA/ltib/rootfs/usr/lib/ -lmcc
 
-INCLUDEPATH += $$PWD/../../../../home/user/Desktop/CHIMERA/ltib/rootfs/usr/include
-DEPENDPATH += $$PWD/../../../../home/user/Desktop/CHIMERA/ltib/rootfs/usr/include
+INCLUDEPATH += /home/user/Desktop/CHIMERA/ltib/rootfs/usr/include
+DEPENDPATH += /home/user/Desktop/CHIMERA/ltib/rootfs/usr/include
 
 RESOURCES += \
     resource/ui/grafica.qrc

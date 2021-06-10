@@ -1,0 +1,56 @@
+///////////////////////////////////////////////////////////
+		CALIBRAZIONE  NACCHERA
+		Modificato per HOTFIX ID13A
+///////////////////////////////////////////////////////////
+<319,162>       // offset, K
+
+///////////////////////////////////////////////////////////
+//		CALIBRAZIONE  PADS
+// Tutte quelle non elencate vengono settate come DEFPAD
+// PAD definibili: sbalzo,K-Elastica,Peso(N)	
+// - PAD24x30
+// - PAD18x24_C
+// - PAD18x24_L
+// - PAD18x24_R
+// - PAD9x21
+// - PAD10x24
+// - PADD75_CNT
+// - PADD75_MAG
+// - PADBIOP_2D
+// - PADBIOP_3D
+// - PADTOMO
+///////////////////////////////////////////////////////////
+<PAD24x30,-110,22,50>
+<PAD18x24_C,-110,22,50>
+<PAD18x24_L,-110,22,50>
+<PAD18x24_R,-110,22,50>
+<PAD9x21,89,17,30>
+<PADD75_CNT,-105,0,0>
+<PADD75_MAG,89,17,30>
+<PADBIOP_3D,-85,10,30>
+<PADTOMO,-115,20,60>
+<DEFPAD,0,0,0>
+
+///////////////////////////////////////////////////////////
+		CALIBRAZIONE  FORZA
+///////////////////////////////////////////////////////////
+<35,814,70,80> // F0,K0,F1,K1
+
+///////////////////////////////////////////////////////////
+		GESTIONE POSIZIONI NACCHERA
+///////////////////////////////////////////////////////////	
+<280> // Max Position Meccanica
+<400> // Max Position senza protezione paziente (livello guscio)
+<280> // Max position con Protezione Paziente (livello protezione)
+
+///////////////////////////////////////////////////////////
+ GESTIONE INGRANDIMENTO (8 possibili fattori)
+///////////////////////////////////////////////////////////	
+<0,0>	  // Sbalzo, Indicazione YX-> Y.X
+<299,20>  // Sbalzo, Indicazione YX-> Y.X
+<259,18>  // Sbalzo, Indicazione YX-> Y.X
+<0,0>	  // Sbalzo, Indicazione YX-> Y.X
+<200,15>  // Sbalzo, Indicazione YX-> Y.X
+<0,0>	  // Sbalzo, Indicazione YX-> Y.X
+<0,0>	  // Sbalzo, Indicazione YX-> Y.X
+<0,0>	  // Sbalzo, Indicazione YX-> Y.X

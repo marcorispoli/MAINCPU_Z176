@@ -3,25 +3,13 @@
 #include "application.h"
 #include "appinclude.h"
 #include "globvar.h"
-#include "ui_loader.h"
+
 
 Loader::Loader(int rotation, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Loader)
-{
-    ui->setupUi(this);
-    scene = new QGraphicsScene();
-    view = new QGraphicsView(scene);
-    proxy = scene->addWidget(this);
+    QWidget(parent)
 
-    view->setWindowFlags(Qt::FramelessWindowHint);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setFixedSize(640,480);    // Dimensione della vista
-    scene -> setSceneRect(0,0,480,640);
-    view->setAlignment(Qt::AlignLeft);
-    view->rotate(rotation);       // Angolo di rotazione della vista corrente
-    view->setScene(scene);
+{
+
 
     manualMode = false;
 
@@ -29,7 +17,7 @@ Loader::Loader(int rotation, QWidget *parent) :
 
 Loader::~Loader()
 {
-    delete ui;
+
 }
 
 

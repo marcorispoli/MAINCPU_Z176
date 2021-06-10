@@ -7,7 +7,7 @@
 #include "../../globvar.h"
 
 #include "../../audio.h"
-#include "../lib/msgbox.h"
+#include "../../../lib/msgbox.h"
 
 extern audio* pAudio;
 

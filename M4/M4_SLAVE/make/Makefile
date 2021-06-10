@@ -1,7 +1,7 @@
 #----------------------------------------------------------
 # setup required variables 
 #----------------------------------------------------------
-PROJ_DIR	    = $(abspath /home/user/Desktop/CHIMERA/Workspace/DBT/M4)
+PROJ_DIR	    = $(abspath /mnt/hgfs/DBT/M4)
 MQX_ROOTDIR         = $(PROJ_DIR)/MQX
 SHARED_DIR	    = $(PROJ_DIR)/../shared_a5_m4
 COM_DIR	    	    = $(PROJ_DIR)/COMMON
@@ -61,9 +61,8 @@ include $(MQX_ROOTDIR)/build/common/make/app-process.mak
 #----------------------------------------------------------
 # generazione ELF file
 elf:
-	/opt/arm-2017/bin/arm-none-eabi-objcopy -O binary $(APPLICATION_FILE) $(PROJ_DIR)/$(NAME).bin
-	cp $(PROJ_DIR)/$(NAME).bin /nfs_chimera/TerminalSlave
-	cp $(PROJ_DIR)/$(NAME).bin /nfs_chimera/TerminalMaster
+	/opt/arm-2017/bin/arm-none-eabi-objcopy -O binary $(APPLICATION_FILE) $(PROJ_DIR)/BIN/$(NAME).bin
+	cp $(PROJ_DIR)/BIN/$(NAME).bin /data/CHIMERA/Workspace/DBT/M4_SLAVE/
 	/opt/arm-2012/bin/arm-none-eabi-readelf $(APPLICATION_FILE) -h | grep "Entry point"
 
 

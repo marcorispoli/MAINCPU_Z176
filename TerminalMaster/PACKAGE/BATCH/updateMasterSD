@@ -1,5 +1,0 @@
-cp /nfs_chimera/TerminalMaster/PACKAGE/id12/PACKAGE_ID12.tar /home/user/Desktop/sd_master/
-cp /nfs_chimera/TerminalMaster/PACKAGE/id12/PACKAGE_ID12.tar /media/masterSD/
-cp /home/user/Desktop/sd_master/sd_prog_master.sh /media/masterSD/
-sync
-
