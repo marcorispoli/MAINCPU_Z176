@@ -54,8 +54,8 @@ void biopsy::defaultConfigData(void){
     config.offsetFibra = 170;   // (mm) distanza zero torretta - fibra di carbonio
 
     // Gestion Movimento Pad
-    config.offsetPad = 50;              // Offset linea di calibrazione posizione - superficie staffe metalliche
-    config.margineRisalita = 15;        // Margine di sicurezza per impatto con il compressore in risalita
+    config.offsetPad = 60;              // Offset linea di calibrazione posizione - superficie staffe metalliche
+    config.margineRisalita = 10;        // Margine di sicurezza per impatto con il compressore in risalita
     config.marginePosizionamento = 5;   // Margine di sicurezza impatto con il compressore in puntamento
 
     // Calibrazione reader
@@ -280,6 +280,8 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
 
 }
 
+
+
 bool biopsy::moveXYZ(unsigned short X, unsigned short Y, unsigned short Z)
 {
     unsigned char data[15];
@@ -480,6 +482,15 @@ bool biopsy::moveIncY(void)
     return TRUE;
 }
 
+bool biopsy::resetBym(void)
+{
+    unsigned char data[2];
+    data[0]=_MCC_BIOPSY_CMD_RESET_BYM; // Codice comando
+    data[1] = 0;
+    if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,2)==FALSE) return false;
+    return TRUE;
+}
+
 bool biopsy::setStepVal(unsigned char step)
 {
     unsigned char data[2];
@@ -520,12 +531,22 @@ bool biopsy::updateConfig(void)
 #define _ROTAZIONE_TO_PELLICOLA 0 // dmm
 #define _COS15 0.96592583
 #define _SIN15 0.25881904
-#define _BIO_REFY_OFFSET (470)  // Distanza Fuoco Reference
+
+// provvisiorio
+//#define _BIO_REFY_OFFSET (470)  // Distanza Fuoco Reference
+#define _BIO_REFY_OFFSET (435)  // Distanza Fuoco Reference
+
 #define _BIO_REFX_OFFSET (0)    // Distanza Fuoco reference
 
 #define _X0_BYM_TO_BIO_X0 260    // dmm Distanza X0 torretta to BIO-X
-#define _Y0_BYM_TO_BIO_Y0 (470)  // Distanza Y0 torretta to BIO-Y
-#define _Z0_BYM_TO_BIO_Y0 (1730) // Distanza Z0 torretta to BIO-Z (1930 - 200)
+
+// Provvisorio
+//#define _Y0_BYM_TO_BIO_Y0 (470)  // Distanza Y0 torretta to BIO-Y
+#define _Y0_BYM_TO_BIO_Y0 (435)
+
+// Provvisorio
+//#define _Z0_BYM_TO_BIO_Y0 (1730) // Distanza Z0 torretta to BIO-Z (1930 - 200)
+#define _Z0_BYM_TO_BIO_Y0 (1700)
 
 bool biopsy::calcLesionPosition(void){
 
@@ -588,7 +609,7 @@ bool biopsy::calcLesionPosition(void){
     Zlesione_dmm =  _Z0_BYM_TO_BIO_Y0 - (int) Zbio + pBiopsy->config.offsetZ;
     Zfibra_dmm   =  pBiopsy->config.offsetFibra * 10 - Zlesione_dmm;
 
-    PRINT(QString("[  LES X:%1 Y:%2 Z:%3 ZF:%4 ]").arg(Xlesione_dmm).arg(Ylesione_dmm).arg(Zlesione_dmm).arg(Zfibra_dmm));
+    PRINT(QString("[  LES X:%1 Y:%2 Z:%3 ZF:%4 THCK:%5 ]").arg(Xlesione_dmm).arg(Ylesione_dmm).arg(Zlesione_dmm).arg(Zfibra_dmm).arg(pCompressore->breastThick));
 
     // Controllo sullla raggiungibilità della lesione
     if(Zfibra_dmm <=40){

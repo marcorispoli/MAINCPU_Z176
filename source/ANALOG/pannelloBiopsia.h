@@ -99,10 +99,10 @@ private:
 public:
     //_______________ GESTIONE WORKFLOW ___________________
     void changeBiopsyWorkflowStatus(unsigned char workflow, bool force);
-    #define _BIOPSY_INIT                 0
-    #define _BIOPSY_SHOT_RIGHT           1
-    #define _BIOPSY_SHOT_LEFT            2
-    #define _BIOPSY_POINT_LESION         3
+    #define _BIOPSY_INIT                 1
+    #define _BIOPSY_SHOT_RIGHT           2
+    #define _BIOPSY_SHOT_LEFT            3
+    //#define _BIOPSY_POINT_LESION         3
     #define _BIOPSY_WAIT_REFERENCE_P15   4
     #define _BIOPSY_WAIT_LESION_P15      5
     #define _BIOPSY_WAIT_REFERENCE_M15   6

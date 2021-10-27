@@ -4030,6 +4030,8 @@ void serverDebug::handleBiopsy(QByteArray data)
         serviceTcp->txData(QByteArray("moveDec    <X|Y|Z>    ? DEC Z or Y or Z \r\n"));
         serviceTcp->txData(QByteArray("stepVal    val        ? set the Step value \r\n"));
         serviceTcp->txData(QByteArray("getStepval            ? return current stepval \r\n"));
+        serviceTcp->txData(QByteArray("resetBym              ? reset bym device \r\n"));
+
 
         serviceTcp->txData(QByteArray("\r\n------------ WORKFLOW ----------------------------\r\n"));
         serviceTcp->txData(QByteArray("setAgo     val        ? set Ago lenght \r\n"));
@@ -4219,6 +4221,10 @@ void serverDebug::handleBiopsy(QByteArray data)
             if(pBiopsy->setLunghezzaAgo((unsigned char) parametri[0].toInt())==false){
                 serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
             }
+
+        }else if(data.contains("resetBym")){
+            pBiopsy->resetBym();
+            serviceTcp->txData(QByteArray("DONE!\n"));
 
         }else if(data.contains("getAgo")){
             serviceTcp->txData(QString("Ago Lenght: %1\n\r").arg(pBiopsy->lunghezzaAgo).toAscii().data());

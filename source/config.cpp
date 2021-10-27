@@ -2705,9 +2705,9 @@ void Config::configSlaveRxHandler(QByteArray frame)
 
         QString command = QString("/monta.sh");
         system(command.toStdString().c_str());
-        command = QString("cp /mnt/nfs/m4_slave.bin /");
+        command = QString("cp /mnt/target/M4_SLAVE/m4_slave.bin /");
         system(command.toStdString().c_str());
-        command = QString("cp /mnt/target/DBTController /");
+        command = QString("cp /mnt/target/DBTController/DBTController /");
         system(command.toStdString().c_str());
         command = QString("sync");
         system(command.toStdString().c_str());
@@ -2719,7 +2719,7 @@ void Config::configSlaveRxHandler(QByteArray frame)
 
         QString command = QString("/monta.sh");
         system(command.toStdString().c_str());
-        command = QString("cp /mnt/target/DBTController /");
+        command = QString("cp /mnt/target/DBTController/DBTController /");
         system(command.toStdString().c_str());
         command = QString("sync");
         system(command.toStdString().c_str());
@@ -3241,11 +3241,11 @@ bool Config::executeUpdateIde(){
 
     QString command = QString("/monta.sh");
     system(command.toStdString().c_str());
-    command = QString("cp /mnt/nfs/m4_master.bin /");
+    command = QString("cp /mnt/target/M4_MASTER/m4_master.bin /");
     system(command.toStdString().c_str());
-    command = QString("cp /mnt/nfs/m4_slave.bin /");
+    command = QString("cp /mnt/target/M4_SLAVE/m4_slave.bin /");
     system(command.toStdString().c_str());
-    command = QString("cp /mnt/target/DBTController /");
+    command = QString("cp /mnt/target/DBTController/DBTController /");
     system(command.toStdString().c_str());
     command = QString("sync");
     system(command.toStdString().c_str());
@@ -3263,7 +3263,7 @@ bool Config::executeUpdateGui(){
 
     QString command = QString("/monta.sh");
     system(command.toStdString().c_str());
-    command = QString("cp /mnt/target/DBTController /");
+    command = QString("cp /mnt/target/DBTController/DBTController /");
     system(command.toStdString().c_str());
     command = QString("sync");
     system(command.toStdString().c_str());

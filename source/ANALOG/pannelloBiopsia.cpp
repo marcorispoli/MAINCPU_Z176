@@ -244,7 +244,7 @@ void pannelloBiopsia::mousePressEvent(QGraphicsSceneMouseEvent* event)
             }
         break;
 
-        case  _BIOPSY_POINT_LESION:
+        //case  _BIOPSY_POINT_LESION:
         case  _BIOPSY_WAIT_REFERENCE_P15:
         case  _BIOPSY_WAIT_LESION_P15:
         case  _BIOPSY_WAIT_REFERENCE_M15:
@@ -268,7 +268,8 @@ void pannelloBiopsia::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
             // Pulsante Repeat measurement
             if((mouse.x()>=240)&&(mouse.x()<=397)&&(mouse.y()>=397)&&(mouse.y()<=467)){
-                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_POINT_LESION);
+//                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_POINT_LESION);
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_WAIT_REFERENCE_P15);
                 return;
             }
 
@@ -471,36 +472,105 @@ void pannelloBiopsia::mousePressEvent(QGraphicsSceneMouseEvent* event)
 void pannelloBiopsia::manageConsoleButtons(int buttons){
     if(!isMaster) return;
 
-    // In ogni stato viene gestito il pulsante di reset:
-    // Si richiede una conferma ...
+    // Pulsante Abort sequence
     if(buttons & _BP_BIOP_PUSH_RESET){
-
+        ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_INIT);
         return;
     }
 
-    // GEstione pulsante ENTER
-    if(buttons & _BP_BIOP_PUSH_SEQ){
-        switch(workflow){
-            case _BIOPSY_POINT_LESION:
+    switch(workflow){
+        case _BIOPSY_INIT: // Attesa pressione pulsante di start
+
+            // Pulsante start sequence: consentita solo con una compressione in corso!!
+            if(buttons & _BP_BIOP_PUSH_SEQ){
+                if(ApplicationDatabase.getDataI(_DB_FORZA) == 0){
+                     ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_MESSAGES, (int) _DB_ANALOG_BIOPSY_MESSAGES_ERROR_MISSING_COMPRESSION, DBase::_DB_FORCE_SGN);
+                }else ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) (ApplicationDatabase.getDataI(_DB_ANALOG_BIOPSY_WORKFLOW)+1));
+                return;
+            }
+
+        break;
+
+        case _BIOPSY_SHOT_LEFT:
+        case _BIOPSY_SHOT_RIGHT: // Inizializzazione modalità biopsia
+
+            // Pulsante Next sequence
+            if(buttons & _BP_BIOP_PUSH_SEQ){
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) (ApplicationDatabase.getDataI(_DB_ANALOG_BIOPSY_WORKFLOW)+1));
+                return;
+            }
+        break;
+
+        /*
+        case  _BIOPSY_POINT_LESION:
+            if(buttons & _BP_BIOP_PUSH_SEQ){
                 // Il pulsante ENT inizia la sequenza di ricerca della lesione
                 ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) (ApplicationDatabase.getDataI(_DB_ANALOG_BIOPSY_WORKFLOW)+1)); // Step dell'acquisizione
-            break;
-            case  _BIOPSY_WAIT_REFERENCE_P15:
+                return;
+            }
+        break;
+        */
+
+        case  _BIOPSY_WAIT_REFERENCE_P15:
+
+            // Ripete il puntamento
+            if(buttons & _BP_BIOP_PUSH_BACK){
+                // ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_POINT_LESION); // Ricomincia il puntamento
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_WAIT_REFERENCE_P15); // Ricomincia il puntamento
+                return;
+            }
+
+            if(buttons & _BP_BIOP_PUSH_SEQ){
                 pBiopsy->dmm_ref_p15_JX = (float) pBiopsy->dmmJX;
                 pBiopsy->dmm_ref_p15_JY = (float) pBiopsy->dmmJY;
                 ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) (ApplicationDatabase.getDataI(_DB_ANALOG_BIOPSY_WORKFLOW)+1)); // Step dell'acquisizione
-            break;
-            case  _BIOPSY_WAIT_LESION_P15:
+                return;
+            }
+        break;
+        case  _BIOPSY_WAIT_LESION_P15:
+
+            // Ripete il puntamento
+            if(buttons & _BP_BIOP_PUSH_BACK){
+                //ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_POINT_LESION); // Ricomincia il puntamento
+                 ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_WAIT_REFERENCE_P15);
+                return;
+            }
+
+            if(buttons & _BP_BIOP_PUSH_SEQ){
                 pBiopsy->dmm_les_p15_JX =(float)  pBiopsy->dmmJX;
                 pBiopsy->dmm_les_p15_JY = (float) pBiopsy->dmmJY;
                 ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) (ApplicationDatabase.getDataI(_DB_ANALOG_BIOPSY_WORKFLOW)+1)); // Step dell'acquisizione
-            break;
-            case  _BIOPSY_WAIT_REFERENCE_M15:
+                return;
+            }
+        break;
+        case  _BIOPSY_WAIT_REFERENCE_M15:
+
+            // Ripete il puntamento
+            if(buttons & _BP_BIOP_PUSH_BACK){
+                //ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_POINT_LESION); // Ricomincia il puntamento
+                 ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_WAIT_REFERENCE_P15);
+                return;
+            }
+
+            if(buttons & _BP_BIOP_PUSH_SEQ){
                 pBiopsy->dmm_ref_m15_JX = (float) pBiopsy->dmmJX;
                 pBiopsy->dmm_ref_m15_JY = (float) pBiopsy->dmmJY;
                 ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) (ApplicationDatabase.getDataI(_DB_ANALOG_BIOPSY_WORKFLOW)+1)); // Step dell'acquisizione
-            break;
-            case _BIOPSY_WAIT_LESION_M15:
+                return;
+            }
+        break;
+
+        case  _BIOPSY_WAIT_LESION_M15:
+
+            // Ripete il puntamento
+            if(buttons & _BP_BIOP_PUSH_BACK){
+                //ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_POINT_LESION); // Ricomincia il puntamento
+                 ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_WAIT_REFERENCE_P15);
+                return;
+            }
+
+            // Completa il puntamento e calcola
+            if(buttons & _BP_BIOP_PUSH_SEQ){
                 pBiopsy->dmm_les_m15_JX = (float) pBiopsy->dmmJX;
                 pBiopsy->dmm_les_m15_JY =(float)  pBiopsy->dmmJY;
 
@@ -522,66 +592,108 @@ void pannelloBiopsia::manageConsoleButtons(int buttons){
                     ApplicationDatabase.setData(_DB_BIOP_AGO, (int) 0);
                     ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_SELECTION_NEEDLE); // Step dell'acquisizione
                 }
-            break;
-        }
+                return;
+            }
 
-        return;
-    }
+        break;
 
-    // Bottone BACKWORD
-    if(buttons & _BP_BIOP_PUSH_BACK){
-        int num;
-        switch(workflow){
-            case _BIOPSY_POINT_LESION:
-            case  _BIOPSY_WAIT_REFERENCE_P15:
-            case  _BIOPSY_WAIT_LESION_P15:
-            case  _BIOPSY_WAIT_REFERENCE_M15:
-            case _BIOPSY_WAIT_LESION_M15:
-                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_POINT_LESION); // Ricomincia il puntamento
-            break;
-            case _BIOPSY_SELECTION_NEEDLE:
+        case _BIOPSY_WRONG_LESION_CALC:
+
+            // Pulsante Repeat measurement
+            if(buttons & _BP_BIOP_PUSH_BACK){
+                //ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_POINT_LESION);
+                 ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_WAIT_REFERENCE_P15);
+                return;
+            }
+
+        break;
+        case _BIOPSY_SELECTION_NEEDLE:
+
+            // Bottone +1
+            if(buttons & _BP_BIOP_PUSH_AGO_1){
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_NEEDLE_LENGTH);
+                return;
+            }
+
+            // Bottone +10
+            if(buttons & _BP_BIOP_PUSH_AGO_10){
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_NEEDLE_LENGTH);
+                return;
+            }
+
+            // Bottone next
+            if(buttons & _BP_BIOP_PUSH_SEQ){
+                if(ApplicationDatabase.getDataI(_DB_BIOP_AGO) == 0) {
+                    ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_MESSAGES, (int) _DB_ANALOG_BIOPSY_MESSAGES_ERROR_INVALID_NEEDLE_LENGHT, DBase::_DB_FORCE_SGN);
+                    return;
+                }
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_MOVE_BYM);
+                return;
+            }
+
+
+        break;
+        case _BIOPSY_MOVE_BYM:
+
+            // Pulsante Move
+            if(buttons & _BP_BIOP_PUSH_SEQ){
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW,(int) _BIOPSY_MOVING);
+                return;
+            }
+
+        break;
+        case _BIOPSY_CHECK_POSITION:
+
+
+        break;
+        case _BIOPSY_NEEDLE_LENGTH:
+
+            // Pulsante OK
+            if(buttons & _BP_BIOP_PUSH_SEQ){
+                int num;
+                // Controllo minimo massimo
                 num = ApplicationDatabase.getDataI(_DB_BIOP_AGO);
-                if(num==0) return;
-                num -= last_increment;
-                if(num < ApplicationDatabase.getDataI(_DB_BIOP_MIN_AGO)) num = ApplicationDatabase.getDataI(_DB_BIOP_MIN_AGO);
+                if(num < ApplicationDatabase.getDataI(_DB_BIOP_MIN_AGO)) num = 0;
+                else if(num > ApplicationDatabase.getDataI(_DB_BIOP_MAX_AGO)) num = 0;
+                if(num==0)  ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_MESSAGES, (int) _DB_ANALOG_BIOPSY_MESSAGES_ERROR_INVALID_NEEDLE_LENGHT, DBase::_DB_FORCE_SGN);
                 ApplicationDatabase.setData(_DB_BIOP_AGO, (int) num);
-            break;
-        }
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_SELECTION_NEEDLE);
+                return;
+            }
 
-        return;
-    }
+            // Pulsante Backward: azzera
+            if(buttons & _BP_BIOP_PUSH_BACK){
+                ApplicationDatabase.setData(_DB_BIOP_AGO, (int) 0);
+                ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_SELECTION_NEEDLE);
+                return;
+            }
 
-    // Bottone +1
-    if(buttons & _BP_BIOP_PUSH_AGO_1){
-        int num;
-        switch(workflow){
-            case _BIOPSY_SELECTION_NEEDLE:
+            // Bottone +1
+            if(buttons & _BP_BIOP_PUSH_AGO_1){
                 last_increment = 1;
+                int num;
                 num = ApplicationDatabase.getDataI(_DB_BIOP_AGO);
                 num ++;
+
                 if(num > ApplicationDatabase.getDataI(_DB_BIOP_MAX_AGO)) num = ApplicationDatabase.getDataI(_DB_BIOP_MAX_AGO);
                 ApplicationDatabase.setData(_DB_BIOP_AGO, (int) num);
-            break;
-        }
+                return;
+            }
 
-        return;
-    }
-
-    // Bottone +10
-    if(buttons & _BP_BIOP_PUSH_AGO_10){
-        int num;
-        switch(workflow){
-            case _BIOPSY_SELECTION_NEEDLE:
+            // Bottone +10
+            if(buttons & _BP_BIOP_PUSH_AGO_10){
                 last_increment = 10;
+                int num;
                 num = ApplicationDatabase.getDataI(_DB_BIOP_AGO);
                 num += 10;
                 if(num > ApplicationDatabase.getDataI(_DB_BIOP_MAX_AGO)) num = ApplicationDatabase.getDataI(_DB_BIOP_MAX_AGO);
                 ApplicationDatabase.setData(_DB_BIOP_AGO, (int) num);
-            break;
-        }
+                return;
+            }
 
-        return;
+        break;
     }
+
 
     return;
 }
@@ -722,6 +834,7 @@ void pannelloBiopsia::changeBiopsyWorkflowStatus(unsigned char wf, bool force){
                }
             }
         break;
+            /*
         case _BIOPSY_POINT_LESION:
             backgroundPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/backgroundBiopsia_POINT_LESION.png"));
 
@@ -733,6 +846,7 @@ void pannelloBiopsia::changeBiopsyWorkflowStatus(unsigned char wf, bool force){
                }
             }
         break;
+        */
         case _BIOPSY_WAIT_REFERENCE_M15:
             backgroundPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/backgroundBiopsia_REFm15.png"));
 
@@ -926,10 +1040,11 @@ void pannelloBiopsia::setStatusMessage(void){
         case _BIOPSY_SHOT_LEFT:
             stringa = QString(QApplication::translate("BIOPSY-MESSAGE","PUT THE CASSETTE \nLEFT SIDE", 0, QApplication::UnicodeUTF8));
         break;
+            /*
         case _BIOPSY_POINT_LESION:
             stringa = QString(QApplication::translate("BIOPSY-MESSAGE","PRESS START MEASURE", 0, QApplication::UnicodeUTF8));
         break;        
-
+*/
         case _BIOPSY_MOVE_BYM:
             stringa = QString(QApplication::translate("BIOPSY-MESSAGE","WAIT FOR POINTING", 0, QApplication::UnicodeUTF8));
         break;
@@ -992,7 +1107,6 @@ void pannelloBiopsia::valueChanged(int index,int opt)
     case _DB_BIOP_AGO:
         needleSelection->setPlainText(QString("%1 (mm)").arg(ApplicationDatabase.getDataI(index)).toAscii().data());
         needleSelection->update();
-
         if(isMaster) pBiopsy->setLunghezzaAgo((unsigned char) ApplicationDatabase.getDataI(index));
         break;
 
@@ -1067,8 +1181,7 @@ void pannelloBiopsia::valueChanged(int index,int opt)
 
     case _DB_BIOP_Z:
     case _DB_BIOP_Y:
-    case _DB_BIOP_X:
-        if(workflow!=_BIOPSY_CHECK_POSITION) return;
+    case _DB_BIOP_X:       
         setCurrentNeedlePosition();
 
     break;
@@ -1121,12 +1234,17 @@ void pannelloBiopsia::setCurrentNeedlePosition(void){
         zPosition->setColor(QColor(0,0,0));
     }
 
-    margPosition->setPlainText(QString("MG:%1 - CMP:%2 (mm)").arg(MG/10).arg(ZLM).toAscii().data());
+
+    margPosition->setPlainText(QString("MG:%1mm- CMP:%2mm").arg(MG).arg(ZLM).toAscii().data());
     zPosition->setPlainText(QString("dX:%1 dY:%2 dZ:%3").arg((float)X/10).arg((float)Y/10).arg((float)Z/10).toAscii().data());
     zPosition->update();
     margPosition->update();
-    zPosition->show();
-    margPosition->show();
+
+    // La visualizzazione viene fatta solo se si trova nel workflow corretto
+    if(workflow ==_BIOPSY_CHECK_POSITION){
+        zPosition->show();
+        margPosition->show();
+    }
 }
 
 /* _____________________________________________________________________________________________________________________________________
@@ -1171,7 +1289,8 @@ void pannelloBiopsia::setTrxPicture(void){
     int angolo = pConfig->convertDangolo(ApplicationDatabase.getDataI(_DB_TRX));
 
 
-    if(workflow <= _BIOPSY_POINT_LESION) {
+    //if(workflow <= _BIOPSY_POINT_LESION) {
+    if(workflow <= _BIOPSY_WAIT_REFERENCE_P15) {
         if((angolo>=14) && (angolo<=16)) trxPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/trxRightDisabled.png"));
         else if((angolo>=-16) && (angolo<=-14)) trxPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/trxLeftDisabled.png"));
         else if((angolo>=-1) && (angolo<=1)) trxPix->setPixmap(QPixmap("://BiopsyPage/BiopsyPage/trxCenterDisabled.png"));

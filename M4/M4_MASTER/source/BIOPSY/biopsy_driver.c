@@ -170,6 +170,29 @@ bool BiopsyDriverGetNeedle(unsigned short* val)
   return FALSE;
 }
 
+bool BiopsyDriverSetStepVal(unsigned char val, unsigned char* stepval)
+{
+    unsigned char rx_buffer[4];
+    unsigned char tx_buffer[4];
+
+    tx_buffer[0] = 0x8D;
+    tx_buffer[1] = 0x7;
+    tx_buffer[2] = val;
+
+#ifdef __BIOPSY_SIMULATOR
+    sim_serialCommand(tx_buffer,rx_buffer);
+#else
+    Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
+#endif
+
+    if(rx_buffer[0]==tx_buffer[0]){
+        if(stepval)  *stepval =  rx_buffer[1];
+        return true;
+    }
+    return FALSE;
+}
+
+
 /*
   La funzione chiede info sulla X corrente del posizionamento
 */
@@ -639,27 +662,6 @@ bool BiopsyDriverSetZlim(unsigned short val, unsigned short* zlim)
 
 
 
-bool BiopsyDriverSetStepVal(unsigned char val, unsigned char* stepval)
-{
-    unsigned char rx_buffer[4];
-    unsigned char tx_buffer[4];
-
-    tx_buffer[0] = 0x10;
-    tx_buffer[1] = val;
-    tx_buffer[2] = 0;
-
-#ifdef __BIOPSY_SIMULATOR
-    sim_serialCommand(tx_buffer,rx_buffer);
-#else
-    Ser422SendRaw(tx_buffer[0], tx_buffer[1], tx_buffer[2], rx_buffer, 5);
-#endif
-
-    if(rx_buffer[0]==tx_buffer[0]){
-        if(stepval)  *stepval =  rx_buffer[1];
-        return true;
-    }
-    return FALSE;
-}
 
 /* EOF */
  

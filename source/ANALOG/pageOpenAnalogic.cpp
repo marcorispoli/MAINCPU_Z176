@@ -596,12 +596,12 @@ void AnalogPageOpen::setTempCuffia(int temp)
     case 0: // HU%
         hu = (float) 100 * 0.9 * (temp - 25) / 40;
         if(hu<0) hu=0;
-        str = QString("T-SHIELD: %1 HU\%").arg(hu);
+        str = QString("T-SHIELD: %1 HU\%").arg((int) hu);
         break;
     case 1: // HU
         hu = (float) 550 * 0.9 * (temp - 25) / 40;
         if(hu<0) hu=0;
-        str = QString("T-SHIELD: %1 kHU").arg(hu);
+        str = QString("T-SHIELD: %1 kHU").arg((int) hu);
         str.setNum((int) hu);
         str.append(QString(" kHU"));
         break;
@@ -628,12 +628,12 @@ void AnalogPageOpen::setHuAnode(int khu)
     case 0: // HU%
         hu = (float) khu * 100 / 300;
         if(hu<0) hu=0;
-        str = QString("T-ANODE: %1 HU\%").arg(hu);
+        str = QString("T-ANODE: %1 HU\%").arg((int) hu);
         break;
     case 1: // HU
         hu = (float) khu ;
         if(hu<0) hu=0;
-        str = QString("T-ANODE: %1 kHU").arg(hu);
+        str = QString("T-ANODE: %1 kHU").arg((int) hu);
         break;
     }
     ui->tempAnode->setText(str);

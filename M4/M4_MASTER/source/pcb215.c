@@ -1131,9 +1131,11 @@ void pcb215VerifyComprData(void)
   // e aggiorna il dispositivo
   if(updateLimitPos)
   {
+      // Bisogna tenere in considerazione che il piano di compressione della fibra del BYM è più alto di 20mm rispetto
+      // al piano del potter.
       if(generalConfiguration.biopsyCfg.connected==TRUE)
       {
-        padLimitPosition = generalConfiguration.biopsyCfg.conf.offsetPad +  generalConfiguration.biopsyCfg.conf.offsetFibra - generalConfiguration.biopsyCfg.conf.margineRisalita - generalConfiguration.biopsyCfg.Z/10;
+        padLimitPosition = generalConfiguration.biopsyCfg.conf.offsetPad +  (generalConfiguration.biopsyCfg.conf.offsetFibra + 20) - generalConfiguration.biopsyCfg.conf.margineRisalita - generalConfiguration.biopsyCfg.Z/10;
       }
       else if(IS_VALID_PAD)
       {

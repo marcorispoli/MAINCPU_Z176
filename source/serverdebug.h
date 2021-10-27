@@ -163,6 +163,7 @@ public slots:
         void handleCanOpen_test(QByteArray data);
 
         void debugPrint(QString data);
+        bool isDebugPrintConnected(void){return serviceTcp->connection_status;}
 private:
     bool mccService(int id, _MccServiceNotify_Code cmd, QByteArray data);
     bool mccService(_MccServiceNotify_Code cmd);

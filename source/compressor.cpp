@@ -103,7 +103,6 @@ bool Compressor::readConfigFile(void)
             int index = getPadCodeFromTag(params.at(0));
             if(index<0) return FALSE;           
             config.pads[index].offset = params.at(1).toInt();
-            if(params.at(0)=="PADBIOP_3D") config.pads[index].offset -= 8; // Correzione per diversa posizione del top
             config.pads[index].kF = params.at(2).toInt();
             config.pads[index].peso = params.at(3).toInt();
         }

@@ -262,8 +262,8 @@ typedef enum
 // Codici pulsanti della console di biopsia
 #define _BP_BIOP_PUSH_NO_EVENT  0
 #define _BP_BIOP_PUSH_RESET     0x1
-#define _BP_BIOP_PUSH_AGO_1     0x2
-#define _BP_BIOP_PUSH_AGO_10    0x4
+#define _BP_BIOP_PUSH_AGO_10    0x2
+#define _BP_BIOP_PUSH_AGO_1     0x4
 #define _BP_BIOP_PUSH_SEQ       0x8
 #define _BP_BIOP_PUSH_BACK      0x10
 
@@ -280,6 +280,7 @@ typedef enum
 #define _MCC_BIOPSY_CMD_MOVE_DECZ   8
 #define _MCC_BIOPSY_CMD_SET_STEPVAL 9
 #define _MCC_BIOPSY_CMD_SET_LAGO    10
+#define _MCC_BIOPSY_CMD_RESET_BYM   11
 
 
 

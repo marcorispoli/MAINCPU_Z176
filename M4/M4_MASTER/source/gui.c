@@ -1251,6 +1251,10 @@ void mccBiopsyCmd(void)
   case _MCC_BIOPSY_CMD_SET_LAGO:
       generalConfiguration.biopsyCfg.lunghezzaAgo =  mcc_cmd.buffer[1];
       break;
+  case _MCC_BIOPSY_CMD_RESET_BYM:
+
+      BiopsyDriverReset();
+      break;
 
   }
 

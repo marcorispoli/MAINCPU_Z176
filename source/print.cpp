@@ -47,18 +47,27 @@ void printDebug::printConnectionHandler(bool stat)
 void printDebug::print(QString stringa)
 {
     static int idx=0;
-    if(!printConnected){
-        coda.append(stringa);
-        return;
-    }
-    if(coda.size()){
-        stringa.prepend(coda);
-        coda.clear();
-    }
 
     stringa.prepend(QString("[%1]:>").arg(idx++));
     stringa.append("\n\r");
-    emit printTxHandler(stringa.toAscii());
+
+    // Se c'è il server in ascolto
+    if(printConnected){
+        if(coda.size()){
+            stringa.prepend(coda);
+            coda.clear();
+        }
+
+        emit printTxHandler(stringa.toAscii());
+        return;
+    }
+
+    // Non oltre 1000 caratteri
+    if(coda.size()>1000) coda.clear();
+    coda.append(stringa);
+
+    return;
+
 
 }
 

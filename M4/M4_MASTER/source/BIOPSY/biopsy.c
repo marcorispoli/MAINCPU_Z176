@@ -140,6 +140,7 @@ void BIOPSY_manageDriverDisconnectedStatus(void){
     if(generalConfiguration.biopsyCfg.statusL & 0x01) return;
 
     // Con la torretta disconnessa occorre verificare se è stata resettata
+    /*
     if(!generalConfiguration.biopsyCfg.connected){
 
         // Verifica se la torretta non è ancora stata resettata (dovrebbe esserlo!!)
@@ -148,7 +149,7 @@ void BIOPSY_manageDriverDisconnectedStatus(void){
             BiopsyDriverReset();
             return;
         }
-    }
+    }*/
 
     // Lo stato della torretta ora è di connessione, ma occorre completare ancora qualche passaggio
     generalConfiguration.biopsyCfg.connected = true;
@@ -184,6 +185,7 @@ void BIOPSY_manageDriverConnectedStatus(void){
     _time_delay(_BYM_CONNECTED_STAT_DELAY);
     dati[_BP_MOTION]=_BP_NO_MOTION;
 
+
     // Evento di Timeout!!
     if(--timer_stat == 0){
 
@@ -197,9 +199,9 @@ void BIOPSY_manageDriverConnectedStatus(void){
     // Calcolo massima escursione Z per evitare l'impatto con il compressore
     if(generalConfiguration.comprCfg.padSelezionato == PAD_BIOP_3D){
         int posizione_staffa_compressore = _DEVREG(RG215_DOSE,PCB215_CONTEST) - generalConfiguration.biopsyCfg.conf.offsetPad;
-        dati[_BP_MAX_Z] = generalConfiguration.biopsyCfg.conf.offsetFibra - posizione_staffa_compressore - generalConfiguration.biopsyCfg.conf.marginePosizionamento;
+        dati[_BP_MAX_Z] = (generalConfiguration.biopsyCfg.conf.offsetFibra + 20) - posizione_staffa_compressore - generalConfiguration.biopsyCfg.conf.marginePosizionamento;
     }else{
-        dati[_BP_MAX_Z] = generalConfiguration.biopsyCfg.conf.offsetFibra;
+        dati[_BP_MAX_Z] = (generalConfiguration.biopsyCfg.conf.offsetFibra + 20);
     }
 
     // Chiede lo status
@@ -255,10 +257,10 @@ void BIOPSY_manageDriverConnectedStatus(void){
             dati[_BP_ZLIMIT] = (generalConfiguration.biopsyCfg.conf.offsetFibra - generalConfiguration.biopsyCfg.lunghezzaAgo);
 
         // Scrittura zlimit sul target
-        if(!BiopsyDriverSetZlim((unsigned short) dati[_BP_ZLIMIT] * 10, 0 ));
+        if(!BiopsyDriverSetZlim((unsigned short) dati[_BP_ZLIMIT] * 10, 0 )) printf("bym: error zlimit");
 
         // Scrittura dello stepval
-        if(!BiopsyDriverSetStepVal(generalConfiguration.biopsyCfg.stepVal, 0 ));
+        if(!BiopsyDriverSetStepVal(generalConfiguration.biopsyCfg.stepVal, 0 )) printf("bym: error stepval");
     }
 
     // Tutto OK
@@ -267,12 +269,13 @@ void BIOPSY_manageDriverConnectedStatus(void){
     timer_stat = 2000 /_BYM_CONNECTED_STAT_DELAY;
 
     // Gestione comandi posizionatore
-    if(activationCommands != _BYM_NO_COMMAND){
+    if((activationCommands != _BYM_NO_COMMAND) || (generalConfiguration.biopsyCfg.statusL & 0x01)){
         driverStatus = _BYM_DRIVER_STAT_ACTIVATED;
         dati[_BP_MOTION]=_BP_MOTION_ON;
         slot = 0;
         printf("BYM DRIVER: GESTIONE ATTIVAZIONE");
     }
+
 
     return;
 }
@@ -409,6 +412,19 @@ void BIOPSY_manageActivationLoop(void){
 
     // Azzeramento bit resettabili
     BiopsyDriverGetStat(&generalConfiguration.biopsyCfg.statusL, &generalConfiguration.biopsyCfg.statusH, true);
+
+
+    // Acquisisce posizione attuale
+    BiopsyDriverGetX(&generalConfiguration.biopsyCfg.X);
+    BiopsyDriverGetY(&generalConfiguration.biopsyCfg.Y);
+    BiopsyDriverGetZ(&generalConfiguration.biopsyCfg.Z);
+
+    dati[_BP_XL] = (unsigned char) (generalConfiguration.biopsyCfg.X & 0x00FF);
+    dati[_BP_XH] = (unsigned char) (generalConfiguration.biopsyCfg.X >> 8);
+    dati[_BP_YL] = (unsigned char) (generalConfiguration.biopsyCfg.Y & 0x00FF);
+    dati[_BP_YH] = (unsigned char) (generalConfiguration.biopsyCfg.Y >> 8);
+    dati[_BP_ZL] = (unsigned char) (generalConfiguration.biopsyCfg.Z & 0x00FF);
+    dati[_BP_ZH] = (unsigned char) (generalConfiguration.biopsyCfg.Z >> 8);
 
     activationCommands =_BYM_NO_COMMAND;
     driverStatus = _BYM_DRIVER_STAT_CONNECTED;

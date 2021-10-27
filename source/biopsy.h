@@ -23,6 +23,7 @@ public:
     bool moveIncX(void);
     bool moveDecY(void);
     bool moveIncY(void);
+    bool resetBym(void);
 
     // Impostazione lunghezza Ago
     bool setLunghezzaAgo(unsigned char len);

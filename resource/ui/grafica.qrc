@@ -77,9 +77,9 @@
         <file>AlarmPage/alarmPix.png</file>
     </qresource>
     <qresource prefix="/Translate">
-        <file>Translate/traduzione_eng.qm</file>
-        <file>Translate/traduzione_ita.qm</file>
         <file>Translate/traduzione_rus.qm</file>
+        <file>Translate/traduzione_ita.qm</file>
+        <file>Translate/traduzione_eng.qm</file>
     </qresource>
     <qresource prefix="/ServicePanel">
         <file>ServicePanel/calib_menu.png</file>
@@ -142,7 +142,6 @@
         <file>BiopsyPage/backgroundBiopsia.png</file>
         <file>BiopsyPage/backgroundBiopsia_LES15.png</file>
         <file>BiopsyPage/backgroundBiopsia_LESm15.png</file>
-        <file>BiopsyPage/backgroundBiopsia_POINT_LESION.png</file>
         <file>BiopsyPage/backgroundBiopsia_REF15.png</file>
         <file>BiopsyPage/backgroundBiopsia_REFm15.png</file>
         <file>BiopsyPage/backgroundBiopsia_SELECT_NEEDLE.png</file>
@@ -155,6 +154,7 @@
         <file>BiopsyPage/remoteKeyboard.png</file>
         <file>BiopsyPage/tubePositioner.png</file>
         <file>BiopsyPage/backgroundBiopsia_CHECK_POSITION.png</file>
+        <file>BiopsyPage/backgroundBiopsia_POINT_LESION.png</file>
     </qresource>
     <qresource prefix="/StartupPage">
         <file>StartupPage/startup_tc.png</file>

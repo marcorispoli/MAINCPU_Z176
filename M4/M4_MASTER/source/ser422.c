@@ -224,6 +224,7 @@ void ser422_driver(uint32_t initial_data)
           Ser422_Stat.timeout=0;
           if(displaySeriale)  printf(">> %x %x %x %x\n",rx_buffer[0],rx_buffer[1],rx_buffer[2],rx_buffer[3]);
 
+
           // Controllo numero byte e Indirizzo
           if((((_Ser422_Addr_Str*)(&rx_buffer[0]))->address!=Target)||(rx_len!=4))
           {
