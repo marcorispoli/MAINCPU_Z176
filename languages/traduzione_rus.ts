@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>BIOPSY</name>
     <message>
         <location filename="../source/biopsy.cpp" line="210"/>
         <source>NOME ACCESSORIO</source>
-        <translation>Биопсийное устройство</translation>
+        <translation>Биопсийное</translation>
     </message>
 </context>
 <context>
     <name>BIOPSY-MESSAGE</name>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="921"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1035"/>
         <source>PRESS START</source>
-        <translation type="unfinished"></translation>
+        <translation>НАЖМИТЕ 
+СТАРТ</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="924"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1038"/>
         <source>PUT THE CASSETTE 
 RIGHT SIDE</source>
-        <translation type="unfinished"></translation>
+        <translation>ПОЛОЖИТЕ КАССЕТУ
+ПРАВАЯ СТОРОНА</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="927"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1041"/>
         <source>PUT THE CASSETTE 
 LEFT SIDE</source>
-        <translation type="unfinished"></translation>
+        <translation>ПОЛОЖИТЕ КАССЕТУ
+ЛЕВАЯ СТОРОНА</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="930"/>
-        <source>PRESS START MEASURE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="934"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1049"/>
         <source>WAIT FOR POINTING</source>
-        <translation type="unfinished"></translation>
+        <translation>ПОДОЖДИТЕ АКТИВАЦИЮ
+ЗАВЕРШЕНИЕ</translation>
     </message>
 </context>
 <context>
@@ -44,32 +43,32 @@ LEFT SIDE</source>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="65"/>
         <source>LESION POSITION</source>
-        <translation type="unfinished"></translation>
+        <translation>ПОРАЖЕНИЕ</translation>
     </message>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="89"/>
         <source>HOLDER</source>
-        <translation type="unfinished"></translation>
+        <translation>МОДЕЛЬ ДЕРЖАТЕЛЯ</translation>
     </message>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="94"/>
         <source>NEEDLE LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>ДЛИНА ИГЛЫ</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1212"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1331"/>
         <source>MIN LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>MIN</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1217"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1336"/>
         <source>MAX LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>MAX</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1222"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1341"/>
         <source>SELECTED</source>
-        <translation type="unfinished"></translation>
+        <translation>ВЫБРАННЫЕ</translation>
     </message>
 </context>
 <context>
@@ -187,12 +186,14 @@ LEFT SIDE</source>
     <message>
         <location filename="../source/pagealarms.cpp" line="2052"/>
         <source>MANCA CASSETTA</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:01710]
+Кассета отсутствует.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="2059"/>
         <source>CASSETTA ESPOSTA</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:01711]
+Кассета уже выставлена!</translation>
     </message>
 </context>
 <context>
@@ -200,12 +201,18 @@ LEFT SIDE</source>
     <message>
         <location filename="../source/pagealarms.cpp" line="2164"/>
         <source>IMPOSTAZIONE CAMPO ESPOSIMETRO</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:01901]
+ОШИБКА ПОЛЯ ДЕТЕКТОРА!
+Невозможно завершить выбор поля детектора.
+Повторите команду или перезагрузите систему.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="2171"/>
         <source>NESSUN PROFILO AEC DISPONIBILE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:01902]
+ОШИБКА ПРОФИЛЯ ДЕТЕКТОРА!
+Нет доступных профилей AEC.
+Вставьте новые профили, прежде чем продолжить.</translation>
     </message>
 </context>
 <context>
@@ -341,42 +348,58 @@ C-ARM РУЧНАЯ КНОПКА ОШИБКА!
     <message>
         <location filename="../source/pagealarms.cpp" line="759"/>
         <source>BIOPSIA:ERRORE MOVIMENTO CURSORE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00001]
+ОШИБКА БИОПСИИ!
+Ошибка активации.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="766"/>
         <source>BIOPSIA:APPLICARE COMPRESSIONE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00002]
+ОШИБКА БИОПСИИ!
+Применить компрессию.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="773"/>
         <source>BIOPSIA:MANCA COMPRESSIONE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00003]
+ОШИБКА БИОПСИИ!
+Отсутствует сжатие.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="780"/>
         <source>BIOPSIA: TIMEOUT MOVIMENTO</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00004]
+ОШИБКА БИОПСИИ!
+Активация тайм-аута.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="787"/>
         <source>BIOPSIA: BUSY</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00005]
+ОШИБКА БИОПСИИ!
+Устройство занято.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="795"/>
         <source>INVALID READER POINTS</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00006]
+ОШИБКА БИОПСИИ!
+Неверное значение читателя.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="802"/>
         <source>LESION MEASURED TOO CLOSED TO THE POTTER PLANE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00007]
+ОШИБКА БИОПСИИ!
+Поражение слишком близко к волокну устройства.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="809"/>
         <source>LESION MEASURED TOO CLOSED TO THE SKIN SURFACE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00008]
+ОШИБКА БИОПСИИ!
+Поражение слишком близко к коже груди.</translation>
     </message>
 </context>
 <context>
@@ -1232,48 +1255,16 @@ SU COLLIMATORE
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1630"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME
-</source>
-        <translation>[M:00948]
-ЭКСПОЗИЦИЯ ОТМЕНЕНА!
-Ошибка начального положения трубки в ТОМО. Повторите эскпозицию или перезагрузите систему.</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1636"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME WIDE
-</source>
-        <translation>[M:00949]
-Рентгеновская последовательность прервана!
-Ошибка в позиционировании HOME Tomo Tube-Arm. Повторите воздействие или перезапустите систему.</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1643"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE
-</source>
-        <translation>[M:00950]
-ЭКСПОЗИЦИЯ ОТМЕНЕНА!
-Ошибка подготовки штатива трубки для ТОМО. Повторите эскпозицию или перезагрузите систему.</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1650"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE WIDE
-</source>
-        <translation>[M:00951]
-Рентгеновская последовательность прервана!
-Ошибка активации Tube-Arm для входящей последовательности Tomo. Повторите воздействие или перезапустите систему.</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1658"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO IN POSIZIONE CC
-</source>
-        <translation>[M:00952]
-ЭКСПОЗИЦИЯ ОТМЕНЕНА!
-Ошибка при попытке установки штатива трубки в положение СС для ТОМО.</translation>
+        <location filename="../source/pagealarms.cpp" line="1694"/>
+        <location filename="../source/pagealarms.cpp" line="1709"/>
+        <location filename="../source/pagealarms.cpp" line="1716"/>
+        <location filename="../source/pagealarms.cpp" line="1723"/>
+        <source>NA</source>
+        <translation>NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1665"/>
@@ -1312,42 +1303,11 @@ SENZA USO DELL&apos;INGRANDITORE</source>
 Малое фокусное пятно в данном режиме можно использовать только для съемки с увеличением.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1694"/>
-        <source>ANOMALIA MOVIMENTO TUBO DURANTE RAGGI</source>
-        <translation>[M:00957]
-Рентгеновская последовательность прервана!
-Обнаруженное препятствие предотвращает завершение последовательности Tomo.</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1701"/>
         <source>ERRORE SPECCHIO FUORI CAMPO</source>
         <translation>[M:00958]
 ЭКСПОЗИЦИЯ ОТМЕНЕНА!
 Ошибка: зеркало находится вне поля</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1709"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME INTERMEDIATE</source>
-        <translation>[M:00959]
-Рентгеновская последовательность прервана!
-Ошибка в позиционировании HOME Tomo Tube-Arm. Повторите воздействие или перезапустите систему.</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1716"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE INTERMEDIATE</source>
-        <translation>[M:00960]
-Рентгеновская последовательность прервана!
-Ошибка активации Tube-Arm для входящей последовательности Tomo. Повторите воздействие или перезапустите систему.</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1723"/>
-        <source>PROTEZIONE PAZIENTE 3D
-</source>
-        <translation>[M:00961]
-ЭКСПОЗИЦИЯ НЕВОЗМОЖНА!
-Установите 3D-щиток защиты лица пациента.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1730"/>
@@ -1396,20 +1356,22 @@ PER PROSEGUIRE</source>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1809"/>
-        <source>MOVIMENTO TUBO NON CONSENTITO. POSSIBILE IMPATTO CON IL SUOLO</source>
-        <translation>[M:00966]
-АКТИВАЦИЯ TUBE-ARM НЕ РАЗРЕШЕНА!
-Трубка может превышать предельный угол.</translation>
+        <source>NA1</source>
+        <translation>NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1816"/>
         <source>SENO TROPPO DENSO</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00967]
+ОШИБКА AEC!
+Грудь слишком плотная</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>ESPOSIMETRO SOVRAESPOSTO</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00968]
+ОШИБКА AEC!
+AEC передержан</translation>
     </message>
 </context>
 <context>

@@ -1627,27 +1627,27 @@ void PageAlarms::createMessageList(void){
     classitem.errlist.append(erritem);
     erritem.codestr = QString("00948");
     erritem.codeval = _SEQ_ERR_NARROW_HOME;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","SEQUENZA RAGGI INTERROTTA\nERRORE POSIZIONAMENTO TUBO IN HOME\n", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
     erritem.codestr = QString("00949");
     erritem.codeval = _SEQ_ERR_WIDE_HOME;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","SEQUENZA RAGGI INTERROTTA\nERRORE POSIZIONAMENTO TUBO IN HOME WIDE\n", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
 
     erritem.codestr = QString("00950");
     erritem.codeval = _SEQ_ERR_NARROW_END;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","SEQUENZA RAGGI INTERROTTA\nERRORE ATTIVAZIONE TUBO PER SCANSIONE\n", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
 
     erritem.codestr = QString("00951");
     erritem.codeval = _SEQ_ERR_WIDE_END;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","SEQUENZA RAGGI INTERROTTA\nERRORE ATTIVAZIONE TUBO PER SCANSIONE WIDE\n", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
@@ -1655,7 +1655,7 @@ void PageAlarms::createMessageList(void){
 
     erritem.codestr = QString("00952");
     erritem.codeval = _SEQ_ERR_TRX_CC;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","SEQUENZA RAGGI INTERROTTA\nERRORE ATTIVAZIONE TUBO IN POSIZIONE CC\n", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
@@ -1691,7 +1691,7 @@ void PageAlarms::createMessageList(void){
 
     erritem.codestr = QString("00957");
     erritem.codeval = ERROR_TRX_FAULT_AFTER_PREP;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","ANOMALIA MOVIMENTO TUBO DURANTE RAGGI", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
@@ -1706,21 +1706,21 @@ void PageAlarms::createMessageList(void){
 
     erritem.codestr = QString("00959");
     erritem.codeval = _SEQ_ERR_INTERMEDIATE_HOME;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","SEQUENZA RAGGI INTERROTTA\nERRORE POSIZIONAMENTO TUBO IN HOME INTERMEDIATE", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
 
     erritem.codestr = QString("00960");
     erritem.codeval = _SEQ_ERR_INTERMEDIATE_END;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","SEQUENZA RAGGI INTERROTTA\nERRORE ATTIVAZIONE TUBO PER SCANSIONE INTERMEDIATE", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
 
     erritem.codestr = QString("00961");
     erritem.codeval = ERROR_MISS_PROT_PAZIENTE_3D;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","PROTEZIONE PAZIENTE 3D\n", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
@@ -1806,7 +1806,7 @@ void PageAlarms::createMessageList(void){
     classitem.errlist.append(erritem);
     erritem.codestr = QString("00966");
     erritem.codeval =_SEQ_ERR_INVALID_TUBE_ACTIVATION ;
-    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","MOVIMENTO TUBO NON CONSENTITO. POSSIBILE IMPATTO CON IL SUOLO", 0, QApplication::UnicodeUTF8));
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","NA1", 0, QApplication::UnicodeUTF8));
     erritem.errpix =  QPixmap(ERR_PIX);
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);

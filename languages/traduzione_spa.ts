@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_ES">
+<TS version="2.1" language="es_ES">
 <context>
     <name>BIOPSY</name>
     <message>
         <location filename="../source/biopsy.cpp" line="210"/>
         <source>NOME ACCESSORIO</source>
-        <translation>DISPOSITIVO DE BIOPSIA</translation>
+        <translation>BIOPSIA</translation>
     </message>
 </context>
 <context>
     <name>BIOPSY-MESSAGE</name>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="921"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1035"/>
         <source>PRESS START</source>
-        <translation type="unfinished"></translation>
+        <translation>SECUENCIA 
+DE INICIO</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="924"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1038"/>
         <source>PUT THE CASSETTE 
 RIGHT SIDE</source>
-        <translation type="unfinished"></translation>
+        <translation>PONER EL CASSETTE
+LADO DERECHO</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="927"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1041"/>
         <source>PUT THE CASSETTE 
 LEFT SIDE</source>
-        <translation type="unfinished"></translation>
+        <translation>PONER EL CASSETTE
+LADO IZQUIERDO</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="930"/>
-        <source>PRESS START MEASURE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="934"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1049"/>
         <source>WAIT FOR POINTING</source>
-        <translation type="unfinished"></translation>
+        <translation>ESPERA ACTIVACIÓN
+TERMINACIÓN</translation>
     </message>
 </context>
 <context>
@@ -44,32 +43,32 @@ LEFT SIDE</source>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="65"/>
         <source>LESION POSITION</source>
-        <translation type="unfinished"></translation>
+        <translation>LESIÓN</translation>
     </message>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="89"/>
         <source>HOLDER</source>
-        <translation type="unfinished"></translation>
+        <translation>MODELO SOPORTE</translation>
     </message>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="94"/>
         <source>NEEDLE LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>LONGITUD DE LA AGUJA</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1212"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1331"/>
         <source>MIN LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>MIN</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1217"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1336"/>
         <source>MAX LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>MAX</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1222"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1341"/>
         <source>SELECTED</source>
-        <translation type="unfinished"></translation>
+        <translation>SELECCIONADO</translation>
     </message>
 </context>
 <context>
@@ -90,7 +89,7 @@ LEFT SIDE</source>
     <message>
         <location filename="../source/collimatore.cpp" line="322"/>
         <source>APERTA</source>
-        <translation>ABIERTA</translation>
+        <translation>ABRIR</translation>
     </message>
 </context>
 <context>
@@ -350,42 +349,58 @@ Se ha detectado un exceso de fuerza de resistencia durante la rotación.</transl
     <message>
         <location filename="../source/pagealarms.cpp" line="759"/>
         <source>BIOPSIA:ERRORE MOVIMENTO CURSORE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00001]
+¡ERROR DE BIOPSIA!
+Fallo de activación.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="766"/>
         <source>BIOPSIA:APPLICARE COMPRESSIONE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00002]
+¡ERROR DE BIOPSIA!
+Aplicar compresión.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="773"/>
         <source>BIOPSIA:MANCA COMPRESSIONE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00003]
+¡ERROR DE BIOPSIA!
+Falta compresión.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="780"/>
         <source>BIOPSIA: TIMEOUT MOVIMENTO</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00004]
+¡ERROR DE BIOPSIA!
+Activación del tiempo de espera.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="787"/>
         <source>BIOPSIA: BUSY</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00005]
+¡ERROR DE BIOPSIA!
+Dispositivo ocupado.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="795"/>
         <source>INVALID READER POINTS</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00006]
+¡ERROR DE BIOPSIA!
+Valor de lector no válido.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="802"/>
         <source>LESION MEASURED TOO CLOSED TO THE POTTER PLANE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00007]
+¡ERROR DE BIOPSIA!
+La lesión está demasiado cerrada a la fibra del dispositivo.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="809"/>
         <source>LESION MEASURED TOO CLOSED TO THE SKIN SURFACE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00008]
+¡ERROR DE BIOPSIA!
+Lesión demasiado cerrada a la piel de la mama.</translation>
     </message>
 </context>
 <context>
@@ -1238,43 +1253,16 @@ NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1630"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME
-</source>
-        <translation>[M:00948]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1636"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME WIDE
-</source>
-        <translation>[M:00949]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1643"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE
-</source>
-        <translation>[M:00950]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1650"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE WIDE
-</source>
-        <translation>[M:00951]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1658"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO IN POSIZIONE CC
-</source>
-        <translation>[M:00952]
-NA</translation>
+        <location filename="../source/pagealarms.cpp" line="1694"/>
+        <location filename="../source/pagealarms.cpp" line="1709"/>
+        <location filename="../source/pagealarms.cpp" line="1716"/>
+        <location filename="../source/pagealarms.cpp" line="1723"/>
+        <source>NA</source>
+        <translation>NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1665"/>
@@ -1313,39 +1301,11 @@ SENZA USO DELL&apos;INGRANDITORE</source>
 El uso del foco pequeño está permitido solo con el dispositivo de magnificación en este contexto. </translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1694"/>
-        <source>ANOMALIA MOVIMENTO TUBO DURANTE RAGGI</source>
-        <translation>[M:00957]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1701"/>
         <source>ERRORE SPECCHIO FUORI CAMPO</source>
         <translation>[M:00958]
 ¡SECUENCIA DE RAYOS X ANULADA!
 Error durante el posicionamiento del espejo fuera de campo. </translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1709"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME INTERMEDIATE</source>
-        <translation>[M:00959]
-NA</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1716"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE INTERMEDIATE</source>
-        <translation>[M:00960]
-NA</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1723"/>
-        <source>PROTEZIONE PAZIENTE 3D
-</source>
-        <translation>[M:00961]
-¡SECUENCIA DE RAYOS X DESACTIVADA!
-El contexto actual requiere el uso de pantalla protectora 3D.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1730"/>
@@ -1392,9 +1352,8 @@ El sensor de temperatura del tubo puede estar dañado o no conectado de forma co
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1809"/>
-        <source>MOVIMENTO TUBO NON CONSENTITO. POSSIBILE IMPATTO CON IL SUOLO</source>
-        <translation>[M:00966]
-NA</translation>
+        <source>NA1</source>
+        <translation>NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1816"/>
@@ -1664,22 +1623,24 @@ Presione la flecha izquierda para cancelar.</translation>
     <message>
         <location filename="../source/projectionPage.cpp" line="250"/>
         <source>MESSAGGIO CONFERMA SELEZIONE PROIEZIONE</source>
-        <translation>Advertencia, seleccionando la proyección, el C-ARM puede estar activado.
-Váyase después de la confirmación.</translation>
+        <translation>Advertencia: seleccionando la proyección puede
+activarse el BRAZO EN C.
+Por favor, aléjese después de la confirmación.</translation>
     </message>
     <message>
         <location filename="../source/projectionPage.cpp" line="258"/>
         <source>BOTTONE ANNULLA</source>
-        <translation>CANCEL</translation>
+        <translation>CANCELAR</translation>
     </message>
     <message>
         <location filename="../source/projectionPage.cpp" line="259"/>
         <source>BOTTONE ACCETTA</source>
-        <translation>CONFIRM</translation>
+        <translation>CONFIRMAR</translation>
     </message>
     <message>
         <location filename="../source/projectionPage.cpp" line="343"/>
         <source>SELEZIONE PROIEZIONE</source>
+        <translatorcomment>SELECCIONAR PANEL DE PROYECCIÓN</translatorcomment>
         <translation>SELECCIONAR PROYECCIÓN</translation>
     </message>
 </context>

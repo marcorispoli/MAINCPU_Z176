@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>BIOPSY</name>
     <message>
         <location filename="../source/biopsy.cpp" line="210"/>
         <source>NOME ACCESSORIO</source>
-        <translation>DISPOSITIF DE BIOPSIE</translation>
+        <translation>BIOPSIE</translation>
     </message>
 </context>
 <context>
     <name>BIOPSY-MESSAGE</name>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="921"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1035"/>
         <source>PRESS START</source>
-        <translation type="unfinished"></translation>
+        <translation>APPUYER
+POUR COMMENCER</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="924"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1038"/>
         <source>PUT THE CASSETTE 
 RIGHT SIDE</source>
-        <translation type="unfinished"></translation>
+        <translation>CASSETTE
+CTÉ DROIT</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="927"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1041"/>
         <source>PUT THE CASSETTE 
 LEFT SIDE</source>
-        <translation type="unfinished"></translation>
+        <translation>CASSETTE
+CTÉ GAUCHE</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="930"/>
-        <source>PRESS START MEASURE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="934"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1049"/>
         <source>WAIT FOR POINTING</source>
-        <translation type="unfinished"></translation>
+        <translation>ATTENDRE ACTIVATION
+ACHÈVEMENT</translation>
     </message>
 </context>
 <context>
@@ -44,32 +43,32 @@ LEFT SIDE</source>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="65"/>
         <source>LESION POSITION</source>
-        <translation type="unfinished"></translation>
+        <translation>LÉSION</translation>
     </message>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="89"/>
         <source>HOLDER</source>
-        <translation type="unfinished"></translation>
+        <translation>MODÈLE DE SUPPORT</translation>
     </message>
     <message>
         <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="94"/>
         <source>NEEDLE LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>LONGUEUR D&apos;AIGUILLE</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1212"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1331"/>
         <source>MIN LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>MIN</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1217"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1336"/>
         <source>MAX LENGTH</source>
-        <translation type="unfinished"></translation>
+        <translation>MAX</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1222"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1341"/>
         <source>SELECTED</source>
-        <translation type="unfinished"></translation>
+        <translation>CHOISI</translation>
     </message>
 </context>
 <context>
@@ -80,7 +79,7 @@ LEFT SIDE</source>
         <location filename="../source/collimatore.cpp" line="304"/>
         <location filename="../source/echodisplay.cpp" line="308"/>
         <source>NON DEFINITA</source>
-        <translation>NON DÉFINI</translation>
+        <translation>INDÉFINI</translation>
     </message>
     <message>
         <location filename="../source/collimatore.cpp" line="283"/>
@@ -90,7 +89,7 @@ LEFT SIDE</source>
     <message>
         <location filename="../source/collimatore.cpp" line="322"/>
         <source>APERTA</source>
-        <translation>OUVERT</translation>
+        <translation>OUVRIR</translation>
     </message>
 </context>
 <context>
@@ -272,7 +271,7 @@ Timeout pendant le processus de positionnement du BRAS EN C.</translation>
         <source>ARM: RILEVATO OSTACOLO DURANTE POSIZIONAMENTO</source>
         <translation>[M:00108]
 ERREUR DE POSITIONNEMENT DU BRAS EN C !
-Timeout pendant le processus de positionnement du BRAS EN C.</translation>
+Obstacle détecté pendant le processus de positionnement. </translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="874"/>
@@ -349,42 +348,58 @@ Les boutons-poussoirs d’activation manuelle du BRAS EN C sont bloqués !</tran
     <message>
         <location filename="../source/pagealarms.cpp" line="759"/>
         <source>BIOPSIA:ERRORE MOVIMENTO CURSORE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00001]
+ERREUR DE BIOPSIE&#xa0;!
+Échec de l&apos;activation.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="766"/>
         <source>BIOPSIA:APPLICARE COMPRESSIONE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00002]
+ERREUR DE BIOPSIE&#xa0;!
+Appliquer la compression.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="773"/>
         <source>BIOPSIA:MANCA COMPRESSIONE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00003]
+ERREUR DE BIOPSIE&#xa0;!
+Compression manquante.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="780"/>
         <source>BIOPSIA: TIMEOUT MOVIMENTO</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00004]
+ERREUR DE BIOPSIE&#xa0;!
+délai d&apos;attente dépassé.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="787"/>
         <source>BIOPSIA: BUSY</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00005]
+ERREUR DE BIOPSIE&#xa0;!
+Appareil occupé.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="795"/>
         <source>INVALID READER POINTS</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00006]
+ERREUR DE BIOPSIE&#xa0;!
+Valeur de lecteur non valide.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="802"/>
         <source>LESION MEASURED TOO CLOSED TO THE POTTER PLANE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00007]
+ERREUR DE BIOPSIE&#xa0;!
+La lésion est trop proche de la fibre de l&apos;appareil.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="809"/>
         <source>LESION MEASURED TOO CLOSED TO THE SKIN SURFACE</source>
-        <translation type="unfinished"></translation>
+        <translation>[M:00008]
+ERREUR DE BIOPSIE&#xa0;!
+Lésion trop proche de la peau du sein.</translation>
     </message>
 </context>
 <context>
@@ -395,32 +410,34 @@ Les boutons-poussoirs d’activation manuelle du BRAS EN C sont bloqués !</tran
 RIPETERE SEQUENZA DI COLLIMAZIONE
 </source>
         <translation>[M:00301]
-ÉCHEC DE LA PROCÉDURE DE COLLIMATION !
-Déverrouillez puis verrouillez la palette de compression pour forcer l’exécution d’une nouvelle tentative de collimation. En cas d’échec, redémarrez le système.</translation>
+PROCÉDURE DE COLLIMATION ÉCHOUÉE !
+Déverrouillez ensuite la palette de compression 
+pour forcer une nouvelle tentative de collimation. 
+En cas d&apos;échec, redémarrez le système.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="940"/>
         <source>IMPOSTAZIONE FILTRO FALLITA!
 </source>
         <translation>[M:00302]
-ÉCHEC DE LA SÉLECTION DU FILTRE !
-Répétez la sélection du filtre ou redémarrez le système.</translation>
+SÉLECTION DU FILTRE ÉCHOUÉE !
+Répétez la sélection du filtre ou réinitialisez le système.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="946"/>
         <source>IMPOSTAZIONE SPECCHIO FALLITA!
 </source>
         <translation>[M:00303]
-ÉCHEC D’ACTIVATION DU MIROIR !
-Répétez l’activation du miroir ou réinitialisez le système.</translation>
+ACTIVATION DU MIROIR ÉCHOUÉE !
+Répétez l&apos;activation du miroir ou réinitialisez le système. </translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="953"/>
         <source>IMPOSTAZIONE LAMPADA CENTRATORE FALLITA!
 </source>
         <translation>[M:00304]
-IMPOSSIBLE D’ACTIVER LA LAMPE DE COLLIMATION !
-Répétez l’action d’activation de la lampe de collimation.</translation>
+ACTIVATION DE LA LAMPE DE COLLIMATION IMPOSSIBLE !
+Répétez le processus d&apos;activation de la lampe de collimation.</translation>
     </message>
 </context>
 <context>
@@ -536,7 +553,7 @@ Le Système ne peut pas traiter la séquence de RAYONS X avant que la températu
         <source>IMPOSTAZIONE FUOCO FALLITA
 </source>
         <translation>[M:00502]
-ÉCHEC DE CONFIGURATION DU FOYER !
+CONFIGURATION DU FOYER ÉCHOUÉE !
 Répétez l’opération ou réinitialisez le système.</translation>
     </message>
     <message>
@@ -700,7 +717,6 @@ Remplacez le capteur.</translation>
         <location filename="../source/pagealarms.cpp" line="1894"/>
         <source>LENZE: ERRORE CONNESSIONE SENSORE DI POSIZIONE</source>
         <translation>[M:01201]
-ERREUR DE SURVEILLANCE DE L’ALIMENTATION !
 ERREUR DE L’ENTRAÎNEMENT LENZE !
 Le câble du capteur de position semble déconnecté.</translation>
     </message>
@@ -745,37 +761,37 @@ Relâchez les pédales ou vérifiez l’intégrité des pédales.</translation>
         <location filename="../source/pagealarms.cpp" line="1273"/>
         <source>COMPRESSORE SBLOCCATO</source>
         <translation>[M:00701]
-PALETTE DE COMPRESSION INCORRECTEMENT VERROUILLÉE !
-Insérez correctement la palette de compression puis verrouillez-la avec le bouton supérieur.</translation>
+PALETTE DE COMPRESSION NON VERROUILLÉE CORRECTEMENT !
+Introduisez correctement la palette de compression puis verrouillez-la au moyen du bouton supérieur.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1279"/>
         <source>SUPPORTO COMPRESSORE SBLOCCATO</source>
         <translation>[M:00702]
-PORTE-PALETTE INCORRECTEMENT VERROUILLÉ !
-Insérez correctement le porte-palette puis verrouillez-le avec le bouton inférieur.</translation>
+PORTE-PALETTE NON VERROUILLÉ CORRECTEMENT ! 
+Introduisez correctement le porte-palette puis verrouillez-le au moyen du bouton inférieur. </translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1285"/>
         <source>COMPRESSORE NON RICONOSCIUTO</source>
         <translation>[M:00703]
 PALETTE DE COMPRESSION NON DÉTECTÉE !
-Le système a détecté une palette de compression erronée.</translation>
+Le système a détecté un code de palette de compression erroné.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1291"/>
         <source>COMPRESSIONE IN CORSO A STUDIO CHIUSO</source>
         <translation>[M:00704]
-COMPRESSION MAMMAIRE EN ÉTUDE FERMÉE !
-Il est fortement suggéré de compresser un sein uniquement en ÉTUDE OUVERTE. En cas de session de test, ignorez ce message.</translation>
+COMPRESSION MAMMAIRE EN EXAMEN FERMÉ!
+Il est fortement recommandé de compresser un sein uniquement en EXAMEN OUVERT. En cas de session de test,  ignorer ce message.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1297"/>
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-ACCESSOIRE NON DÉTECTÉ !
-Le système n’a pas détecté d’accessoire valide.</translation>
+ACCESSOIRE NON DÉTECTÉ&#xa0;!
+Le système n&apos;a pas détecté un accessoire valide.</translation>
     </message>
 </context>
 <context>
@@ -1238,43 +1254,16 @@ NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1630"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME
-</source>
-        <translation>[M:00948]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1636"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME WIDE
-</source>
-        <translation>[M:00949]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1643"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE
-</source>
-        <translation>[M:00950]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1650"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE WIDE
-</source>
-        <translation>[M:00951]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1658"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO IN POSIZIONE CC
-</source>
-        <translation>[M:00952]
-NA</translation>
+        <location filename="../source/pagealarms.cpp" line="1694"/>
+        <location filename="../source/pagealarms.cpp" line="1709"/>
+        <location filename="../source/pagealarms.cpp" line="1716"/>
+        <location filename="../source/pagealarms.cpp" line="1723"/>
+        <source>NA</source>
+        <translation>NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1665"/>
@@ -1313,40 +1302,11 @@ SÉQUENCE DE RAYONS X INTERROMPUE !
 L’utilisation du petit foyer n’est autorisée qu’avec le dispositif d’agrandissement dans ce contexte.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1694"/>
-        <source>ANOMALIA MOVIMENTO TUBO DURANTE RAGGI</source>
-        <translation>[M:00957]
-DÉTECTEUR AEC SUREXPOSÉ
-Le détecteur AEC est partiellement ou entièrement hors du sein et a été exposé au faisceau direct de rayons X.</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1701"/>
         <source>ERRORE SPECCHIO FUORI CAMPO</source>
         <translation>[M:00958]
 SÉQUENCE DE RAYONS X INTERROMPUE !
 Erreur de positionnement du miroir hors du champ </translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1709"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME INTERMEDIATE</source>
-        <translation>[M:00959]
-NA</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1716"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE INTERMEDIATE</source>
-        <translation>[M:00960]
-NA</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1723"/>
-        <source>PROTEZIONE PAZIENTE 3D
-</source>
-        <translation>[M:00961]
-SÉQUENCE DE RAYONS X DÉSACTIVÉE !
-Le contexte actuel nécessite l’utilisation de l’écran de protection 3D.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1730"/>
@@ -1393,23 +1353,22 @@ Le capteur de température du tube est peut-être endommagé ou mal connecté.</
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1809"/>
-        <source>MOVIMENTO TUBO NON CONSENTITO. POSSIBILE IMPATTO CON IL SUOLO</source>
-        <translation>[M:00966]
-NA</translation>
+        <source>NA1</source>
+        <translation>NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1816"/>
         <source>SENO TROPPO DENSO</source>
         <translation>[M:00967]
-ERREUR AEC!
-Poitrine trop dense.</translation>
+DÉTECTEUR AEC SUREXPOSÉ
+Le détecteur AEC est partiellement ou entièrement hors du sein et a été exposé au faisceau direct de rayons X.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>ESPOSIMETRO SOVRAESPOSTO</source>
         <translation>[M:00968]
-ERREUR AEC!
-AEC surexposé.</translation>
+DÉTECTEUR AEC SOUS-EXPOSÉ
+Détecteur AEC sous-exposé</translation>
     </message>
 </context>
 <context>
@@ -1421,7 +1380,7 @@ CODE DI PROCESSO PROVVISORIAMENTE PIENE
 RIPETERE L&apos;ULTIMA OPERAZIONE</source>
         <translation>[M:00601]
 ERREUR SYSTÈME !
-Redémarrez le système.</translation>
+Réinitialisez le système.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1247"/>
@@ -1430,7 +1389,8 @@ RILEVATE REVISIONI SOFTWARE NON COMPATIBILI
 CONTATTARE L&apos;ASSISTENZA</source>
         <translation>[M:00602]
 ERREUR SYSTÈME !
-Le système a détecté des révisions de micrologiciel du dispositif non compatibles.</translation>
+Le système a détecté des révisions de micrologiciel du dispositif non compatibles. 
+Redémarrez le système.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1255"/>
@@ -1446,23 +1406,22 @@ Le système se met hors tension en quelques secondes.</translation>
         <location filename="../source/pagealarms.cpp" line="970"/>
         <source>TRX: ATTIVAZIONE NON CONSENTITA</source>
         <translation>[M:00401]
-ACTIVATION DU BRAS DU TUBE INTERDITE !
-Le bras du tube n’a pas pu être configuré ou est occupé
-Répétez la commande ou redémarrez le système.</translation>
+ACTIVATION DU TUBE-BRAS INTERDITE !
+Le bras du tube n’a pas pu être configuré ou est occupé</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="977"/>
         <source>TRX: ERRORE PARAMETRI DI PREPARAZIONE AZZERAMENTO</source>
         <translation>[M:00402]
- RÉGLAGE DU ZÉRO DU BRAS DU TUBE NON AUTORISÉ !
-Le bras du tube n’a pas pu être configuré ou est occupé.</translation>
+RÉGLAGE DU ZÉRO DU BRAS DU TUBE NON AUTORISÉ !
+Le bras du tube n’a pas pu être configuré ou est occupé </translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="983"/>
         <source>TRX: ERRORE PARAMETRI DI MOVIMENTO DI AZZERAMENTO</source>
         <translation>[M:00403]
 RÉGLAGE DU ZÉRO DU BRAS DU TUBE NON AUTORISÉ !
-Le bras du tube n’a pas pu être configuré ou est occupé.</translation>
+Le bras du tube n’a pas pu être configuré ou est occupé</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="989"/>
@@ -1585,7 +1544,7 @@ Le système a détecté le blocage du bouton-poussoir des rayons X.</translation
         <location filename="../source/pagelanguages.cpp" line="163"/>
         <location filename="../source/pagelanguages.cpp" line="170"/>
         <source>LINGUA CORRENTE: ITALIANO</source>
-        <translation>LANGUAGE ACTUELLE: FRANCAIS</translation>
+        <translation>LANGAGE COURANT : FRANҪAIS</translation>
     </message>
 </context>
 <context>
@@ -1593,7 +1552,7 @@ Le système a détecté le blocage du bouton-poussoir des rayons X.</translation
     <message>
         <location filename="../source/mainpage.cpp" line="731"/>
         <source>INTESTAZIONE</source>
-        <translation>ETUDE FERMÉE</translation>
+        <translation>EXAMEN TERMINÉ</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="734"/>
@@ -1623,12 +1582,12 @@ Le système a détecté le blocage du bouton-poussoir des rayons X.</translation
     <message>
         <location filename="../source/mainpage.cpp" line="747"/>
         <source>TARGET</source>
-        <translation>LE BUT</translation>
+        <translation>CIBLE</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="787"/>
         <source>MESSAGGIO ATTIVAZIONE POWER OFF</source>
-        <translation>LE SYSTÈME S&apos;ÉTEINT!
+        <translation>LE SYSTÈME VA S&apos;ÉTEINDRE!
 Appuyez sur la flèche gauche pour annuler.</translation>
     </message>
 </context>
@@ -1648,13 +1607,13 @@ Appuyez sur la flèche gauche pour annuler.</translation>
     <message>
         <location filename="../source/potter.cpp" line="56"/>
         <source>INGRANDITORE_ND</source>
-        <translation>MAG.FACTOR: -.-</translation>
+        <translation>FACTEUR D&apos;AGRAND.: -.-</translation>
     </message>
     <message>
         <location filename="../source/potter.cpp" line="51"/>
         <location filename="../source/potter.cpp" line="72"/>
         <source>FATTORE_INGRANDIMENTO</source>
-        <translation>MAG.FACTOR: %1.%2</translation>
+        <translation>FACTEUR D&apos;AGRAND. :%1.%2</translation>
     </message>
 </context>
 <context>
@@ -1662,13 +1621,14 @@ Appuyez sur la flèche gauche pour annuler.</translation>
     <message>
         <location filename="../source/projectionPage.cpp" line="248"/>
         <source>PROIEZIONE SELEZIONATA</source>
-        <translation>SÉLECTIONNÉ</translation>
+        <translation>SELECTIONNÉ</translation>
     </message>
     <message>
         <location filename="../source/projectionPage.cpp" line="250"/>
         <source>MESSAGGIO CONFERMA SELEZIONE PROIEZIONE</source>
-        <translation>Attention, en sélectionnant la projection, le C-ARM peut être activé.
-Veuillez vous en aller après confirmation.</translation>
+        <translation>Attention, en sélectionnant la projection, le BRAS EN C peut
+être activé.
+Écartez-vous après confirmation.</translation>
     </message>
     <message>
         <location filename="../source/projectionPage.cpp" line="258"/>

@@ -12,29 +12,24 @@
 <context>
     <name>BIOPSY-MESSAGE</name>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="921"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1035"/>
         <source>PRESS START</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="924"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1038"/>
         <source>PUT THE CASSETTE 
 RIGHT SIDE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="927"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1041"/>
         <source>PUT THE CASSETTE 
 LEFT SIDE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="930"/>
-        <source>PRESS START MEASURE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="934"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1049"/>
         <source>WAIT FOR POINTING</source>
         <translation type="unfinished"></translation>
     </message>
@@ -57,17 +52,17 @@ LEFT SIDE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1212"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1331"/>
         <source>MIN LENGTH</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1217"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1336"/>
         <source>MAX LENGTH</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1222"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1341"/>
         <source>SELECTED</source>
         <translation type="unfinished"></translation>
     </message>
@@ -964,37 +959,15 @@ SU COLLIMATORE
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1630"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1636"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME WIDE
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1643"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1650"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE WIDE
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1658"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO IN POSIZIONE CC
-</source>
+        <location filename="../source/pagealarms.cpp" line="1694"/>
+        <location filename="../source/pagealarms.cpp" line="1709"/>
+        <location filename="../source/pagealarms.cpp" line="1716"/>
+        <location filename="../source/pagealarms.cpp" line="1723"/>
+        <source>NA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1026,31 +999,8 @@ SENZA USO DELL&apos;INGRANDITORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1694"/>
-        <source>ANOMALIA MOVIMENTO TUBO DURANTE RAGGI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1701"/>
         <source>ERRORE SPECCHIO FUORI CAMPO</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1709"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME INTERMEDIATE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1716"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE INTERMEDIATE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1723"/>
-        <source>PROTEZIONE PAZIENTE 3D
-</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1090,7 +1040,7 @@ PER PROSEGUIRE</source>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1809"/>
-        <source>MOVIMENTO TUBO NON CONSENTITO. POSSIBILE IMPATTO CON IL SUOLO</source>
+        <source>NA1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

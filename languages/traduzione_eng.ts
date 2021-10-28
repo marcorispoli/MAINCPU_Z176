@@ -6,39 +6,33 @@
     <message>
         <location filename="../source/biopsy.cpp" line="210"/>
         <source>NOME ACCESSORIO</source>
-        <translation>BYM-3D</translation>
+        <translation>BIOPSY</translation>
     </message>
 </context>
 <context>
     <name>BIOPSY-MESSAGE</name>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="921"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1035"/>
         <source>PRESS START</source>
         <translation>PRESS TO
 START SEQUENCE</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="924"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1038"/>
         <source>PUT THE CASSETTE 
 RIGHT SIDE</source>
         <translation>PUT THE CASSETTE
 RIGHT SIDE</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="927"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1041"/>
         <source>PUT THE CASSETTE 
 LEFT SIDE</source>
         <translation>PUT THE CASSETTE
 LEFT SIDE</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="930"/>
-        <source>PRESS START MEASURE</source>
-        <translation>PRESS -SEQ-
-TO INIT MEASURE</translation>
-    </message>
-    <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="934"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1049"/>
         <source>WAIT FOR POINTING</source>
         <translation>WAIT ACTIVATION
 COMPLETION</translation>
@@ -62,17 +56,17 @@ COMPLETION</translation>
         <translation>NEEDLE LENGTH</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1212"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1331"/>
         <source>MIN LENGTH</source>
         <translation>MIN</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1217"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1336"/>
         <source>MAX LENGTH</source>
         <translation>MAX</translation>
     </message>
     <message>
-        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1222"/>
+        <location filename="../source/ANALOG/pannelloBiopsia.cpp" line="1341"/>
         <source>SELECTED</source>
         <translation>SELECTED</translation>
     </message>
@@ -355,50 +349,58 @@ The C-ARM manual activation push buttons result blocked!</translation>
     <message>
         <location filename="../source/pagealarms.cpp" line="759"/>
         <source>BIOPSIA:ERRORE MOVIMENTO CURSORE</source>
-        <translation>BIOPSY ERROR:
-ACTIVATION FAILURE.</translation>
+        <translation>[M:00001]
+BIOPSY ERROR!
+Activation failure.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="766"/>
         <source>BIOPSIA:APPLICARE COMPRESSIONE</source>
-        <translation>BIOPSY ERROR!
-APPLY COMPRESSION.</translation>
+        <translation>[M:00002]
+BIOPSY ERROR!
+Apply compressione.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="773"/>
         <source>BIOPSIA:MANCA COMPRESSIONE</source>
-        <translation>BIOPSY ERROR!
-MISSING COMPRESSION.</translation>
+        <translation>[M:00003]
+BIOPSY ERROR!
+Missing compression.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="780"/>
         <source>BIOPSIA: TIMEOUT MOVIMENTO</source>
-        <translation>BIOPSY ERROR!
-TIMEOUT ACTIVATION.</translation>
+        <translation>[M:00004]
+BIOPSY ERROR!
+Timeout activation.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="787"/>
         <source>BIOPSIA: BUSY</source>
-        <translation>BIOPSY ERROR!
-BIOPSY BUSY.</translation>
+        <translation>[M:00005]
+BIOPSY ERROR!
+Device busy.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="795"/>
         <source>INVALID READER POINTS</source>
-        <translation>BIOPSY ERROR!
-INVALID READER POINTS</translation>
+        <translation>[M:00006]
+BIOPSY ERROR!
+Invalid reader value.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="802"/>
         <source>LESION MEASURED TOO CLOSED TO THE POTTER PLANE</source>
-        <translation>BIOPSY ERROR!
-LESION TOO CLOSED TO THE FIBER.</translation>
+        <translation>[M:00007]
+BIOPSY ERROR!
+Lesion is too closed to the device fiber.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="809"/>
         <source>LESION MEASURED TOO CLOSED TO THE SKIN SURFACE</source>
-        <translation>BIOPSY ERROR!
-LESION TOO CLOSED TO THE SKIN.</translation>
+        <translation>[M:00008]
+BIOPSY ERROR!
+Lesion too closed to the breast skin.</translation>
     </message>
 </context>
 <context>
@@ -761,7 +763,6 @@ Release the pedals or check the pedal integrity.</translation>
     <message>
         <location filename="../source/pagealarms.cpp" line="1273"/>
         <source>COMPRESSORE SBLOCCATO</source>
-        <translatorcomment>ERRORE PAD</translatorcomment>
         <translation>[M:00701]
 COMPRESSION PADDLE NOT CORRECTLY LOCKED!
 Insert properly the compression paddle then lock it with the upper knob.</translation>
@@ -769,7 +770,6 @@ Insert properly the compression paddle then lock it with the upper knob.</transl
     <message>
         <location filename="../source/pagealarms.cpp" line="1279"/>
         <source>SUPPORTO COMPRESSORE SBLOCCATO</source>
-        <translatorcomment>ERRORE PAD</translatorcomment>
         <translation>[M:00702]
 COMPRESSION PADDLE HOLDER NOT CORRECTLY LOCKED!
 Insert properly the compression paddle holder then lock it with the lower knob.</translation>
@@ -777,7 +777,6 @@ Insert properly the compression paddle holder then lock it with the lower knob.<
     <message>
         <location filename="../source/pagealarms.cpp" line="1285"/>
         <source>COMPRESSORE NON RICONOSCIUTO</source>
-        <translatorcomment>ERRORE PAD</translatorcomment>
         <translation>[M:00703]
 UNDETECTED COMPRESSION PADDLE!
 The system detected a wrong compression paddle code.</translation>
@@ -785,7 +784,6 @@ The system detected a wrong compression paddle code.</translation>
     <message>
         <location filename="../source/pagealarms.cpp" line="1291"/>
         <source>COMPRESSIONE IN CORSO A STUDIO CHIUSO</source>
-        <translatorcomment>ERRORE PAD</translatorcomment>
         <translation>[M:00704]
 COMPRESSION BREAST WITH CLOSED STUDY!
 It is strongly suggested to compress a breast only when in OPEN STUDY.
@@ -795,7 +793,6 @@ In case of test session, ignore  this message.</translation>
         <location filename="../source/pagealarms.cpp" line="1297"/>
         <source>ACCESSORIO DISCONNESSO
 </source>
-        <translatorcomment>ERRORE PAD</translatorcomment>
         <translation>[M:00705]
 UNDETECTED ACCESSORY!
 The system didn&apos;t detect a valid accessory.</translation>
@@ -817,7 +814,6 @@ Power off the system and check the device integrity.</translation>
     <message>
         <location filename="../source/pagealarms.cpp" line="1312"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON VALIDO</source>
-        <translatorcomment>ERRORE POTTER</translatorcomment>
         <translation>[M:00801]
 MAGNIFICATION DEVICE ERROR!
 Invalid magnification factor.</translation>
@@ -825,7 +821,6 @@ Invalid magnification factor.</translation>
     <message>
         <location filename="../source/pagealarms.cpp" line="1319"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON CONFIGURATO</source>
-        <translatorcomment>ERRORE POTTER</translatorcomment>
         <translation>[M:00802]
 MAGNIFICATION DEVICE ERROR!
 Magnification device not configured.</translation>
@@ -865,7 +860,6 @@ Wait the power startup completion before to activate the C-ARM or to expose.</tr
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PIOMBO
 </source>
-        <translatorcomment>ERRORE-RAGGI</translatorcomment>
         <translation>[M:00901]
 XRAY SEQUENCE DISABLED!
 The current contest requires the use of lead protection.</translation>
@@ -875,7 +869,6 @@ The current contest requires the use of lead protection.</translation>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PLEXYGLASS
 </source>
-        <translatorcomment>ERRORE-RAGGI</translatorcomment>
         <translation>[M:00902]
 XRAY SEQUENCE DISABLED!
 The current contest requires the use of test phantom.</translation>
@@ -885,7 +878,6 @@ The current contest requires the use of test phantom.</translation>
         <source>IMPOSSIBILE PROCEDERE CON I RAGGI!!
 INSERIRE ACCESSORIO PROTEZIONE PAZIENTE
 </source>
-        <translatorcomment>ERRORE-RAGGI</translatorcomment>
         <translation>[M:00903]
 XRAY SEQUENCE DISABLED!
 The current contest requires the use of 2D protective screen.</translation>
@@ -903,7 +895,6 @@ The Door of the room results open.</translation>
         <location filename="../source/pagealarms.cpp" line="1360"/>
         <source>ERRORE DATI SU DRIVER PCB190!!
 </source>
-        <translatorcomment>ERRORE-RAGGI</translatorcomment>
         <translation>[M:00905]
 XRAY SEQUENCE DISABLED!
 Exposure data error. Repeat the sequence or restart the system.</translation>
@@ -912,7 +903,6 @@ Exposure data error. Repeat the sequence or restart the system.</translation>
         <location filename="../source/pagealarms.cpp" line="1366"/>
         <source>IO ERROR: IMPOSSIBILE ATTIVARE XRAY ENA
 </source>
-        <translatorcomment>ERRORE-RAGGI</translatorcomment>
         <translation>[M:00906]
 XRAY SEQUENCE DISABLED!
 IO system error. Repeat  the sequence or restart the system.</translation>
@@ -921,7 +911,6 @@ IO system error. Repeat  the sequence or restart the system.</translation>
         <location filename="../source/pagealarms.cpp" line="1372"/>
         <source>TIMEOUT STARTER ANODO ROTANTE
 </source>
-        <translatorcomment>ERRORE-RAGGI</translatorcomment>
         <translation>[M:00907]
 XRAY SEQUENCE DISABLED!
 Timeout High Speed Starter. Repeat  the sequence or restart the system.</translation>
@@ -930,7 +919,6 @@ Timeout High Speed Starter. Repeat  the sequence or restart the system.</transla
         <location filename="../source/pagealarms.cpp" line="1378"/>
         <source>RILASCIO ANTICIPATO DEL PULSANTE RAGGI
 </source>
-        <translatorcomment>ERRORE-RAGGI</translatorcomment>
         <translation>[M:00908]
 X-RAY SEQUENCE ABORTED!
 X-ray push button early released.</translation>
@@ -962,10 +950,8 @@ NA</translation>
         <location filename="../source/pagealarms.cpp" line="1402"/>
         <source>TIMEOUT ATTESA SEGNALE EXP WIN DA DETECTOR
 </source>
-        <translatorcomment>ERRORE-RAGGI</translatorcomment>
         <translation>[M:00912]
-X-RAY SEQUENCE ABORTED
-The Detector doesn&apos;t activate the EXP-WIN signal.</translation>
+NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1408"/>
@@ -1270,43 +1256,16 @@ NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1630"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME
-</source>
-        <translation>[M:00948]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1636"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME WIDE
-</source>
-        <translation>[M:00949]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1643"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE
-</source>
-        <translation>[M:00950]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1650"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE WIDE
-</source>
-        <translation>[M:00951]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1658"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO IN POSIZIONE CC
-</source>
-        <translation>[M:00952]
-NA</translation>
+        <location filename="../source/pagealarms.cpp" line="1694"/>
+        <location filename="../source/pagealarms.cpp" line="1709"/>
+        <location filename="../source/pagealarms.cpp" line="1716"/>
+        <location filename="../source/pagealarms.cpp" line="1723"/>
+        <source>NA</source>
+        <translation>NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1665"/>
@@ -1345,39 +1304,11 @@ X-RAY SEQUENCE ABORTED!
 The use of the small focus is allowed only with the  magnification device in this contest.</translation>
     </message>
     <message>
-        <location filename="../source/pagealarms.cpp" line="1694"/>
-        <source>ANOMALIA MOVIMENTO TUBO DURANTE RAGGI</source>
-        <translation>[M:00957]
-NA</translation>
-    </message>
-    <message>
         <location filename="../source/pagealarms.cpp" line="1701"/>
         <source>ERRORE SPECCHIO FUORI CAMPO</source>
         <translation>[M:00958]
 X-RAY SEQUENCE ABORTED!
 Error in mirror positioning out of the field.</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1709"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE POSIZIONAMENTO TUBO IN HOME INTERMEDIATE</source>
-        <translation>[M:00959]
-NA</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1716"/>
-        <source>SEQUENZA RAGGI INTERROTTA
-ERRORE ATTIVAZIONE TUBO PER SCANSIONE INTERMEDIATE</source>
-        <translation>[M:00960]
-NA</translation>
-    </message>
-    <message>
-        <location filename="../source/pagealarms.cpp" line="1723"/>
-        <source>PROTEZIONE PAZIENTE 3D
-</source>
-        <translation>[M:00961]
-XRAY SEQUENCE DISABLED!
-The current contest requires the use of 3D protective screen.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1730"/>
@@ -1426,9 +1357,8 @@ or not properly connected.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1809"/>
-        <source>MOVIMENTO TUBO NON CONSENTITO. POSSIBILE IMPATTO CON IL SUOLO</source>
-        <translation>[M:00966]
-NA</translation>
+        <source>NA1</source>
+        <translation>NA</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1816"/>
