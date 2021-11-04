@@ -37,7 +37,6 @@
         <file>MainPage/Selezione90.png</file>
         <file>MainPage/Selezione45.png</file>
         <file>MainPage/Selezione0.png</file>
-        <file>MainPage/frameTilt.png</file>
         <file>MainPage/framePowerOff.png</file>
         <file>MainPage/batt_fault.png</file>
         <file>MainPage/batt100.png</file>
@@ -56,6 +55,7 @@
         <file>MainPage/backgroundAnalogic.png</file>
         <file>MainPage/audioOn.png</file>
         <file>MainPage/audioMuted.png</file>
+        <file>MainPage/frameTilt.png</file>
     </qresource>
     <qresource prefix="/LanguagePage">
         <file>LanguagePage/BandiereC.png</file>

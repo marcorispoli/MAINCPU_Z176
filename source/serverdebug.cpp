@@ -4220,6 +4220,8 @@ void serverDebug::handleBiopsy(QByteArray data)
             if(parametri.size()!=1) serviceTcp->txData(QByteArray("PARAMETRI ERRATI!\n"));
             if(pBiopsy->setLunghezzaAgo((unsigned char) parametri[0].toInt())==false){
                 serviceTcp->txData(QByteArray("FALLITO COMANDO!\n"));
+            }else{
+                ApplicationDatabase.setData(_DB_BIOP_AGO, (int) parametri[0].toInt());
             }
 
         }else if(data.contains("resetBym")){

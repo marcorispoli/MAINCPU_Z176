@@ -333,6 +333,8 @@ void calibconsole::initPage(void){
         ApplicationDatabase.setData(_CAL_CONSOLE_Y_OFFSET, (int) config.offsetY,DBase::_DB_FORCE_SGN);
         ApplicationDatabase.setData(_CAL_CONSOLE_Z_OFFSET, (int) config.offsetZ,DBase::_DB_FORCE_SGN);
         ApplicationDatabase.setData(_CAL_CONSOLE_F_OFFSET, (int) config.offsetFibra,DBase::_DB_FORCE_SGN);
+        ApplicationDatabase.setData(_DB_BIOP_AGO, (int) 0,DBase::_DB_FORCE_SGN);
+        pBiopsy->setLunghezzaAgo((unsigned char) 0);
 
     }
 
@@ -777,7 +779,7 @@ void calibconsole::calculatorSlot(bool state){
         ApplicationDatabase.setData(_CAL_CONSOLE_Y_MOVE,val);
         break;
     case 9:
-        if(val>ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT)) val = ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT);
+        if(val>ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT)*10) val = ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT)*10;
         if(val<0) val =0;
         ApplicationDatabase.setData(_CAL_CONSOLE_Z_MOVE,val);
         break;
@@ -793,7 +795,7 @@ void calibconsole::calculatorSlot(bool state){
         ApplicationDatabase.setData(_CAL_CONSOLE_Y_MOVE,val);
         break;
     case 12:
-        if(val>ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT)) val = ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT);
+        if(val>ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT)*10) val = ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT)*10;
         if(val<0) val =0;
         ApplicationDatabase.setData(_CAL_CONSOLE_Z_MOVE,val);
         break;
@@ -824,7 +826,7 @@ void calibconsole::refreshStatus(void){
                                  .arg(ApplicationDatabase.getDataI(_DB_BIOP_X))\
                                  .arg(ApplicationDatabase.getDataI(_DB_BIOP_Y))\
                                  .arg(ApplicationDatabase.getDataI(_DB_BIOP_Z))\
-                                 .arg(ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT))\
+                                 .arg(ApplicationDatabase.getDataI(_DB_BIOP_ZLIMIT)*10)\
                                  .arg(ApplicationDatabase.getDataI(_CAL_CONSOLE_JX))\
                                  .arg(ApplicationDatabase.getDataI(_CAL_CONSOLE_JY))\
                                  );

@@ -442,35 +442,39 @@ void MainPage::buttonActivationNotify(int id, bool status,int opt)
         break;
 
     case _ROT_PANEL:
-        if(pbutton==pulsanteCancRot){
-            selRotAngolo=-1;
-            changePannello(_MAIN_PANEL);
-            return;
-        }
-        if(pbutton==pulsanteOkRot){
-            activateRot(selRotAngolo);
-            changePannello(_MAIN_PANEL);
-            return;
-        }
+        if(status){
+            if(pbutton==pulsanteCancRot){
+                selRotAngolo=-1;
+                changePannello(_MAIN_PANEL);
+                return;
+            }
+            if(pbutton==pulsanteOkRot){
+                activateRot(selRotAngolo);
+                changePannello(_MAIN_PANEL);
+                return;
+            }
 
-        selRotAngolo=pbutton->pulsanteData;
-
+            selRotAngolo=pbutton->pulsanteData;
+        }
         break;
     case _TILT_PANEL:
-        if(pbutton==pulsanteCancRot){
-            selTiltAngolo=-1;
-            changePannello(_MAIN_PANEL);
-            return;
+        if(status){
+            if(pbutton==pulsanteCancRot){
+                selTiltAngolo=-1;
+                changePannello(_MAIN_PANEL);
+                return;
+
+            }
+            if(pbutton==pulsanteOkRot){
+                activateTilt(selTiltAngolo);
+                changePannello(_MAIN_PANEL);
+                return;
+            }
+
+            selTiltAngolo=pbutton->pulsanteData;
 
         }
-        if(pbutton==pulsanteOkRot){
-            activateTilt(selTiltAngolo);
-            changePannello(_MAIN_PANEL);
-            return;
-        }
-
-        selTiltAngolo=pbutton->pulsanteData;
-        break;
+    break;
 
     case _PWROFF_PANEL:                
         if((isMaster) && (pbutton==pulsanteOkPowerOff))
@@ -649,12 +653,12 @@ void MainPage::changePannello(int newpanel){
         pulsanteRot0->setVisible(true);
         pulsanteRot45->setVisible(true);
         pulsanteRot45->pulsanteData = 15;
-        pulsanteRot90->setVisible(true);
-        pulsanteRot90->pulsanteData=20;
+        //pulsanteRot90->setVisible(true);
+        //pulsanteRot90->pulsanteData=20;
         pulsanteRot_45->setVisible(true);
         pulsanteRot_45->pulsanteData=-15;
-        pulsanteRot_90->setVisible(true);
-        pulsanteRot_90->pulsanteData=-20;
+        //pulsanteRot_90->setVisible(true);
+        //pulsanteRot_90->pulsanteData=-20;
         break;
     case _PWROFF_PANEL:
         panelTool->setPixmap(QPixmap("://MainPage/MainPage/framePowerOff.png"));
@@ -827,8 +831,8 @@ void MainPage::activateTilt(int angolo)
     if(!isMaster) return;
     unsigned char buffer[4];
 
-    if(angolo>28) angolo=28;
-    else if(angolo<-28) angolo=-28;
+    if(angolo>15) angolo=15;
+    else if(angolo<-15) angolo=-15;
 
     buffer[0]=TRX_MOVE_ANGLE;
     buffer[2] = (unsigned char) angolo;

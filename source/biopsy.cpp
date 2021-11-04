@@ -60,7 +60,7 @@ void biopsy::defaultConfigData(void){
 
     // Calibrazione reader
     config.dmm_DXReader = 1200;                // Dimensione in dmm Fantoccio di calibrazione Reader
-    config.dmm_DYReader = 305;
+    config.dmm_DYReader = 355;
     config.readerKX = 1.883;                   // Fattore di conversione
     config.readerKY = 0.973;                   // Fattore di conversione
 }
@@ -506,6 +506,7 @@ bool biopsy::setLunghezzaAgo(unsigned char len)
     data[0]=_MCC_BIOPSY_CMD_SET_LAGO; // Codice comando
     data[1] = len;
     if(pConsole->pGuiMcc->sendFrame(MCC_BIOPSY_CMD,1,data,2)==FALSE) return false;
+    lunghezzaAgo = len;
     return TRUE;
 }
 
@@ -532,21 +533,11 @@ bool biopsy::updateConfig(void)
 #define _COS15 0.96592583
 #define _SIN15 0.25881904
 
-// provvisiorio
-//#define _BIO_REFY_OFFSET (470)  // Distanza Fuoco Reference
-#define _BIO_REFY_OFFSET (435)  // Distanza Fuoco Reference
-
+#define _BIO_REFY_OFFSET (470)  // Distanza Fuoco Reference
 #define _BIO_REFX_OFFSET (0)    // Distanza Fuoco reference
-
 #define _X0_BYM_TO_BIO_X0 260    // dmm Distanza X0 torretta to BIO-X
-
-// Provvisorio
-//#define _Y0_BYM_TO_BIO_Y0 (470)  // Distanza Y0 torretta to BIO-Y
-#define _Y0_BYM_TO_BIO_Y0 (435)
-
-// Provvisorio
-//#define _Z0_BYM_TO_BIO_Y0 (1730) // Distanza Z0 torretta to BIO-Z (1930 - 200)
-#define _Z0_BYM_TO_BIO_Y0 (1700)
+#define _Y0_BYM_TO_BIO_Y0 (470)  // Distanza Y0 torretta to BIO-Y
+#define _Z0_BYM_TO_BIO_Y0 (1730) // Distanza Z0 torretta to BIO-Z (1930 - 200)
 
 bool biopsy::calcLesionPosition(void){
 
@@ -606,8 +597,10 @@ bool biopsy::calcLesionPosition(void){
     // Spostamento in coordinate torretta + offset di correzione da calibrazione
     Xlesione_dmm =  _X0_BYM_TO_BIO_X0 - (int) Xbio + pBiopsy->config.offsetX;
     Ylesione_dmm =  _Y0_BYM_TO_BIO_Y0 - (int) Ybio + pBiopsy->config.offsetY;
-    Zlesione_dmm =  _Z0_BYM_TO_BIO_Y0 - (int) Zbio + pBiopsy->config.offsetZ;
-    Zfibra_dmm   =  pBiopsy->config.offsetFibra * 10 - Zlesione_dmm;
+    //Zlesione_dmm =  _Z0_BYM_TO_BIO_Y0 - (int) Zbio + pBiopsy->config.offsetZ;
+    Zlesione_dmm =  pBiopsy->config.offsetFibra * 10 + 40 - (int) Zbio + pBiopsy->config.offsetZ;
+    //Zfibra_dmm   =  pBiopsy->config.offsetFibra * 10 - Zlesione_dmm;
+    Zfibra_dmm   =  (int) Zbio - 40;
 
     PRINT(QString("[  LES X:%1 Y:%2 Z:%3 ZF:%4 THCK:%5 ]").arg(Xlesione_dmm).arg(Ylesione_dmm).arg(Zlesione_dmm).arg(Zfibra_dmm).arg(pCompressore->breastThick));
 
