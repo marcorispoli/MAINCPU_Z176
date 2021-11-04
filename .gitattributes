@@ -1,0 +1,8 @@
+* text eol=lf
+*.bin -text
+*.a -text
+*.d -text
+*.o -text
+*.d -text
+*.png -text
+
