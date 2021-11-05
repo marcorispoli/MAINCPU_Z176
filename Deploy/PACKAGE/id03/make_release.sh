@@ -10,7 +10,7 @@ ID=${DIR##id}
 # DEFINIZIONE DEI CODICI DI REVISIONE
 #################################################################
 FW269=FW269_1.2.hex
-FW190=FW190A_1.1.hex
+FW190A=FW190A_1.1.hex
 FW240=FW240DMD_1.2.hex
 FW249U1=FW249U1_3.1.hex
 FW249U1A=FW249U1_2.5.hex
@@ -49,7 +49,7 @@ mkdir $MANSLAVE
 
 
 cp FWDIR/FW269.hex $FW/$FW269
-cp FWDIR/FW190.hex $FW/$FW190
+cp FWDIR/FW190A.hex $FW/$FW190A
 cp FWDIR/FW240.hex $FW/$FW240
 cp FWDIR/FW249U1.hex $FW/$FW249U1
 cp FWDIR/FW249U1A.hex $FW/$FW249U1A

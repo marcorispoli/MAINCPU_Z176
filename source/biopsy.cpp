@@ -591,16 +591,14 @@ bool biopsy::calcLesionPosition(void){
     Zbio = Xmp * H / (2*L + Xmp);
     Xbio = (2*L * Xp + L * Xmp)/( Xmp + 2*L);
     Ybio = (2*L * Ymp) / (Xmp + 2*L);
+    Zfibra_dmm   =  (int) Zbio - 59;
 
     PRINT(QString("[  CALC X:%1 Y:%2 Z:%3  ]").arg(Xbio).arg(Ybio).arg(Zbio));
 
     // Spostamento in coordinate torretta + offset di correzione da calibrazione
     Xlesione_dmm =  _X0_BYM_TO_BIO_X0 - (int) Xbio + pBiopsy->config.offsetX;
     Ylesione_dmm =  _Y0_BYM_TO_BIO_Y0 - (int) Ybio + pBiopsy->config.offsetY;
-    //Zlesione_dmm =  _Z0_BYM_TO_BIO_Y0 - (int) Zbio + pBiopsy->config.offsetZ;
-    Zlesione_dmm =  pBiopsy->config.offsetFibra * 10 + 40 - (int) Zbio + pBiopsy->config.offsetZ;
-    //Zfibra_dmm   =  pBiopsy->config.offsetFibra * 10 - Zlesione_dmm;
-    Zfibra_dmm   =  (int) Zbio - 40;
+    Zlesione_dmm =  pBiopsy->config.offsetFibra * 10 - Zfibra_dmm + pBiopsy->config.offsetZ;
 
     PRINT(QString("[  LES X:%1 Y:%2 Z:%3 ZF:%4 THCK:%5 ]").arg(Xlesione_dmm).arg(Ylesione_dmm).arg(Zlesione_dmm).arg(Zfibra_dmm).arg(pCompressore->breastThick));
 

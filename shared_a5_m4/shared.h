@@ -228,10 +228,10 @@ typedef struct
     float          readerKY;    // Fattore di conversione unit/dmm
 
     // Dati di calibrazione
-    unsigned char  offsetX;                 // Offset di calibrazione puntamento X (dmm)
-    unsigned char  offsetY;                 // Offset di calibrazione puntamento Y (dmm)
-    unsigned char  offsetZ;                 // Offset di calibrazione puntamento Z (dmm)
-    unsigned char  offsetFibra;           // Distanza Home torretta-Fibra di carbonio (mm)
+    int  offsetX;                 // Offset di calibrazione puntamento X (dmm)
+    int  offsetY;                 // Offset di calibrazione puntamento Y (dmm)
+    int  offsetZ;                 // Offset di calibrazione puntamento Z (dmm)
+    unsigned char  offsetFibra;   // Distanza Home torretta-Fibra di carbonio (mm)
 
 
     // Guardie anti impatto con il compressore
