@@ -324,27 +324,26 @@ void Generatore::pcb190Notify(unsigned char id, unsigned char cmd, QByteArray da
             warningITest = false;
         }else {
             faultR16 = false;
-            // Controllo valore anodica: solo warning se la variazione è contenuta altrementi è fault
-            if((anodicaTest < pConfig->userCnf.correnteAnodicaTest-10)||(anodicaTest > pConfig->userCnf.correnteAnodicaTest+10)){
-                faultITest = true;
-                warningITest = true;
-            }else{
-                faultITest  = false;
-                if((anodicaTest < pConfig->userCnf.correnteAnodicaTest-5)||(anodicaTest > pConfig->userCnf.correnteAnodicaTest+5)) warningITest=true;
-                else warningITest = false;
-            }
+
+            if((anodicaTest < pConfig->userCnf.correnteAnodicaTest-5)||(anodicaTest > pConfig->userCnf.correnteAnodicaTest+5)) warningITest=true;
+            else warningITest = false;
+
+            if(pConfig->userCnf.enableIFil){
+                if((anodicaTest < pConfig->userCnf.correnteAnodicaTest-10)||(anodicaTest > pConfig->userCnf.correnteAnodicaTest+10)){
+                    faultITest = true;
+                }else    faultITest = false;
+            }else faultITest = false;
+
         }
 
-        // Controllo mAs (solo se gnd è ok)
-        if(faultGnd==false){
-            int dmas = pConfig->userCnf.correnteAnodicaTest * 5 / 100;
-            if((mAsTest < pConfig->userCnf.correnteAnodicaTest-dmas)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+dmas)) warningMas=true;
-            else warningMas = false;
-            if(pConfig->userCnf.enableTestMasmetro){
-                if((mAsTest < pConfig->userCnf.correnteAnodicaTest-2*dmas)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+2*dmas)) faultMas=true;
-                else faultMas=false;
-            }else faultMas = false;
-        }
+        // Controllo mAs
+        if((mAsTest < pConfig->userCnf.correnteAnodicaTest-3)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+3)) warningMas=true;
+        else warningMas = false;
+
+        if((!faultR16)&&(!faultGnd)&&(!faultITest)&&(!warningITest)&&(pConfig->userCnf.enableTestMasmetro)){
+            if((mAsTest < pConfig->userCnf.correnteAnodicaTest-6)||(mAsTest > pConfig->userCnf.correnteAnodicaTest+6)) faultMas=true;
+            else faultMas=false;
+        }else faultMas = false;
 
 
         // Tensioni di alimentazione scheda
