@@ -840,6 +840,8 @@ not_ready_bits|=2000;  // TEmperatura cuffia
 
 void AnalogPageOpen::verifyStandardReady(void){
 
+    int plate_type = ApplicationDatabase.getDataI(_DB_PLATE_TYPE);
+
     int flags = ApplicationDatabase.getDataI(_DB_ANALOG_FLAGS);
     int not_ready_bits=0;
 
@@ -856,7 +858,7 @@ void AnalogPageOpen::verifyStandardReady(void){
     if(!pPotter->getCassettePresence()){
             not_ready_bits|=0x10;   // Missing Cassette
     } else if(pPotter->getCassetteExposed()){
-            not_ready_bits|=0x20;   // Exposed Cassette
+        if(plate_type == ANALOG_PLATE_FILM)  not_ready_bits|=0x20;   // Exposed Cassette only with film, not CR
     }
 
     // Gruppo OpenDoor
