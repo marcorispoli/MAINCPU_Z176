@@ -775,6 +775,9 @@ bool Collimatore::readConfigFile(void)
             newColli2DItem.B = (unsigned char) dati.at(5).toInt();
             newColli2DItem.T = (unsigned char) dati.at(6).toInt();
             colliConf.colli2D.append(newColli2DItem);
+            if(pad == PAD_24x30) colli24x30 = newColli2DItem;
+            if(pad == PAD75_24x30) colli24x30 = newColli2DItem;
+
             continue;
         }
     }
@@ -782,9 +785,26 @@ bool Collimatore::readConfigFile(void)
 
     // C'è stata una variazione di revisione
     if( fileRevision != COLLI_CNF_REV){
+
+        if(fileRevision<= 2){
+
+            // Crea il nuovo item di collimazione
+            _colliPadStr newColli2DItem;
+
+            newColli2DItem = colli24x30;
+            newColli2DItem.PadCode = PAD_PROSTHESIS;
+            colliConf.colli2D.append(newColli2DItem);
+            newColli2DItem.PadCode = PAD_TOMO_24x30;
+            colliConf.colli2D.append(newColli2DItem);
+
+            newColli2DItem.PadCode = PAD_9x9_MAG;
+            colliConf.colli2D.append(newColli2DItem);
+        }
+
         // Salvataggio
         storeConfigFile();
     }
+
 
     file.close();
     return true;

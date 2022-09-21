@@ -1295,50 +1295,55 @@ bool classifyPad(void)
     generalConfiguration.comprCfg.padSelezionato = POTTER_DISCONNECTED;
   }else if((POTTER==POTTER_TOMO)||(POTTER==POTTER_2D)) 
   {
-    switch(i)
-    {
-      case _POTTER_24x30_LEVEL: // 24x30
-          generalConfiguration.comprCfg.padSelezionato = PAD_24x30;
-          break;
-      case _POTTER_18x24_LEVEL: // 18x24 Center
-          generalConfiguration.comprCfg.padSelezionato = PAD_18x24;
-          break;
-      case _POTTER_10x24_LEVEL: // 10x24 SBALZATO
-          generalConfiguration.comprCfg.padSelezionato = PAD_10x24;
-          break;
-      case _POTTER_BP2D_LEVEL: // Biopsia 2D
-          generalConfiguration.comprCfg.padSelezionato = PAD_BIOP_2D;
-          break;
-      case _POTTER_TOMO_LEVEL: // PAD PER TOMO
-          generalConfiguration.comprCfg.padSelezionato = PAD_TOMO_24x30;
-          break;
-      case _POTTER_D75_LEVEL: // Diametro 75 a contatto
-          generalConfiguration.comprCfg.padSelezionato = PAD_D75_CNT;
-          break;
-      case _POTTER_18x24L_LEVEL: // 18x24 Left
-          generalConfiguration.comprCfg.padSelezionato = PAD_18x24_LEFT;
-          break;
-      case _POTTER_18x24R_LEVEL: // 18x24 Right
-          generalConfiguration.comprCfg.padSelezionato = PAD_18x24_RIGHT;
-          break;
-      default:  
-        generalConfiguration.comprCfg.padSelezionato = PAD_ND;
-      break;
-    }
+      switch(i)
+      {
+        case _POTTER_24x30_LEVEL: // 24x30
+            generalConfiguration.comprCfg.padSelezionato = PAD_24x30;
+            break;
+        case _POTTER_18x24_LEVEL: // 18x24 Center
+            generalConfiguration.comprCfg.padSelezionato = PAD_18x24;
+            break;
+        case _POTTER_10x24_LEVEL: // 10x24 SBALZATO
+            generalConfiguration.comprCfg.padSelezionato = PAD_10x24;
+            break;
+        case _POTTER_BP2D_LEVEL: // Biopsia 2D
+            generalConfiguration.comprCfg.padSelezionato = PAD_BIOP_2D;
+            break;
+        case _POTTER_TOMO_LEVEL: // PAD PER TOMO
+            generalConfiguration.comprCfg.padSelezionato = PAD_TOMO_24x30;
+            break;
+        case _POTTER_PROSTHESIS: // 10x24 per protesi
+            generalConfiguration.comprCfg.padSelezionato = PAD_PROSTHESIS;
+            break;
+        case _POTTER_18x24L_LEVEL: // 18x24 Left
+            generalConfiguration.comprCfg.padSelezionato = PAD_18x24_LEFT;
+            break;
+        case _POTTER_18x24R_LEVEL: // 18x24 Right
+            generalConfiguration.comprCfg.padSelezionato = PAD_18x24_RIGHT;
+            break;
+        default:
+          generalConfiguration.comprCfg.padSelezionato = PAD_ND;
+        break;
+      }
   }else if(POTTER==POTTER_MAGNIFIER) 
   {
-    switch(i)
-    {
-      case _MAG_9x21_LEVEL: 
-          generalConfiguration.comprCfg.padSelezionato = PAD_9x21;
+      switch(i)
+      {
+        case _MAG_9x21_LEVEL:
+            generalConfiguration.comprCfg.padSelezionato = PAD_9x21;
+            break;
+        case _MAG_D75_LEVEL: // D75 Sbalzato per ingranditore Center
+            generalConfiguration.comprCfg.padSelezionato = PAD_D75_MAG;
+            break;
+
+      case _MAG_9x9_LEVEL:
+          generalConfiguration.comprCfg.padSelezionato = PAD_9x9_MAG;
           break;
-      case _MAG_D75_LEVEL: // D75 Sbalzato per ingranditore Center
-          generalConfiguration.comprCfg.padSelezionato = PAD_D75_MAG;
-          break;
-      default:  
-        generalConfiguration.comprCfg.padSelezionato = PAD_ND;
-      break;
-    }
+
+      default:
+          generalConfiguration.comprCfg.padSelezionato = PAD_ND;
+        break;
+      }
   }
   
   if(padDetected!=generalConfiguration.comprCfg.padSelezionato)

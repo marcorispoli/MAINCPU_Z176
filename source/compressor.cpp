@@ -16,30 +16,32 @@ void Compressor::activateConnections(void){
 Compressor::Compressor(QObject *parent) :
     QObject(parent)
 {
+
     padTags.append(QString("PAD24x30"));
     padTags.append(QString("PAD18x24_C"));
     padTags.append(QString("PAD18x24_L"));
     padTags.append(QString("PAD18x24_R"));
     padTags.append(QString("PAD9x21"));
     padTags.append(QString("PAD10x24"));
-    padTags.append(QString("PADD75_CNT"));
+    padTags.append(QString("PADPROSTHESIS"));
     padTags.append(QString("PADD75_MAG"));
     padTags.append(QString("PADBIOP_2D"));
     padTags.append(QString("PADBIOP_3D"));
     padTags.append(QString("PADTOMO"));
+    padTags.append(QString("PAD9x9_MAG"));
 
     padNames.append(QString("24x30"));
     padNames.append(QString("18x24 CENTER"));
     padNames.append(QString("18x24 LEFT"));
     padNames.append(QString("18x24 RIGHT"));
-    padNames.append(QString("9x21"));
+    padNames.append(QString("9x21 (MAG)"));
     padNames.append(QString("10x24"));
-    padNames.append(QString("D75 CONTACT"));
-    padNames.append(QString("D75 MAGNIFY"));
-    padNames.append(QString("BIOP 2D"));
+    padNames.append(QString("PROSTHESIS"));
+    padNames.append(QString("D75 (MAG)"));
+    padNames.append(QString("BIOPSY 2D"));
     padNames.append(QString("BIOPSY STEREO"));
     padNames.append(QString("TOMO 24x30"));
-
+    padNames.append(QString("9x9 (MAG)"));
 
     comprStat = COMPR_ND;
     comprMagnifier = 1;
