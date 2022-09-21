@@ -136,6 +136,9 @@ typedef struct
     unsigned short F1;               // Valore soglia curva
     unsigned short KF1;              // Coeff. K curva operativa
 
+    // Massima forza di compressione
+    unsigned short max_compression_force;
+
     // Posizione nacchera
     unsigned short maxMechPosition; // MAssima posizione meccanica    
     unsigned short maxPosition;    // Massima posizione assoluta nacchera

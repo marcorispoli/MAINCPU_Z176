@@ -38,10 +38,12 @@ public:
     unsigned char getForce(){return comprStrenght;}
 
     // Configurazione
-    bool readConfigFile(void);
-    bool storeConfigFile(void);
-    bool readPadCfg(void);      // Lettura file di configurazione livelli di riconoscimento del pad
-    bool storePadCfg(void);     // Salvataggio dei dati di configurazione
+    void switchCalibFileVersion(void);
+    void setConfigDefault(void);
+    void readOldConfigFile(void);
+    void readCompressorConfigFile(void);
+    void storeConfigFile(void);
+
     void calibrateThresholds(unsigned char ncc); // Calcola le soglie corrette per il sistema vero
 
     bool configUpdate; // Configurazione compressore aggiornata

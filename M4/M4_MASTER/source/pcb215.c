@@ -1462,7 +1462,8 @@ void pcb215PrintConfig(void){
   printf("KF0 =%d\n", generalConfiguration.comprCfg.calibration.KF0);
   printf("F1 =%d\n", generalConfiguration.comprCfg.calibration.F1);
   printf("KF1 =%d\n", generalConfiguration.comprCfg.calibration.KF1);
-  
+  printf("MAX COMPRESSION: =%d\n", generalConfiguration.comprCfg.calibration.max_compression_force);
+
   printf("MAX MECH =%d\n", generalConfiguration.comprCfg.calibration.maxMechPosition);
   printf("MAX POS =%d\n", generalConfiguration.comprCfg.calibration.maxPosition);
   printf("MAX PROT =%d\n", generalConfiguration.comprCfg.calibration.maxProtection);
@@ -1486,25 +1487,25 @@ Funzione configuratrice:
 */
 bool config_pcb215(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len){
   
-   
-  // Salva nella struttura locale i dati
-  if(setmem){
-    if(len!=sizeof(compressoreCnf_Str))
-    {
-      printf("PCB215 CONFIG FALLITA PER LEN: RIC=%d CUR=%d\n",len,sizeof(compressoreCnf_Str));
-      return false;    
-    }
-    memcpy((unsigned char*)&(generalConfiguration.comprCfg.calibration), (compressoreCnf_Str*) buffer, sizeof(compressoreCnf_Str));
-    pcb215PrintConfig();    
+
+  if(blocco==0){
+      memcpy((unsigned char*)&(generalConfiguration.comprCfg.calibration), buffer, _MCC_DIM-2);
+      return true;
   }
+
+  // Completa il blocco dati
+  memcpy(&((unsigned char*)&(generalConfiguration.comprCfg.calibration))[_MCC_DIM-2], buffer, sizeof(compressoreCnf_Str) - (_MCC_DIM-2));
+  pcb215PrintConfig();
+
 
   // Forza l'uscita dal modo calibrazione se necessario
   generalConfiguration.comprCfg.calibrationMode = FALSE;
-  
+
   // Aggiorna i dati di calibrazione passati dall'applicazione
   if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_OFS), generalConfiguration.comprCfg.calibration.calibPosOfs,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_K), generalConfiguration.comprCfg.calibration.calibPosK,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_STR_K), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+  if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT),  generalConfiguration.comprCfg.calibration.max_compression_force,10,&CONTEST)!=_SER422_NO_ERROR) return false;
 
   if(Ser422WriteRegister(_REGID(COMPRESSOR_F0), generalConfiguration.comprCfg.calibration.F0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
   if(Ser422WriteRegister(_REGID(COMPRESSOR_KF0), generalConfiguration.comprCfg.calibration.KF0,10,&CONTEST)!=_SER422_NO_ERROR) return false;

@@ -952,11 +952,10 @@ void serverDebug::handleCompressore(QByteArray data)
         serviceTcp->txData(QByteArray("getCalibPad:                 restituisce il valore corrente di calibrazione del pad corrente \r\n"));
         serviceTcp->txData(QByteArray("setThick: <val>              corregge il calcolo dello spessore alla compressione corrente \r\n"));
         serviceTcp->txData(QByteArray("setKF: <val>                 imposta il coefficiente di flessione per correggere lo spessore\r\n"));
+        serviceTcp->txData(QByteArray("setLimitForce: <val>         imposta max compressione (range 70:200) \r\n"));
         serviceTcp->txData(QByteArray("setWeight: <val>             imposta il peso in (N) \r\n"));
         serviceTcp->txData(QByteArray("STORE:                       Salva i dati nel file di configurazione \r\n"));
         serviceTcp->txData(QByteArray("getBattery:                  Legge il valore della tensione di batteria \r\n"));
-        serviceTcp->txData(QByteArray("readPadConfig:               Legge il file padcalib.cnf e aggiorna i drivers \r\n"));
-        serviceTcp->txData(QByteArray("storePadConfid:              Salva i dati di configurazione PAD nel file padclib.cnf \r\n"));
         serviceTcp->txData(QByteArray("calibThresholds: <val>       Calcola le soglie ideali per il riconoscimento PAD \r\n"));
         serviceTcp->txData(QByteArray("getTrolley                   Restituisce lo spessore anche non in compressione \r\n"));
         serviceTcp->txData(QByteArray("setCompressorRelease <val>   Imposta lo stato del rilascio dopo esposizione \r\n"));
@@ -1007,19 +1006,6 @@ void serverDebug::handleCompressore(QByteArray data)
     }else if(data.contains("getBattery"))
     {
         serviceTcp->txData(QString("Battery: %1(V)\r\n").arg(pCompressore->battery).toAscii());
-    }else if(data.contains("readPadConfig"))
-    {
-        pCompressore->readPadCfg();
-        pConfig->updatePCB269();
-
-        // Visualizza il contenuto
-        for(int i=0; i<10; i++){
-            serviceTcp->txData(QString("THRESHOLD[%1]=%2!\r\n").arg(i).arg(pCompressore->config.thresholds[i]).toAscii());
-        }
-    }else if(data.contains("storePadConfig"))
-    {
-        pCompressore->storePadCfg();
-        serviceTcp->txData(QByteArray("DATI SALVATI NEL FILE PADCALIB.cnf! \r\n"));
     }else if(data.contains("calibThresholds"))
     {
         handleCalibThresholds(data);
@@ -1030,6 +1016,28 @@ void serverDebug::handleCompressore(QByteArray data)
         }
 
         serviceTcp->txData(QByteArray("I dati devono essere salvati e riletti perchè siano operativi \r\n"));
+    }else if(data.contains("setLimitForce"))
+    {
+        QList<QByteArray> parametri;
+
+        parametri = getNextFieldsAfterTag(data, QString("setLimitForce"));
+        if(parametri.size()!=1) serviceTcp->txData(QByteArray("WRONG PARAMETER!\n\r"));
+        if(parametri[0].toInt() > 200){
+            serviceTcp->txData(QByteArray("ERROR: the limit force cannot exceed 200N!\n\r"));
+            return;
+        }
+        if(parametri[0].toInt() < 70){
+            serviceTcp->txData(QByteArray("ERROR: the limit force cannot be lower than 70N!\n\r"));
+            return;
+        }
+
+        // Salva il valore, aggiorna il file di configurazione e aggiorna la periferica
+        pCompressore->config.max_compression_force = parametri[0].toInt();
+        pCompressore->storeConfigFile();
+        pConfig->updatePCB269();
+
+        serviceTcp->txData(QByteArray("Pad Configuration file and peripheral device updated!\n\r"));
+        return;
     }
 
 

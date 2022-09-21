@@ -247,9 +247,9 @@ unsigned char Collimatore::colliFormatFromPad(int pad){
      if(pad == PAD_24x30)       return    _COLLI_FORMAT_24x30;
      if(pad == PAD_TOMO_24x30)   return    _COLLI_FORMAT_24x30;
      if(pad == PAD_18x24)       return    _COLLI_FORMAT_18x24;
-     if(pad == PAD_18x24_LEFT)   return    _COLLI_FORMAT_18x24;
-     if(pad == PAD_18x24_RIGHT)   return    _COLLI_FORMAT_18x24;
-     if(pad == PAD_PROSTHESIS) return    _COLLI_FORMAT_18x24;
+     if(pad == PAD_18x24_LEFT)   return    _COLLI_FORMAT_24x30;
+     if(pad == PAD_18x24_RIGHT)   return    _COLLI_FORMAT_24x30;
+     if(pad == PAD_PROSTHESIS) return    _COLLI_FORMAT_24x30;
      if(pad == PAD_BIOP_2D) return    _COLLI_FORMAT_18x24;
      if(pad == PAD_10x24)   return    _COLLI_FORMAT_18x24;
      if(pad == PAD_BIOP_3D) return    _COLLI_FORMAT_BIOPSY;
@@ -651,6 +651,9 @@ void Collimatore::guiNotifySlot(unsigned char id, unsigned char mcccode, QByteAr
 bool Collimatore::readConfigFile(void)
 {
     QString filename;
+     _colliPadStr colli24x30;
+     _colliPadStr colliMag;
+
     QList<QString> dati;
     int i=0;
     int pad;
@@ -758,7 +761,6 @@ bool Collimatore::readConfigFile(void)
 
         // ---------------------------- Collimazioni 2D --------------------------------------- //
         if(dati.at(0).contains("PAD")){
-
             // Legge il codice numerico del PAD associato al tag alfanumerico
             pad = pCompressore->getPadCodeFromTag(dati.at(0));
             if(pad==-1) continue;
@@ -775,6 +777,9 @@ bool Collimatore::readConfigFile(void)
             newColli2DItem.B = (unsigned char) dati.at(5).toInt();
             newColli2DItem.T = (unsigned char) dati.at(6).toInt();
             colliConf.colli2D.append(newColli2DItem);
+
+            if(pad == PAD_24x30) colli24x30 = newColli2DItem;
+            else if(pad == PAD_D75_MAG) colliMag = newColli2DItem;
             continue;
         }
     }
@@ -782,9 +787,31 @@ bool Collimatore::readConfigFile(void)
 
     // C'è stata una variazione di revisione
     if( fileRevision != COLLI_CNF_REV){
+
+        if(fileRevision < 3){
+
+            // Crea il nuovo item di collimazione
+            _colliPadStr newColli2DItem;
+
+            // New Colli 24x30 ________________________
+            newColli2DItem = colli24x30;
+
+            newColli2DItem.PadCode = PAD_PROSTHESIS;
+            colliConf.colli2D.append(newColli2DItem);
+
+            newColli2DItem.PadCode = PAD_TOMO_24x30;
+            colliConf.colli2D.append(newColli2DItem);
+
+            // Colli Mag ________________________
+            newColli2DItem = colliMag;
+            newColli2DItem.PadCode = PAD_9x9_MAG;
+            colliConf.colli2D.append(newColli2DItem);
+        }
+
         // Salvataggio
         storeConfigFile();
     }
+
 
     file.close();
     return true;
@@ -818,6 +845,7 @@ bool Collimatore::storeConfigFile(void)
     // Collimazione 2D
     for(i=0; i<colliConf.colli2D.size();i++)
     {
+
         data = QString("<%1,%2,%3,%4,%5,%6,%7>\n").arg(pCompressore->getPadTag((Pad_Enum) (colliConf.colli2D[i].PadCode))).arg(QString("-")).arg((int) colliConf.colli2D[i].L).arg((int) colliConf.colli2D[i].R).arg((int) colliConf.colli2D[i].F).arg((int) colliConf.colli2D[i].B).arg((int) colliConf.colli2D[i].T);
         filecpy.write(data.toAscii().data());
     }
