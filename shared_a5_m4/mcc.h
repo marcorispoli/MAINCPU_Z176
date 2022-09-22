@@ -38,7 +38,8 @@
 #define CONFIG_GENERAL        3
 
 #define CONFIG_PCB190         20
-#define CONFIG_PCB269         30
+#define CONFIG_PCB269_0       30
+#define CONFIG_PCB269_1       31
 #define CONFIG_PCB249U2       40
 #define CONFIG_PCB244         50
 #define CONFIG_BIOPSY         60

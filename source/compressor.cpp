@@ -16,37 +16,49 @@ void Compressor::activateConnections(void){
 Compressor::Compressor(QObject *parent) :
     QObject(parent)
 {
+
     padTags.append(QString("PAD24x30"));
     padTags.append(QString("PAD18x24_C"));
     padTags.append(QString("PAD18x24_L"));
     padTags.append(QString("PAD18x24_R"));
     padTags.append(QString("PAD9x21"));
     padTags.append(QString("PAD10x24"));
-    padTags.append(QString("PADD75_CNT"));
+    padTags.append(QString("PADPROSTHESIS"));
     padTags.append(QString("PADD75_MAG"));
     padTags.append(QString("PADBIOP_2D"));
     padTags.append(QString("PADBIOP_3D"));
     padTags.append(QString("PADTOMO"));
+    padTags.append(QString("PAD9x9_MAG"));
 
     padNames.append(QString("24x30"));
     padNames.append(QString("18x24 CENTER"));
     padNames.append(QString("18x24 LEFT"));
     padNames.append(QString("18x24 RIGHT"));
-    padNames.append(QString("9x21"));
+    padNames.append(QString("9x21 (MAG)"));
     padNames.append(QString("10x24"));
-    padNames.append(QString("D75 CONTACT"));
-    padNames.append(QString("D75 MAGNIFY"));
-    padNames.append(QString("BIOP 2D"));
+    padNames.append(QString("PROSTHESIS"));
+    padNames.append(QString("D75 (MAG)"));
+    padNames.append(QString("BIOPSY 2D"));
     padNames.append(QString("BIOPSY STEREO"));
     padNames.append(QString("TOMO 24x30"));
-
+    padNames.append(QString("9x9 (MAG)"));
 
     comprStat = COMPR_ND;
     comprMagnifier = 1;
     comprPad = PAD_ND;    
 
-    configUpdate = FALSE;   
-    pConfig->compressor_configured = (readConfigFile() && readPadCfg());
+    // Imposta la configurazione di default
+    setConfigDefault();
+
+    // Verifica se deve compensare id ati di calibrazione del vecchio file di configurazione
+    // s il file esiste ne carica solo i dati di calibrazione e poi cancella il vecchioo file
+    switchCalibFileVersion();
+
+    // Carica il nuovo file di calibrazione
+    readCompressorConfigFile();
+    configUpdate = true;
+    pConfig->compressor_configured = true;
+
 
     // Inizializzazione della diagnostica
     fault = false;
@@ -59,29 +71,157 @@ Compressor::Compressor(QObject *parent) :
 
 }
 
-bool Compressor::readConfigFile(void)
+// Se trova il vecchio file di configurazione lo legge e lo cancella
+// Restituisce true se l'ha trovato
+void Compressor::switchCalibFileVersion(void){
+    QString command;
+
+    // Verifica esistenza file : /resource/config/compressore.cnf
+    QFile file("/resource/config/compressore.cnf");
+    if (file.exists())
+    {
+        // Legge il file e lo cancella
+        readOldConfigFile();
+
+        // Cancella il file
+        command = QString("rm /resource/config/compressore.cnf");
+        system(command.toStdString().c_str());
+
+        command = QString("sync");
+        system(command.toStdString().c_str());
+    }
+
+    // Verifica esistenza file : /resource/config/padcalib.cnf
+    QFile file1("/resource/config/padcalib.cnf");
+    if (file1.exists())
+    {
+        // Cancella il file
+        command = QString("rm /resource/config/padcalib.cnf");
+        system(command.toStdString().c_str());
+
+        command = QString("sync");
+        system(command.toStdString().c_str());
+    }
+    return ;
+}
+
+void Compressor::setConfigDefault(void){
+
+    // Imposta calibrazione di default per la posizione
+    config.calibPosOfs = 217;
+    config.calibPosK = 151;
+
+    // Imposta calibrazione di default per la forza
+    config.F0  = 35;
+    config.KF0 = 814;
+    config.F1  = 70;
+    config.KF1 = 80;
+    config.max_compression_force=200;
+
+    // Impostazione di default per limiti meccanici
+    config.maxMechPosition = 280;
+    config.maxPosition = 400;
+    config.maxProtection = 280;
+
+    // Impostazione Sbalzo ingranditore
+    config.sbalzoIngranditore[0] = 0;
+    config.fattoreIngranditore[0] = 0;
+    config.sbalzoIngranditore[1] = 299;
+    config.fattoreIngranditore[1] = 20; // 2x
+    config.sbalzoIngranditore[2] = 259;
+    config.fattoreIngranditore[2] = 18; // 1.8x
+    config.sbalzoIngranditore[3] = 0;
+    config.fattoreIngranditore[3] = 0;
+    config.sbalzoIngranditore[4] = 200;
+    config.fattoreIngranditore[4] = 15; // 1.5x
+    config.sbalzoIngranditore[5] = 0;
+    config.fattoreIngranditore[5] = 0;
+    config.sbalzoIngranditore[6] = 0;
+    config.fattoreIngranditore[6] = 0;
+    config.sbalzoIngranditore[7] = 0;
+    config.fattoreIngranditore[7] = 0;
+
+    // Impostazione dei livelli di riconoscimento pad di default
+    config.thresholds[0] = _PAD_THRESHOLD_0;
+    config.thresholds[1] = _PAD_THRESHOLD_1;
+    config.thresholds[2] = _PAD_THRESHOLD_2;
+    config.thresholds[3] = _PAD_THRESHOLD_3;
+    config.thresholds[4] = _PAD_THRESHOLD_4;
+    config.thresholds[5] = _PAD_THRESHOLD_5;
+    config.thresholds[6] = _PAD_THRESHOLD_6;
+    config.thresholds[7] = _PAD_THRESHOLD_7;
+    config.thresholds[8] = _PAD_THRESHOLD_8;
+    config.thresholds[9] = _PAD_THRESHOLD_9;
+
+
+    // Imposta i valori di default per le caratteristiche morfologiche
+    config.pads[PAD_24x30].offset = -110;
+    config.pads[PAD_24x30].kF = 22;
+    config.pads[PAD_24x30].peso = 50;
+
+    config.pads[PAD_TOMO_24x30].offset = -110;
+    config.pads[PAD_TOMO_24x30].kF = 15;
+    config.pads[PAD_TOMO_24x30].peso = 50;
+
+    config.pads[PAD_18x24].offset = -110;
+    config.pads[PAD_18x24].kF = 22;
+    config.pads[PAD_18x24].peso = 50;
+
+    config.pads[PAD_18x24_LEFT].offset = -110;
+    config.pads[PAD_18x24_LEFT].kF = 22;
+    config.pads[PAD_18x24_LEFT].peso = 50;
+
+    config.pads[PAD_18x24_RIGHT].offset = -110;
+    config.pads[PAD_18x24_RIGHT].kF = 22;
+    config.pads[PAD_18x24_RIGHT].peso = 50;
+
+    config.pads[PAD_9x21].offset = 89;
+    config.pads[PAD_9x21].kF = 17;
+    config.pads[PAD_9x21].peso = 30;
+
+    config.pads[PAD_10x24].offset = -106;
+    config.pads[PAD_10x24].kF = 12;
+    config.pads[PAD_10x24].peso = 30;
+
+    config.pads[PAD_PROSTHESIS].offset = -106;
+    config.pads[PAD_PROSTHESIS].kF = 12;
+    config.pads[PAD_PROSTHESIS].peso = 30;
+
+    config.pads[PAD_D75_MAG].offset = 89;
+    config.pads[PAD_D75_MAG].kF = 17;
+    config.pads[PAD_D75_MAG].peso = 30;
+
+
+    config.pads[PAD_9x9_MAG].offset = 89;
+    config.pads[PAD_9x9_MAG].kF = 17;
+    config.pads[PAD_9x9_MAG].peso = 30;
+
+    config.pads[PAD_BIOP_2D].offset = -110;
+    config.pads[PAD_BIOP_2D].kF = 22;
+    config.pads[PAD_BIOP_2D].peso = 50;
+
+    config.pads[PAD_BIOP_3D].offset = -100;
+    config.pads[PAD_BIOP_3D].kF = 10;
+    config.pads[PAD_BIOP_3D].peso = 30;
+
+}
+
+
+// Rilegge tutto il vecchio file di configurazione
+// ma carica solo i file di calibrazione di posizione e forza
+void Compressor::readOldConfigFile(void)
 {
     QString filename;
     int i=0;
     int array[10];
 
     filename =  QString(COMPRCFG);
-
     QFile file(filename.toAscii());
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE:" << filename;
-        return FALSE;
-    }
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
 
-
-    // Lettura calibrazione nacchera
     Config::getNextArrayLine(&file,array, 2);
     config.calibPosOfs = array[0];
     config.calibPosK = array[1];
-
-    // Inizializza i PADS utilizzando un valore impossibile per il peso
-    for(i=0;i<PAD_ENUM_SIZE;i++) config.pads[i].peso = 255;
 
     // Lettura configurazione Pads fino a DEFPAD
     QList<QString> params;
@@ -90,34 +230,7 @@ bool Compressor::readConfigFile(void)
     for(i=0;i<PAD_ENUM_SIZE+1;i++)
     {
         params = Config::getNextArrayFields(&file);
-        if(params.size()!=4) return FALSE;
-        if(params.at(0)=="DEFPAD")
-        {
-            // DEFPAD deve essere l'ultimo della lista dei pads
-            defPad.offset=params.at(1).toInt();
-            defPad.kF = params.at(2).toInt();
-            defPad.peso = params.at(3).toInt();
-            break;
-        }else
-        {
-            int index = getPadCodeFromTag(params.at(0));
-            if(index<0) return FALSE;           
-            config.pads[index].offset = params.at(1).toInt();
-            config.pads[index].kF = params.at(2).toInt();
-            config.pads[index].peso = params.at(3).toInt();
-        }
-    }
-
-    // Ripassa la lista per assegnare il default ai pads non definiti
-    // Il valore di default
-    for(i=0;i<PAD_ENUM_SIZE;i++)
-    {
-        if(config.pads[i].peso == 255)
-        {
-            config.pads[i].offset = defPad.offset;
-            config.pads[i].kF = defPad.kF;
-            config.pads[i].peso = defPad.peso;
-        }
+        if(params.at(0)=="DEFPAD") break;
     }
 
     // Lettura coefficienti per la forza
@@ -129,137 +242,232 @@ bool Compressor::readConfigFile(void)
     config.F1 = array[2];
     config.KF1=array[3];
 
-    // Lettura dati limitazione altezza
-    Config::getNextArrayLine(&file,array, 1);
-    config.maxMechPosition = array[0];
-    Config::getNextArrayLine(&file,array, 1);
-    config.maxPosition = array[0];
-    Config::getNextArrayLine(&file,array, 1);
-    config.maxProtection = array[0];
-
-
-    // Lettura dati Ingranditore
-    for(i=0; i<8; i++)
-    {
-        Config::getNextArrayLine(&file,array, 2);
-        config.sbalzoIngranditore[i] = array[0];
-        config.fattoreIngranditore[i] = array[1];
-    }
-
     file.close();
-    return true;
+    return ;
 }
 
-/*
- *  ATTENZIONE: il file di configurazione del compressore non è sequenziale e contiene
- *  campi opzionali. Pertanto nel salvataggio del file di configurazione verranno
- *  persi tutti i commenti in linea con i campi opzionali. Verranno tuttavia mantenuti
- *  tutti i commenti in linea per i campi sequenziali.
- *
- */
-bool Compressor::storeConfigFile(void)
-{
-    QString filename;
-    QString filenamecpy;
-    QString command;
-    int i=0;
-    int array[10];
+#define COMPRESSOR_CONFIG_FILE_REVISION 1
+#define COMPRESSOR_CONFIG_FILE "/resource/config/pad.cnf"
+void Compressor::readCompressorConfigFile(void){
+    QList<QString> dati;
 
-    filename =  QString(COMPRCFG);
-    filenamecpy = "comprtemp.cnf";
-
-
-    // Copia il file da modificare in file.cnf.bak per sicurezza
-    command = QString("cp %1 %1.bak").arg(filename);
-    system(command.toStdString().c_str());
-
-    QFile file(filename.toAscii());
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE:" << filename;
-        return FALSE;
+    // Se il file non esiste lo crea con i dati di default
+    QFile filetest("/resource/config/pad.cnf");
+    if (!filetest.exists()){
+        storeConfigFile();
+        return;
     }
 
-    QFile filecpy(filenamecpy.toAscii());
-    if (!filecpy.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" << filenamecpy;
-        return FALSE;
+    // prova ad aprirlo e se non riesce lo ricrea con dati di default
+    QFile file(COMPRESSOR_CONFIG_FILE);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        storeConfigFile();
+        return;
     }
 
-    // Scrittura calibrazione nacchera
-    array[0] =config.calibPosOfs;
-    array[1] =config.calibPosK;
-    Config::writeNextArrayLine(&filecpy,&file,array,2);
-
-    // Scrittura configurazione Pads (solo per quelli diversi dal default)
-    // Attenzione, questi sono campi opzionali ..
-    QByteArray lastLine = Config::alignFileWithValidField(&filecpy,&file);
-
-    for(i=0;i<PAD_ENUM_SIZE;i++)
+    // Cicla sugli items
+    while(1)
     {
-        if((defPad.offset==config.pads[i].offset) && (defPad.kF==config.pads[i].kF) && (defPad.peso==config.pads[i].peso))
-            continue;
 
-        // Scrive il pad nella forna <PADNAME,offset,kF,peso>
-        Config::writeNextStringLine(&filecpy,QString("%1,%2,%3,%4").arg(padTags.at(i)).arg((int)config.pads[i].offset).arg((int)config.pads[i].kF).arg((int)config.pads[i].peso));
+        dati = Config::getNextArrayFields(&file);
+        if(dati.isEmpty()) break;
+
+        if(dati.at(0)=="REVISION"){
+            // COMPRESSOR_CONFIG_FILE_RELEASE
+
+        }else  if(dati.at(0)=="POSITION"){
+            config.calibPosOfs = dati.at(1).toUShort();
+            config.calibPosK = dati.at(2).toUShort();
+        }else  if(dati.at(0)=="FORCE"){
+            config.F0   = dati.at(1).toUShort();
+            config.KF0  = dati.at(2).toUShort();
+            config.F1   = dati.at(3).toUShort();
+            config.KF1  = dati.at(4).toUShort();
+            config.max_compression_force = dati.at(5).toUShort();
+            if(config.max_compression_force > 200) config.max_compression_force=200;
+            else if(config.max_compression_force < 70) config.max_compression_force=70;
+
+        }else  if(dati.at(0)=="PAD24x30"){
+            config.pads[PAD_24x30].offset = dati.at(1).toInt();
+            config.pads[PAD_24x30].kF     = dati.at(2).toInt();
+            config.pads[PAD_24x30].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PAD18x24_C"){
+            config.pads[PAD_18x24].offset = dati.at(1).toInt();
+            config.pads[PAD_18x24].kF     = dati.at(2).toInt();
+            config.pads[PAD_18x24].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PAD18x24_L"){
+            config.pads[PAD_18x24_LEFT].offset = dati.at(1).toInt();
+            config.pads[PAD_18x24_LEFT].kF     = dati.at(2).toInt();
+            config.pads[PAD_18x24_LEFT].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PAD18x24_R"){
+            config.pads[PAD_18x24_RIGHT].offset = dati.at(1).toInt();
+            config.pads[PAD_18x24_RIGHT].kF     = dati.at(2).toInt();
+            config.pads[PAD_18x24_RIGHT].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PAD9x21"){
+            config.pads[PAD_9x21].offset = dati.at(1).toInt();
+            config.pads[PAD_9x21].kF     = dati.at(2).toInt();
+            config.pads[PAD_9x21].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PAD10x24"){
+            config.pads[PAD_10x24].offset = dati.at(1).toInt();
+            config.pads[PAD_10x24].kF     = dati.at(2).toInt();
+            config.pads[PAD_10x24].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PADPROSTHESIS"){
+            config.pads[PAD_PROSTHESIS].offset = dati.at(1).toInt();
+            config.pads[PAD_PROSTHESIS].kF     = dati.at(2).toInt();
+            config.pads[PAD_PROSTHESIS].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PADD75_MAG"){
+            config.pads[PAD_D75_MAG].offset = dati.at(1).toInt();
+            config.pads[PAD_D75_MAG].kF     = dati.at(2).toInt();
+            config.pads[PAD_D75_MAG].peso   = dati.at(3).toInt();
+        }
+        else  if(dati.at(0)=="PAD9x9_MAG"){
+            config.pads[PAD_9x9_MAG].offset = dati.at(1).toInt();
+            config.pads[PAD_9x9_MAG].kF     = dati.at(2).toInt();
+            config.pads[PAD_9x9_MAG].peso   = dati.at(3).toInt();
+        }
+        else  if(dati.at(0)=="PADBIOP_2D"){
+            config.pads[PAD_BIOP_2D].offset = dati.at(1).toInt();
+            config.pads[PAD_BIOP_2D].kF     = dati.at(2).toInt();
+            config.pads[PAD_BIOP_2D].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PADBIOP_3D"){
+            config.pads[PAD_BIOP_3D].offset = dati.at(1).toInt();
+            config.pads[PAD_BIOP_3D].kF     = dati.at(2).toInt();
+            config.pads[PAD_BIOP_3D].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="PADTOMO"){
+            config.pads[PAD_TOMO_24x30].offset = dati.at(1).toInt();
+            config.pads[PAD_TOMO_24x30].kF     = dati.at(2).toInt();
+            config.pads[PAD_TOMO_24x30].peso   = dati.at(3).toInt();
+        }else  if(dati.at(0)=="LIMITS"){
+            config.maxMechPosition = dati.at(1).toUShort();
+            config.maxPosition = dati.at(2).toUShort();
+            config.maxProtection = dati.at(3).toUShort();
+        }else  if(dati.at(0)=="MAGNIFIER"){
+            config.sbalzoIngranditore[0] = dati.at(1).toUShort();
+            config.fattoreIngranditore[0] = dati.at(2).toUShort();
+            config.sbalzoIngranditore[1] = dati.at(3).toUShort();
+            config.fattoreIngranditore[1] = dati.at(4).toUShort();
+            config.sbalzoIngranditore[2] = dati.at(5).toUShort();
+            config.fattoreIngranditore[2] = dati.at(6).toUShort();
+            config.sbalzoIngranditore[3] = dati.at(7).toUShort();
+            config.fattoreIngranditore[3] = dati.at(8).toUShort();
+            config.sbalzoIngranditore[4] = dati.at(9).toUShort();
+            config.fattoreIngranditore[4] = dati.at(10).toUShort();
+            config.sbalzoIngranditore[5] = dati.at(11).toUShort();
+            config.fattoreIngranditore[5] = dati.at(12).toUShort();
+            config.sbalzoIngranditore[6] = dati.at(13).toUShort();
+            config.fattoreIngranditore[6] = dati.at(14).toUShort();
+            config.sbalzoIngranditore[7] = dati.at(15).toUShort();
+            config.fattoreIngranditore[7] = dati.at(16).toUShort();
+        }else  if(dati.at(0)=="THRESHOLDS"){
+            config.thresholds[0] = dati.at(1).toInt();
+            config.thresholds[1] = dati.at(2).toInt();
+            config.thresholds[2] = dati.at(3).toInt();
+            config.thresholds[3] = dati.at(4).toInt();
+            config.thresholds[4] = dati.at(5).toInt();
+            config.thresholds[5] = dati.at(6).toInt();
+            config.thresholds[6] = dati.at(7).toInt();
+            config.thresholds[7] = dati.at(8).toInt();
+            config.thresholds[8] = dati.at(9).toInt();
+            config.thresholds[9] = dati.at(10).toInt();
+        }
     }
-
-    // Scrive il pad DEFAULT obbligatoriamente
-    Config::writeNextStringLine(&filecpy,QString("%1,%2,%3,%4").arg("DEFPAD").arg((int)defPad.offset).arg((int)defPad.kF).arg((int)defPad.peso));
-
-    // Si allinea con la fine della parte non sequenziale
-    if(!lastLine.contains("DEFPAD"))
-    {
-        // Allinea i files per i prossimi campi sequenziali
-        if(Config::alignFileWithTag(&file,QString("DEFPAD"))==FALSE) return FALSE;
-    }
-
-    // Scrittura coefficienti per la forza
-    array[0] = config.F0;
-    array[1] = config.KF0;
-    array[2] = config.F1;
-    array[3] = config.KF1;
-    Config::writeNextArrayLine(&filecpy,&file,array,4);
-
-    // Scrittura dati limitazione altezza
-    array[0] = config.maxMechPosition;
-    Config::writeNextArrayLine(&filecpy,&file,array,1);
-
-    array[0] = config.maxPosition;
-    Config::writeNextArrayLine(&filecpy,&file,array,1);
-
-    array[0] = config.maxProtection;
-    Config::writeNextArrayLine(&filecpy,&file,array,1);
-
-    // Scrittura dati Ingranditore
-    for(i=0; i<8; i++)
-    {
-        array[0] = config.sbalzoIngranditore[i];
-        array[1] = config.fattoreIngranditore[i];
-        Config::writeNextArrayLine(&filecpy,&file,array,2);
-    }
-    filecpy.flush();
-    filecpy.close();
-    file.close();
-
-    pSysLog->log("CONFIG: COMPRESSOR CALIBRATION FILE");
-
-    // Copia il file temp nel file definitivo
-    filename =  QString(COMPRCFG);
-    filenamecpy = "comprtemp.cnf";
-
-
-    // Copia il file modificato nel file finale
-    command = QString("cp comprtemp.cnf %1").arg(filename);
-    system(command.toStdString().c_str());
-
-    // SYNC
-    command = QString("sync");
-    system(command.toStdString().c_str());
-    return true;
 }
 
+void Compressor::storeConfigFile(void){
+    QString frame;
+    QFile file(COMPRESSOR_CONFIG_FILE);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+
+
+    frame = QString("<REVISION,%1>\n").arg((int) COMPRESSOR_CONFIG_FILE_REVISION);
+    file.write(frame.toAscii().data());
+
+    frame = QString("<POSITION,%1,%2>\n").arg(config.calibPosOfs).arg(config.calibPosK);
+    file.write(frame.toAscii().data());
+
+    frame = QString("<FORCE,%1,%2,%3,%4,%5>\n").arg(config.F0).arg(config.KF0).arg(config.F1).arg(config.KF1).arg(config.max_compression_force);
+    file.write(frame.toAscii().data());
+
+    int padcode = PAD_24x30;
+    frame = QString("<PAD24x30,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_18x24;
+    frame = QString("<PAD_18x24,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_18x24_LEFT;
+    frame = QString("<PAD18x24_L,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_18x24_RIGHT;
+    frame = QString("<PAD18x24_R,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_9x21;
+    frame = QString("<PAD_9x21,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_10x24;
+    frame = QString("<PAD10x24,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_PROSTHESIS;
+    frame = QString("<PADPROSTHESIS,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_D75_MAG;
+    frame = QString("<PADD75_MAG,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_9x9_MAG;
+    frame = QString("<PAD9x9_MAG,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_BIOP_2D;
+    frame = QString("<PADBIOP_2D,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_BIOP_3D;
+    frame = QString("<PADBIOP_3D,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    padcode = PAD_TOMO_24x30;
+    frame = QString("<PADTOMO,%1,%2,%3>\n").arg(config.pads[padcode].offset).arg(config.pads[padcode].kF).arg(config.pads[padcode].peso);
+    file.write(frame.toAscii().data());
+
+    frame = QString("<LIMITS,%1,%2,%3>\n").arg(config.maxMechPosition).arg(config.maxPosition).arg(config.maxProtection);
+    file.write(frame.toAscii().data());
+
+    frame = QString("<MAGNIFIER,%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14,%15,%16>\n")\
+            .arg(config.sbalzoIngranditore[0]).arg(config.fattoreIngranditore[0])\
+            .arg(config.sbalzoIngranditore[1]).arg(config.fattoreIngranditore[1])\
+            .arg(config.sbalzoIngranditore[2]).arg(config.fattoreIngranditore[2])\
+            .arg(config.sbalzoIngranditore[3]).arg(config.fattoreIngranditore[3])\
+            .arg(config.sbalzoIngranditore[4]).arg(config.fattoreIngranditore[4])\
+            .arg(config.sbalzoIngranditore[5]).arg(config.fattoreIngranditore[5])\
+            .arg(config.sbalzoIngranditore[6]).arg(config.fattoreIngranditore[6])\
+            .arg(config.sbalzoIngranditore[7]).arg(config.fattoreIngranditore[7]);
+    file.write(frame.toAscii().data());
+
+    frame = QString("<THRESHOLDS,%1,%2,%3,%4,%5,%6,%7,%8,%9,%10>\n")\
+            .arg(config.thresholds[0]).arg(config.thresholds[1])\
+            .arg(config.thresholds[2]).arg(config.thresholds[3])\
+            .arg(config.thresholds[4]).arg(config.thresholds[5])\
+            .arg(config.thresholds[6]).arg(config.thresholds[7])\
+            .arg(config.thresholds[8]).arg(config.thresholds[9]);
+    file.write(frame.toAscii().data());
+
+
+    file.close();
+    file.flush();
+
+    // Effettua un sync
+    QString command = QString("sync");
+    system(command.toStdString().c_str());
+
+    return ;
+}
 
 
 // Intercetta le notifiche dal Driver compressore
@@ -390,95 +598,6 @@ QString Compressor::getPadTag(Pad_Enum code)
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-// LETTURA CONFIGURAZIONE RICONOSCIMENTO PAD
-bool Compressor::readPadCfg(void)
-{
-    QString filename;
-    QList<QString> dati;
-
-    // Imposta i valori di default
-    config.thresholds[0] = _PAD_THRESHOLD_0;
-    config.thresholds[1] = _PAD_THRESHOLD_1;
-    config.thresholds[2] = _PAD_THRESHOLD_2;
-    config.thresholds[3] = _PAD_THRESHOLD_3;
-    config.thresholds[4] = _PAD_THRESHOLD_4;
-    config.thresholds[5] = _PAD_THRESHOLD_5;
-    config.thresholds[6] = _PAD_THRESHOLD_6;
-    config.thresholds[7] = _PAD_THRESHOLD_7;
-    config.thresholds[8] = _PAD_THRESHOLD_8;
-    config.thresholds[9] = _PAD_THRESHOLD_9;
-
-    // Apre automaticamente il file user
-    filename =  QString("/resource/config/padcalib.cnf");
-
-    QFile file(filename.toAscii());
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {        
-        // Si salva il file con i valori di default
-        return storePadCfg();
-    }
-
-
-    while(1)
-    {
-
-        dati = pConfig->getNextArrayFields(&file);
-        if(dati.isEmpty()) break;
-
-        // Se il dato non è corretto non lo considera
-        if(dati.size()!=2) continue;
-
-        if(dati.at(0)=="0")  config.thresholds[0] = dati.at(1).toInt();
-        else if(dati.at(0)=="1") config.thresholds[1] = dati.at(1).toInt();
-        else if(dati.at(0)=="2") config.thresholds[2] = dati.at(1).toInt();
-        else if(dati.at(0)=="3") config.thresholds[3] = dati.at(1).toInt();
-        else if(dati.at(0)=="4") config.thresholds[4] = dati.at(1).toInt();
-        else if(dati.at(0)=="5") config.thresholds[5] = dati.at(1).toInt();
-        else if(dati.at(0)=="6") config.thresholds[6] = dati.at(1).toInt();
-        else if(dati.at(0)=="7") config.thresholds[7] = dati.at(1).toInt();
-        else if(dati.at(0)=="8") config.thresholds[8] = dati.at(1).toInt();
-        else if(dati.at(0)=="9") config.thresholds[9] = dati.at(1).toInt();
-    }
-
-
-    file.close();
-
-    return TRUE;
-}
-
-bool Compressor::storePadCfg(void)
-{
-    QString frame;
-    QString filename ;
-    int i;
-
-    filename =  QString("/resource/config/padcalib.cnf");
-
-    // Apre il file in scrittura
-    QFile file(filename.toAscii());
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
-        return FALSE;
-    }
-
-    for(i=0; i<10;i++){
-        frame = QString("<%1,%2>  \n").arg(i).arg(config.thresholds[i]);
-        file.write(frame.toAscii().data());
-    }
-
-    file.close();
-    file.flush();
-
-    pSysLog->log("CONFIG: PAD CALIBRATION FILE");
-
-    // Effettua un sync
-    QString command = QString("sync");
-    system(command.toStdString().c_str());
-
-    return TRUE;
-}
 
 // Calcola le soglie ideali dato il valore numerico
 // con PAD aperto (idealmente 255)

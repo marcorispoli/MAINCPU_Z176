@@ -120,8 +120,7 @@ public:
     unsigned char accessorio; // Accessorio riconosciuto
 
     // Gestione file di configurazione
-    // Hotfix 11C
-    #define COLLI_CNF_REV   2   // Revisione file di configurazione del collimatore
+    #define COLLI_CNF_REV   3   // Revisione file di configurazione del collimatore
 
     bool colliConfUpdated;      // Configurazione aggiornata
     colliConf_Str colliConf;    // Configurazione collimatore

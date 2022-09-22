@@ -1909,9 +1909,14 @@ bool Config::sendMccConfigCommand(unsigned char cmd){
             memcpy(pData, (unsigned char*) &pGeneratore->genCnf.pcb190, sizeof(pcb190Conf_Str));
             buflen += sizeof(pcb190Conf_Str);
         break;
-        case CONFIG_PCB269:
-            memcpy(pData, (unsigned char*) (&pCompressore->config), sizeof(compressoreCnf_Str));
-            buflen += sizeof(compressoreCnf_Str);
+        case CONFIG_PCB269_0:
+            memcpy(pData, (unsigned char*) (&pCompressore->config), (_MCC_DIM-2));
+            buflen = _MCC_DIM;
+        break;
+        case CONFIG_PCB269_1:
+            buffer[1]=1; // Secondo blocco dati
+            memcpy(pData, &(((unsigned char*) (&pCompressore->config))[_MCC_DIM-2]), sizeof(compressoreCnf_Str)-(_MCC_DIM-2));
+            buflen += (sizeof(compressoreCnf_Str)-(_MCC_DIM-2));
         break;
         case CONFIG_PCB249U1_1:
             // Invia il blocco 0. Sulle risposte verranno inviati i blocchi successivi.
@@ -3389,7 +3394,7 @@ void Config::updatePCB249U2(void){
 
 void Config::updatePCB269(void){
     singleConfigUpdate = true;
-    sendMccConfigCommand(CONFIG_PCB269);
+    sendMccConfigCommand(CONFIG_PCB269_0);
     return ;
 }
 
@@ -3428,9 +3433,13 @@ void Config::configNotifySlot(unsigned char id, unsigned char mcccode, QByteArra
 
     switch(mcccode){
     case CONFIG_GENERAL:
-         sendMccConfigCommand(CONFIG_PCB269);
+         sendMccConfigCommand(CONFIG_PCB269_0);
         break;
-    case CONFIG_PCB269:
+    case CONFIG_PCB269_0:
+        sendMccConfigCommand(CONFIG_PCB269_1);
+        break;
+
+    case CONFIG_PCB269_1:
         if(singleConfigUpdate) {
             singleConfigUpdate = false;
             emit configUpdatedSgn();
