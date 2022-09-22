@@ -329,12 +329,12 @@ void manageMccConfig(){
         size = 1;
       break;
     case CONFIG_PCB269_0:
-       if(config_pcb215(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
+       if(config_pcb215(mcc_cmd.buffer[1], &mcc_cmd.buffer[2])==true) data[0]=1;
        else data[0]= 0;
        size = 1;
      break;
    case CONFIG_PCB269_1:
-      if(config_pcb215(true, mcc_cmd.buffer[1], &mcc_cmd.buffer[2], mcc_cmd.len-2)==true) data[0]=1;
+      if(config_pcb215(mcc_cmd.buffer[1], &mcc_cmd.buffer[2])==true) data[0]=1;
       else data[0]= 0;
       size = 1;
     break;

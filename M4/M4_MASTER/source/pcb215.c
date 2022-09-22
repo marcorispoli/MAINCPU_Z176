@@ -301,7 +301,7 @@ void pcb215_driver(uint32_t taskRegisters)
          executeConfig = FALSE;
          verifyComprDataInit=TRUE;
          verifyClassPadInit=TRUE;
-         config_pcb215(false, 0,null,0);
+         uploadConfigData();
        }else
        {
           // Legge i registri di Base per effettuare la calibrazione
@@ -1309,11 +1309,11 @@ bool classifyPad(void)
         case _POTTER_BP2D_LEVEL: // Biopsia 2D
             generalConfiguration.comprCfg.padSelezionato = PAD_BIOP_2D;
             break;
-        case _POTTER_TOMO_LEVEL: // PAD PER TOMO
-            generalConfiguration.comprCfg.padSelezionato = PAD_TOMO_24x30;
+        case _POTTER_TOMO_LEVEL: // Non esiste in Analog: equivale al 9x9 MAG
+            generalConfiguration.comprCfg.padSelezionato = PAD_9x9_MAG;
             break;
-        case _POTTER_PROSTHESIS: // 10x24 per protesi
-            generalConfiguration.comprCfg.padSelezionato = PAD_PROSTHESIS;
+        case _POTTER_PROSTHESIS: // Non esiste in Analogica: equivale al D75 MAG
+            generalConfiguration.comprCfg.padSelezionato = PAD_D75_MAG;
             break;
         case _POTTER_18x24L_LEVEL: // 18x24 Left
             generalConfiguration.comprCfg.padSelezionato = PAD_18x24_LEFT;
@@ -1485,7 +1485,29 @@ void pcb215PrintConfig(void){
 Funzione configuratrice:
   
 */
-bool config_pcb215(bool setmem, unsigned char blocco, unsigned char* buffer, unsigned char len){
+bool uploadConfigData(void){
+
+    // Forza l'uscita dal modo calibrazione se necessario
+    generalConfiguration.comprCfg.calibrationMode = FALSE;
+    pcb215PrintConfig();
+
+    // Aggiorna i dati di calibrazione passati dall'applicazione
+    if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_OFS), generalConfiguration.comprCfg.calibration.calibPosOfs,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+    if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_K), generalConfiguration.comprCfg.calibration.calibPosK,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+    if(Ser422WriteRegister(_REGID(COMPRESSOR_STR_K), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+    if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT),  generalConfiguration.comprCfg.calibration.max_compression_force,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+
+    if(Ser422WriteRegister(_REGID(COMPRESSOR_F0), generalConfiguration.comprCfg.calibration.F0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+    if(Ser422WriteRegister(_REGID(COMPRESSOR_KF0), generalConfiguration.comprCfg.calibration.KF0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+    if(Ser422WriteRegister(_REGID(COMPRESSOR_F1), generalConfiguration.comprCfg.calibration.F1,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+    if(Ser422WriteRegister(_REGID(COMPRESSOR_KF1), generalConfiguration.comprCfg.calibration.KF1,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+    if(Ser422WriteRegister(_REGID(POSITION_PAD_TARA), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+    if(Ser422WriteRegister(_REGID(POSITION_LOW_MODO_0), 30,10,&CONTEST)!=_SER422_NO_ERROR) return false;
+
+    return true;
+}
+
+bool config_pcb215(unsigned char blocco, unsigned char* buffer){
   
 
   if(blocco==0){
@@ -1495,27 +1517,7 @@ bool config_pcb215(bool setmem, unsigned char blocco, unsigned char* buffer, uns
 
   // Completa il blocco dati
   memcpy(&((unsigned char*)&(generalConfiguration.comprCfg.calibration))[_MCC_DIM-2], buffer, sizeof(compressoreCnf_Str) - (_MCC_DIM-2));
-  pcb215PrintConfig();
-
-
-  // Forza l'uscita dal modo calibrazione se necessario
-  generalConfiguration.comprCfg.calibrationMode = FALSE;
-
-  // Aggiorna i dati di calibrazione passati dall'applicazione
-  if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_OFS), generalConfiguration.comprCfg.calibration.calibPosOfs,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSOR_POS_K), generalConfiguration.comprCfg.calibration.calibPosK,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSOR_STR_K), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT),  generalConfiguration.comprCfg.calibration.max_compression_force,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-
-  if(Ser422WriteRegister(_REGID(COMPRESSOR_F0), generalConfiguration.comprCfg.calibration.F0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSOR_KF0), generalConfiguration.comprCfg.calibration.KF0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSOR_F1), generalConfiguration.comprCfg.calibration.F1,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSOR_KF1), generalConfiguration.comprCfg.calibration.KF1,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(POSITION_PAD_TARA), 0,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(POSITION_LOW_MODO_0), 30,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-  if(Ser422WriteRegister(_REGID(COMPRESSION_LIMIT), 200,10,&CONTEST)!=_SER422_NO_ERROR) return false;
-
-  return true;
+  return uploadConfigData();
 }
 
 
