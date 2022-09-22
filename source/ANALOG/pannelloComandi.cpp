@@ -132,6 +132,10 @@ pannelloComandi::pannelloComandi(QGraphicsView* view){
     font.setStretch(50);
     mAsXLabel = new GLabel(this,QRectF(337,342,100,20),font,QColor(_W_TECH_MODE),"mAs: ----",Qt::AlignLeft);
 
+    font.setPointSize(20);
+    font.setStretch(50);
+    FilterXLabel = new GLabel(this,QRectF(337,363,100,20),font,QColor(_W_TECH_MODE),"Flt: ----",Qt::AlignLeft);
+
 
     font.setPointSize(30);
     font.setStretch(60);
@@ -494,6 +498,12 @@ void pannelloComandi::valueChanged(int index,int opt)
         if(ApplicationDatabase.getDataI(index)==0) kvXLabel->setPlainText(QString("kV: ----").toAscii().data());
         else   kvXLabel->setPlainText(QString("kV: %1").arg(((float)ApplicationDatabase.getDataI(index))/10).toAscii().data());
         kvXLabel->update();
+        break;
+    case _DB_XFILTER:
+        if(ApplicationDatabase.getDataI(index)==1) FilterXLabel->setPlainText(QString("Flt: Rh").toAscii().data());
+        else if(ApplicationDatabase.getDataI(index)==2) FilterXLabel->setPlainText(QString("Flt: Mo").toAscii().data());
+        else FilterXLabel->setPlainText(QString("Flt: ----").toAscii().data());
+        FilterXLabel->update();
         break;
     }
 

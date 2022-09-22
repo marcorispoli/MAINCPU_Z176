@@ -73,6 +73,8 @@ private:
     GLabel* doseLabel;
     GLabel* mAsXLabel;
     GLabel* kvXLabel;
+    GLabel* FilterXLabel;
+
     GLabel* angoloArm;
 
     QString projectionsFiles[17];

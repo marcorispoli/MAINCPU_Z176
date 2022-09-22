@@ -17,6 +17,9 @@ void AnalogPageOpen::startXraySequence(void){
     Xprofile = pGeneratore->pAECprofiles->getCurrentProfileSymName();
     ApplicationDatabase.setData(_DB_XDMAS,(int) 0);
     ApplicationDatabase.setData(_DB_XDKV,(int) 0);
+    ApplicationDatabase.setData(_DB_XFILTER,(int) 0);
+
+
     ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: ----"));
     saveOptions();
 
@@ -309,8 +312,13 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         logstring += "FORCE:" + QString("%1").arg(XForce) + ", ";
 
         // Filter
-        if(XselectedFiltro == Collimatore::FILTRO_Mo)   logstring += "FILTER:Mo, ";
-        else logstring += "FILTER:Rh, ";
+        if(XselectedFiltro == Collimatore::FILTRO_Mo){
+            logstring += "FILTER:Mo, ";
+            ApplicationDatabase.setData(_DB_XFILTER,(int) 2);
+        }else{
+            logstring += "FILTER:Rh, ";
+            ApplicationDatabase.setData(_DB_XFILTER,(int) 1);
+        }
 
         // Focus
         if(pGeneratore->selectedFSize == Generatore::FUOCO_LARGE) logstring += "FOCUS: L, ";
