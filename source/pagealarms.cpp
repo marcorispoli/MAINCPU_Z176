@@ -719,9 +719,9 @@ void PageAlarms::exportMessageList(void){
         file.write("-----------------------------------------------------------"); file.write("\n");
         file.write(errors[i].classDescription.toAscii().data()); file.write("\n");
         for(int j= 0; j< errors[i].errlist.size(); j++){
-            file.write("[M:");
-            file.write(errors[i].errlist[j].codestr.toAscii().data());
-            file.write("] -> ");
+            //file.write("[M:");
+            //file.write(errors[i].errlist[j].codestr.toAscii().data());
+            //file.write("] -> ");
             file.write(errors[i].errlist[j].errmsg.toAscii().data());
             file.write("\n");
         }

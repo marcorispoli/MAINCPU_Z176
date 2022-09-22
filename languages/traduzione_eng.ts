@@ -168,7 +168,7 @@ Apply compression first.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 SYSTEM NOT READY FOR EXPOSURE!
-Invalid Accessory.</translation>
+Invalid Component.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="2036"/>
@@ -794,8 +794,8 @@ In case of test session, ignore  this message.</translation>
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-UNDETECTED ACCESSORY!
-The system didn&apos;t detect a valid accessory.</translation>
+UNDETECTED COMPONENT!
+The system didn&apos;t detect a valid component.</translation>
     </message>
 </context>
 <context>
@@ -1128,7 +1128,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 X-RAY SEQUENCE ABORTED!
-Accessory not detected.</translation>
+Component not detected.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1541"/>
@@ -1335,7 +1335,7 @@ ATTENDERE CHE IL TUBO SI RAFFREDDI
 PER PROSEGUIRE</source>
         <translation>[M:00963]
 X-RAY SEQUENCE ABORTED!
-The Tube Anode is too hot for further expositions.</translation>
+The Tube Anode is too hot for further exposures.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1797"/>
@@ -1365,14 +1365,14 @@ or not properly connected.</translation>
         <source>SENO TROPPO DENSO</source>
         <translation>[M:00967]
 AEC ERROR!
-Breast too dense</translation>
+AEC detector under-exposed.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>ESPOSIMETRO SOVRAESPOSTO</source>
         <translation>[M:00968]
 AEC ERROR!
-AEC overexposed</translation>
+AEC AEC detector over-exposed.</translation>
     </message>
 </context>
 <context>
@@ -1559,7 +1559,7 @@ The system detected the X-RAY push button blocked.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="734"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSORY</translation>
+        <translation>COMPONENT</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>

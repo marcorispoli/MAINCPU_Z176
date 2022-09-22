@@ -166,7 +166,7 @@ Applica prima la compressione.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 SISTEMA NON PRONTO PER L&apos;ESPOSIZIONE!
-Accessorio non valido.</translation>
+Componente non valido.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="2036"/>
@@ -798,8 +798,8 @@ La compressione a Studio chiuso è sconsigliata ma non  inibita. In caso di sess
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-ACCESSORIO DISCONNESSO!
-Nessun accessorio è stato rilevato dal Mammografo.</translation>
+COMPONENTE DISCONNESSO!
+Nessun componente è stato rilevato dal Mammografo.</translation>
     </message>
 </context>
 <context>
@@ -819,14 +819,14 @@ Spegnere il sistema e verificare l&apos;integrità del dispositivo</translation>
         <location filename="../source/pagealarms.cpp" line="1312"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON VALIDO</source>
         <translation>[M:00801]
-ERRORE ACCESSORIO INGRANDITORE!
+ERRORE COMPONENTE INGRANDITORE!
 Fattore di ingrandimento non valido.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1319"/>
         <source>INGRANDITORE: FATTORE DI INGRANDIMENTO NON CONFIGURATO</source>
         <translation>[M:00802]
-ERRORE ACCESSORIO INGRANDITORE!
+ERRORE COMPONENTE INGRANDITORE!
 Ingranditore non configurato.</translation>
     </message>
 </context>
@@ -1132,7 +1132,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 INTERRUZIONE SEQUENZA RAGGI!
-Accessorio non rilevato.</translation>
+Componente non rilevato.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1541"/>
@@ -1297,7 +1297,7 @@ SI STA UTILIZZANDO IL FUOCO GRANDE
 CON L&apos;INGRANDITORE INSERITO</source>
         <translation>[M:00955]
 INTERRUZIONE SEQUENZA RAGGI!
-Selezione del Fuoco Grande non valida con l&apos;accessorio Ingranditore inserito.</translation>
+Selezione del Fuoco Grande non valida con il dispositivo Ingranditore inserito.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1687"/>
@@ -1306,7 +1306,7 @@ SI STA UTILIZZANDO IL FUOCO PICCOLO
 SENZA USO DELL&apos;INGRANDITORE</source>
         <translation>[M:00956]
 INTERRUZIONE SEQUENZA RAGGI!
-Selezione del Fuoco Piccolo non valida senza l&apos;accessorio Ingranditore inserito.</translation>
+Selezione del Fuoco Piccolo non valida senza il componente Ingranditore inserito.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1701"/>
@@ -1370,14 +1370,14 @@ o non correttamente connesso.</translation>
         <source>SENO TROPPO DENSO</source>
         <translation>[M:00967]
 ERRORE AEC!
-RILEVATO SENO TROPPO DENSO.</translation>
+Il dispositivo AEC ha ricevuto un livello di radiazione troppo basso.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>ESPOSIMETRO SOVRAESPOSTO</source>
         <translation>[M:00968]
 ERRORE AEC!
-RIVELATORE AEC SOVRAESPOSTO.</translation>
+Il dispositivo AEC ha ricevuto un livello di radiazione troppo alto.</translation>
     </message>
 </context>
 <context>
@@ -1570,7 +1570,7 @@ Il sistema ha rilevato che il pulsante RAGGI X è bloccato.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="734"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSORIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>

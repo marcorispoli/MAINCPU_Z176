@@ -166,7 +166,7 @@ Aplique a compressão primeiro.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 O SISTEMA NÃO ESTÁ PRONTO PARA EXPOSIÇÃO!
-Acessório inválido.</translation>
+Componente inválido.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="2036"/>
@@ -791,8 +791,8 @@ Em caso de sessão de teste, ignore esta mensagem.</translation>
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-ACESSÓRIO NÃO DETECTADO!
-O sistema não detectou um acessório válido.</translation>
+COMPONENTE NÃO DETECTADO!
+O sistema não detectou um componente válido.</translation>
     </message>
 </context>
 <context>
@@ -1123,7 +1123,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 SEQUÊNCIA DE RAIOS X ABORTADA!
-Acessório não detectado.</translation>
+Componente não detectado.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1541"/>
@@ -1357,15 +1357,15 @@ O sensor de temperatura do tubo pode ser danificado ou não conectado corretamen
         <location filename="../source/pagealarms.cpp" line="1816"/>
         <source>SENO TROPPO DENSO</source>
         <translation>[M:00967]
-DETECTOR DA AEC SUPER EXPOSTO
-O detector AEC está parcial ou totalmente fora da mama e foi exposto ao feixe de raios-X direto.</translation>
+ERRO AEC!
+Detector AEC subexposto.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>ESPOSIMETRO SOVRAESPOSTO</source>
         <translation>[M:00968]
-DETECTOR AEC SOB EXPOSTO
-Detector AEC subexposto</translation>
+ERRO AEC!
+O detector AEC está parcial ou totalmente fora da mama e foi exposto ao feixe de raios-X direto.</translation>
     </message>
 </context>
 <context>
@@ -1555,7 +1555,7 @@ O sistema detectou que o botão X-RAY foi bloqueado.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="734"/>
         <source>ACCESSORIO</source>
-        <translation>ACESSÓRIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>

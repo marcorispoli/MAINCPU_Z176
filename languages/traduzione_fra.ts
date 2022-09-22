@@ -167,7 +167,7 @@ Appliquez d’abord une compression.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 SYSTÈME PAS PRÊT POUR L’EXPOSITION !
-Accessoire non valide.</translation>
+Composant non valide.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="2036"/>
@@ -790,8 +790,8 @@ Il est fortement recommandé de compresser un sein uniquement en EXAMEN OUVERT. 
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-ACCESSOIRE NON DÉTECTÉ&#xa0;!
-Le système n&apos;a pas détecté un accessoire valide.</translation>
+COMPOSANT NON DÉTECTÉ&#xa0;!
+Le système n&apos;a pas détecté un composant valide.</translation>
     </message>
 </context>
 <context>
@@ -1126,7 +1126,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 SÉQUENCE DE RAYONS X INTERROMPUE !
-Accessoire non détecté.</translation>
+Composant non détecté.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1541"/>
@@ -1360,15 +1360,15 @@ Le capteur de température du tube est peut-être endommagé ou mal connecté.</
         <location filename="../source/pagealarms.cpp" line="1816"/>
         <source>SENO TROPPO DENSO</source>
         <translation>[M:00967]
-DÉTECTEUR AEC SUREXPOSÉ
-Le détecteur AEC est partiellement ou entièrement hors du sein et a été exposé au faisceau direct de rayons X.</translation>
+ERREUR AEC!
+Détecteur AEC sous-exposé.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>ESPOSIMETRO SOVRAESPOSTO</source>
         <translation>[M:00968]
-DÉTECTEUR AEC SOUS-EXPOSÉ
-Détecteur AEC sous-exposé</translation>
+ERREUR AEC!
+Le détecteur AEC est partiellement ou entièrement hors du sein et a été exposé au faisceau direct de rayons X.</translation>
     </message>
 </context>
 <context>
@@ -1557,7 +1557,7 @@ Le système a détecté le blocage du bouton-poussoir des rayons X.</translation
     <message>
         <location filename="../source/mainpage.cpp" line="734"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESSOIRE</translation>
+        <translation>COMPOSANT</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>

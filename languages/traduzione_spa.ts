@@ -166,7 +166,7 @@ Primero, aplique compresión.</translation>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 ¡EL SISTEMA NO ESTÁ LISTO PARA LA EXPOSICIÓN!
-Accesorio no válido.</translation>
+Componente no válido.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="2036"/>
@@ -790,8 +790,8 @@ Se recomienda encarecidamente comprimir la mama únicamente con un ESTUDIO ABIER
         <source>ACCESSORIO DISCONNESSO
 </source>
         <translation>[M:00705]
-¡ACCESORIO NO DETECTADO!
-El sistema no ha detectado un accesorio válido.</translation>
+¡COMPONENTE  NO DETECTADO!
+El sistema no ha detectado un componente válido.</translation>
     </message>
 </context>
 <context>
@@ -1125,7 +1125,7 @@ POTTER NON RICONOSCIUTO
 </source>
         <translation>[M:00934]
 ¡SECUENCIA DE RAYOS X ANULADA!
-No se ha detectado el accesorio.</translation>
+No se ha detectado el componente.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1541"/>
@@ -1359,15 +1359,15 @@ El sensor de temperatura del tubo puede estar dañado o no conectado de forma co
         <location filename="../source/pagealarms.cpp" line="1816"/>
         <source>SENO TROPPO DENSO</source>
         <translation>[M:00967]
-DETECTOR AEC SOBREEXPUESTO
-El detector AEC está parcial o totalmente fuera de la mama y ha sido expuesto directamente al haz de rayos X.</translation>
+¡ERROR AEC!
+El detector AEC está subexpuesto.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>ESPOSIMETRO SOVRAESPOSTO</source>
         <translation>[M:00968]
-DETECTOR AEC SUBEXPUESTO
-El detector AEC está subexpuesto.</translation>
+¡ERROR AEC!
+El detector AEC está parcial o totalmente fuera de la mama y ha sido expuesto directamente al haz de rayos X.</translation>
     </message>
 </context>
 <context>
@@ -1554,7 +1554,7 @@ El sistema detectó el botón de rayos X bloqueado.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="734"/>
         <source>ACCESSORIO</source>
-        <translation>ACCESORIO</translation>
+        <translation>COMPONENTE</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="737"/>

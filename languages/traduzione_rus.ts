@@ -167,7 +167,7 @@ LEFT SIDE</source>
         <source>POTTER NON VALIDO O NON RICONOSCIUTO</source>
         <translation>[M:01707]
 СИСТЕМА НЕ ГОТОВА К ВОЗДЕЙСТВИЮ!
-Неверный аксессуар.</translation>
+Недопустимый аксессуар.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="2036"/>
@@ -1363,15 +1363,15 @@ PER PROSEGUIRE</source>
         <location filename="../source/pagealarms.cpp" line="1816"/>
         <source>SENO TROPPO DENSO</source>
         <translation>[M:00967]
-ОШИБКА AEC!
-Грудь слишком плотная</translation>
+ДЕТЕКТОР AEC НЕДОЭКСПОНИРОВАН!
+Детектор AEC недоэкспонирован.</translation>
     </message>
     <message>
         <location filename="../source/pagealarms.cpp" line="1823"/>
         <source>ESPOSIMETRO SOVRAESPOSTO</source>
         <translation>[M:00968]
-ОШИБКА AEC!
-AEC передержан</translation>
+ДЕТЕКТОР AEC ПЕРЕЭКСПОНИРОВАН!
+Детектор AEC частично или полностью выходит за пределы груди и был подвергнут прямому воздействию рентгеновского луча.</translation>
     </message>
 </context>
 <context>
