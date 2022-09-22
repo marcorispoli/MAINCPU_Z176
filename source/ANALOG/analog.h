@@ -74,6 +74,8 @@
     #define _DB_ANALOG_BIOPSY_BUTTON_TRX_EM15       12
 
 #define _DB_ANALOG_BIOPSY_ERR_CALC        _DB_SERVICE37_INT
+#define _DB_XFILTER                       _DB_SERVICE38_INT
+
 
 #define PANNELLO_PROIEZIONI             1
 #define PANNELLO_COMANDI                2
