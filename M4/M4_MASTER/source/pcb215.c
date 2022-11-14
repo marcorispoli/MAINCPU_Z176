@@ -1309,11 +1309,11 @@ bool classifyPad(void)
         case _POTTER_BP2D_LEVEL: // Biopsia 2D
             generalConfiguration.comprCfg.padSelezionato = PAD_BIOP_2D;
             break;
-        case _POTTER_TOMO_LEVEL: // Non esiste in Analog: equivale al 9x9 MAG
-            generalConfiguration.comprCfg.padSelezionato = PAD_9x9_MAG;
+        case _POTTER_TOMO_LEVEL:
+            generalConfiguration.comprCfg.padSelezionato = PAD_TOMO_24x30;
             break;
-        case _POTTER_PROSTHESIS: // Non esiste in Analogica: equivale al D75 MAG
-            generalConfiguration.comprCfg.padSelezionato = PAD_D75_MAG;
+        case _POTTER_PROSTHESIS:
+            generalConfiguration.comprCfg.padSelezionato = PAD_PROSTHESIS;
             break;
         case _POTTER_18x24L_LEVEL: // 18x24 Left
             generalConfiguration.comprCfg.padSelezionato = PAD_18x24_LEFT;

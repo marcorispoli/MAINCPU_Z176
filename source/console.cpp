@@ -2360,7 +2360,8 @@ void console::handleSelectTube(QString tubeName, protoConsole* answer)
     // Rilettura file di configurazione del Tubo
     QString tubeDir = QString(_TUBEPATH) + QString("/") + pConfig->userCnf.tubeFileName + QString("/");
 
-    if(pGeneratore->openTube(tubeDir)==FALSE)
+    pConfig->generator_configured = pGeneratore->openTube(tubeDir);
+    if(pConfig->generator_configured==FALSE)
     {
         emit  consoleTxHandler(answer->cmdToQByteArray("NOK"));
         return;

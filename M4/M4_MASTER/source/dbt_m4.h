@@ -1,7 +1,7 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.2.0"
+#define REVISIONE "1.3.0"
 #define REVMAJ 1
 #define REVMIN 2
 #define REV_BETA 0
