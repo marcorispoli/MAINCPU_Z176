@@ -248,7 +248,7 @@ void AnalogCalibPageOpen::profileValueChanged(int index,int opt)
         else ui->profilePlog->setText(QString("Plog:---"));
         break;
     case _DB_CALIB_PROFILE_OFFSET:
-        if(ApplicationDatabase.getDataI(index)) ui->profileOffset->setText(QString("Ofs:%1").arg((float) ApplicationDatabase.getDataI(index)/25));
+        if(ApplicationDatabase.getDataI(index)) ui->profileOffset->setText(QString("Ofs:%1").arg((float) ApplicationDatabase.getDataI(index)/4));
         else ui->profileOffset->setText(QString("Ofs:---"));
         break;
 
@@ -495,12 +495,12 @@ void AnalogCalibPageOpen::profileGuiNotify(unsigned char id, unsigned char mccco
         // Richiede i dati dell'AEC
         profile_rxplog = rxdata[0] + 256*rxdata[1];
         profile_rxrad = rxdata[2] + 256*rxdata[3];
-        int rad25 = rxdata[6] + 256*rxdata[7];
+        int offset = rxdata[6] + 256*rxdata[7];
 
 
         ApplicationDatabase.setData(_DB_CALIB_PROFILE_PLOG, (int)  profile_rxplog, DBase::_DB_FORCE_SGN);
         ApplicationDatabase.setData(_DB_CALIB_PROFILE_RAD, (int)  profile_rxrad, DBase::_DB_FORCE_SGN);
-        ApplicationDatabase.setData(_DB_CALIB_PROFILE_OFFSET, (int)  rad25, DBase::_DB_FORCE_SGN);
+        ApplicationDatabase.setData(_DB_CALIB_PROFILE_OFFSET, (int)  offset, DBase::_DB_FORCE_SGN);
 
 
         // Preleva i dati per la nuova esposizione

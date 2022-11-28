@@ -440,7 +440,7 @@ int AnalogAECModeExposure(void){
 
     int rad1 = _DEVREG(RG244_A_RAD1,PCB244_A_CONTEST) / 4;
     int rad5 = _DEVREG(RG244_A_RAD5,PCB244_A_CONTEST) / 4;
-    int rad25 = _DEVREG(RG244_A_RAD25,PCB244_A_CONTEST) ;
+    //int rad25 = _DEVREG(RG244_A_RAD25,PCB244_A_CONTEST) ;
     int prerad =  _DEVREG(RG244_A_PRE_OFFSET,PCB244_A_CONTEST);
     printf("OFFSET PRE RX: %d - %f\n", prerad, (float) prerad/4.0);
 
@@ -468,8 +468,8 @@ int AnalogAECModeExposure(void){
     data[3]=(unsigned char) ((rad>>8)&0xFF);
     data[4]=(unsigned char) ((rad5)&0xFF);
     data[5]=(unsigned char) ((rad5>>8)&0xFF);
-    data[6]=(unsigned char) ((rad25)&0xFF);
-    data[7]=(unsigned char) ((rad25>>8)&0xFF);
+    data[6]=(unsigned char) ((prerad)&0xFF);
+    data[7]=(unsigned char) ((prerad>>8)&0xFF);
     mccGuiNotify(1,MCC_XRAY_ANALOG_REQ_AEC_PULSE,data,8);
 
     // Attesa dati da interfaccia

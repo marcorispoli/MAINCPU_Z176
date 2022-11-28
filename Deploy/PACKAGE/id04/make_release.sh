@@ -10,7 +10,7 @@ ID=${DIR##id}
 # DEFINIZIONE DEI CODICI DI REVISIONE
 #################################################################
 FW269=FW269_1.2.hex
-FW190A=FW190A_1.1.hex
+FW190A=FW190A_1.2.hex
 FW240=FW240DMD_1.2.hex
 FW249U1=FW249U1_3.1.hex
 FW249U1A=FW249U1_2.5.hex

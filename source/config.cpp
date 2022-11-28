@@ -388,6 +388,7 @@ bool Config::openUserCfg(void)
     QString filename;
     QList<QString> dati;
 
+
     // Gruppo Generali
     userCnf.enableSblocco =true;
     userCnf.enableCheckAccessorio = false;      // Non usato
@@ -539,6 +540,8 @@ bool Config::saveUserCfg(void)
 
 
     // GRUPPO GENERALI -------------------------------------------------------------------------------------------
+
+
     // Sblocco compressore
     if(userCnf.enableSblocco) file.write("<SBLOCCO_COMPRESSORE,1>    // Impostazione sblocco compressore\n");
     else file.write("<SBLOCCO_COMPRESSORE,0>    // Impostazione sblocco compressore\n");

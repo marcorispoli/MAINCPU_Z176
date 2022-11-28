@@ -27,6 +27,10 @@ mv /PACKAGE_$PKGCODE.tar $HOME/
 echo PACKAGE EXTRACTING ..
 cd $HOME
 tar -xf PACKAGE_$PKGCODE.tar SWPackage.tar
+tar -xf SWPackage.tar
+cp ./BIN/DBTController /
+cp ./BIN/m4_slave.bin /
+
 
 ##############################################################
 # Questa sezione è dedicata all'hotfix che non preveda

@@ -366,6 +366,9 @@ void MainPage::valueChanged(int index,int opt)
         break;
 
 
+
+
+
     case _DB_CLOSED_DOOR:
         if(ApplicationDatabase.getDataU(_DB_CLOSED_DOOR)){
             closedDoorPix->hide();
@@ -723,6 +726,7 @@ void MainPage::setWindowUpdate(void)
 
 
         awsPresent->hide();
+
         if(ApplicationDatabase.getDataU(_DB_AUDIO_PRESENT)==0)  pulsanteAudioMute->setVisible(false);
         else{
             if(ApplicationDatabase.getDataU(_DB_AUDIO_MUTE)==0)   pulsanteAudioMute->activate(false,DBase::_DB_NO_ACTION);

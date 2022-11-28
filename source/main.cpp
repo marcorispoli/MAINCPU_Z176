@@ -327,7 +327,7 @@ int main(int argc, char *argv[])
         pWarningBox =   new msgBox(rotView,0);
         pLoader =       new Loader(rotView);
         io =            new sysIO(TRUE);
-        pConfig =       new Config(TRUE);
+        pConfig =       new Config(TRUE);        
         pCompressore =  new Compressor();
         pCollimatore =  new Collimatore();
         pGeneratore =   new Generatore();
