@@ -273,8 +273,6 @@
         <file>paginaOperativaAnalogica/campi2.png</file>
         <file>paginaOperativaAnalogica/campi1.png</file>
         <file>paginaOperativaAnalogica/pannellokV.png</file>
-        <file>paginaOperativaAnalogica/film.png</file>
-        <file>paginaOperativaAnalogica/CR.png</file>
         <file>paginaOperativaAnalogica/pannelloRotondoProiezioniL.png</file>
         <file>paginaOperativaAnalogica/pannelloRotondoProiezioniR.png</file>
         <file>paginaOperativaAnalogica/smallFocus.png</file>
@@ -287,10 +285,8 @@
         <file>paginaOperativaAnalogica/disable_mas.png</file>
         <file>paginaOperativaAnalogica/disable_od.png</file>
         <file>paginaOperativaAnalogica/disable_tech.png</file>
-        <file>paginaOperativaAnalogica/disable_film.png</file>
         <file>paginaOperativaAnalogica/disable_button.png</file>
         <file>paginaOperativaAnalogica/selButton.png</file>
-        <file>paginaOperativaAnalogica/pannelloOpzioni.png</file>
         <file>paginaOperativaAnalogica/pannelloComandi.png</file>
         <file>paginaOperativaAnalogica/blocco.png</file>
         <file>paginaOperativaAnalogica/xrayon.png</file>
@@ -300,6 +296,16 @@
         <file>paginaOperativaAnalogica/pannelloColli_Custom.png</file>
         <file>paginaOperativaAnalogica/pannelloColli_ManualFormat.png</file>
         <file>paginaOperativaAnalogica/pannelloComandiRotManuale.png</file>
+        <file>paginaOperativaAnalogica/film_icon.png</file>
+        <file>paginaOperativaAnalogica/cr_icon.png</file>
+        <file>paginaOperativaAnalogica/film_button.png</file>
+        <file>paginaOperativaAnalogica/dr_button.png</file>
+        <file>paginaOperativaAnalogica/cr_button.png</file>
+        <file>paginaOperativaAnalogica/dr_icon.png</file>
+        <file>paginaOperativaAnalogica/unlock_button.png</file>
+        <file>paginaOperativaAnalogica/lock_button.png</file>
+        <file>paginaOperativaAnalogica/disable_film.png</file>
+        <file>paginaOperativaAnalogica/pannelloOpzioni.png</file>
     </qresource>
     <qresource prefix="/Sym">
         <file>Sym/pad.png</file>

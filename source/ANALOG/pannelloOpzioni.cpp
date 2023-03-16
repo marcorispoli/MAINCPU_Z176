@@ -50,11 +50,13 @@ pannelloOpzioni::pannelloOpzioni(QGraphicsView* view){
 
     font.setPointSize(26);
     font.setStretch(50);
-    profileLabel = new GLabel(this,QRectF(162,206,215,46),font,QColor(_W_TEXT)," ---",Qt::AlignCenter);
-    indexLabel = new GLabel(this,QRectF(128,206,30,46),font,QColor(_W_TEXT)," ---",Qt::AlignCenter);
+    profileLabel = new GLabel(this,QRectF(137,206,212,46),font,QColor(_W_TEXT)," ---",Qt::AlignCenter);
 
-    platePix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/film.png"));
-    platePix->setOffset(104,215);
+
+    platePix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/film_button.png"));
+    platePix->setOffset(27,206);
+    lockPix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/lock_button.png"));
+    lockPix->setOffset(399,206);
 
 
     disableOdPix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/disable_od.png"));
@@ -62,7 +64,7 @@ pannelloOpzioni::pannelloOpzioni(QGraphicsView* view){
     disableTechPix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/disable_tech.png"));
     disableTechPix->setPos(125,337);
     disableFilmPix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/disable_film.png"));
-    disableFilmPix->setPos(14,203);
+    disableFilmPix->setPos(11,203);
 
     disableFiltroAutoPix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/disable_button.png"));
     disableFiltroAutoPix->setPos(284,125);
@@ -151,16 +153,31 @@ void pannelloOpzioni::mousePressEvent(QGraphicsSceneMouseEvent* event)
     // Pulsanti selezione profilo
     if(mouse.y()<=258){
         if(ApplicationDatabase.getDataI(_DB_NUMERO_PROFILI)==0) return;
-        if(ApplicationDatabase.getDataI(_DB_TECH_MODE)==ANALOG_TECH_MODE_MANUAL) return;
-
-         analog_conf_changed = true;
-        // Trigger al master
-        if(mouse.x()<=166)
-            ApplicationDatabase.setData(_DB_SET_PROFILE,(int) 2,DBase::_DB_FORCE_SGN); // Backward
-        else
-            ApplicationDatabase.setData(_DB_SET_PROFILE,(int) 1,DBase::_DB_FORCE_SGN); // Forward
+        //if(ApplicationDatabase.getDataI(_DB_TECH_MODE)==ANALOG_TECH_MODE_MANUAL) return;
 
 
+        if(mouse.x()>393){
+                if(ApplicationDatabase.getDataI(_DB_LOCK_MODE) == 0)
+                    ApplicationDatabase.setData(_DB_LOCK_MODE,(int) 1,DBase::_DB_FORCE_SGN);
+                else
+                    ApplicationDatabase.setData(_DB_LOCK_MODE,(int) 0,DBase::_DB_FORCE_SGN);
+
+                return;
+        }
+
+        if(!ApplicationDatabase.getDataI(_DB_LOCK_MODE)){
+             if(mouse.x()<=75) // DR/CR mode
+             {
+                profile_conf_changed = true;
+                ApplicationDatabase.setData(_DB_SET_PROFILE,(int) 3,DBase::_DB_FORCE_SGN); // DR/CR mode
+             }else  if(mouse.x()<=150){
+                analog_conf_changed = true;
+                ApplicationDatabase.setData(_DB_SET_PROFILE,(int) 2,DBase::_DB_FORCE_SGN); // Backward
+             }else  if(mouse.x()>330){
+                analog_conf_changed = true;
+                ApplicationDatabase.setData(_DB_SET_PROFILE,(int) 1,DBase::_DB_FORCE_SGN); // Forward
+             }
+        }
         return;
     }
 
@@ -213,6 +230,9 @@ void pannelloOpzioni::open(){
     profile_conf_changed = false;
 
 
+    ApplicationDatabase.setData(_DB_LOCK_MODE, (int) 1,DBase::_DB_NO_ECHO |DBase::_DB_NO_CHG_SGN);
+    lockPix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/lock_button.png"));
+
     // Inizializza cursore di selezione tecnica
     if(ApplicationDatabase.getDataI(_DB_TECH_MODE)==ANALOG_TECH_MODE_MANUAL)     selButtonTechModePix->setPos(SEL_MANUAL_POS);
     else if(ApplicationDatabase.getDataI(_DB_TECH_MODE)==ANALOG_TECH_MODE_SEMI)     selButtonTechModePix->setPos(SEL_SEMI_POS);
@@ -249,6 +269,12 @@ void pannelloOpzioni::valueChanged(int index,int opt)
     if((!isMaster)&&(opt&DBase::_DB_ONLY_MASTER_ACTION)) return;
 
     switch(index){
+    case _DB_LOCK_MODE:
+        if(ApplicationDatabase.getDataI(index)==1) lockPix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/lock_button.png"));
+        else lockPix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/unlock_button.png"));
+        setEnables();
+        break;
+
     case _DB_TECH_MODE:
         setEnables();
         if(ApplicationDatabase.getDataI(_DB_TECH_MODE)==ANALOG_TECH_MODE_MANUAL)     selButtonTechModePix->setPos(SEL_MANUAL_POS);
@@ -316,13 +342,25 @@ void pannelloOpzioni::valueChanged(int index,int opt)
 /* _____________________________________________________________________________________________________________________________________
  * Imposta il nuovo profilo cercando il successivo o il precedente rispetto al parametro
  * dir==1 ->Forward
+ * dir==2 ->Back
+ * dir==3 ->DR/CR
  _____________________________________________________________________________________________________________________________________ */
 void pannelloOpzioni::stepProfile(int dir){
     AEC::profileCnf_Str* profilePtr;
     if(!isMaster) return;
 
+
     if(dir==1) profilePtr = pGeneratore->pAECprofiles->getNextProfilePtr();
-    else profilePtr = pGeneratore->pAECprofiles->getPrevProfilePtr();
+    else if(dir==2) profilePtr = pGeneratore->pAECprofiles->getPrevProfilePtr();
+    else{
+        profilePtr = pGeneratore->pAECprofiles->getCurrentProfilePtr();
+        if(profilePtr == null) return;
+        if(profilePtr->plateType == ANALOG_PLATE_FILM) return;
+        profilePtr->dr_mode = !profilePtr->dr_mode;
+        ApplicationDatabase.setData(_DB_DRMODE,(int) profilePtr->dr_mode ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+        return;
+
+    }
 
     // Reimposta conseguentemente tutti i registri associati
     if(profilePtr==null){
@@ -333,6 +371,8 @@ void pannelloOpzioni::stepProfile(int dir){
     ApplicationDatabase.setData(_DB_PROFILE_INDEX,(int) pConfig->analogCnf.current_profile ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
     ApplicationDatabase.setData(_DB_PROFILE_NAME,profilePtr->symbolicName ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
     ApplicationDatabase.setData(_DB_PLATE_TYPE,(int) profilePtr->plateType ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_DRMODE,(int) profilePtr->dr_mode ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+
     if(profilePtr->plateType == ANALOG_PLATE_FILM){
         ApplicationDatabase.setData(_DB_TECHNIC,(int) profilePtr->technic ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
         ApplicationDatabase.setData(_DB_OD,(int) profilePtr->odindex ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
@@ -347,8 +387,7 @@ void pannelloOpzioni::stepProfile(int dir){
 static unsigned short od_posx[11]={50,85,119,153,187,221,255,289,323,357,391};
 void pannelloOpzioni::setProfile(void){
     setProfileLabel(ApplicationDatabase.getDataS(_DB_PROFILE_NAME));
-    setPlate((unsigned char) ApplicationDatabase.getDataI(_DB_PLATE_TYPE));
-    setProfileIndex(ApplicationDatabase.getDataI(_DB_PROFILE_INDEX));
+    setPlate((unsigned char) ApplicationDatabase.getDataI(_DB_PLATE_TYPE), (unsigned char) ApplicationDatabase.getDataI(_DB_DRMODE));
 
     int i=ApplicationDatabase.getDataI(_DB_OD);
     if(i>10||i<0) i=5;
@@ -367,9 +406,13 @@ void pannelloOpzioni::setProfile(void){
 
 
 /* _____________________________________________________________________________________________________________________________________
- * Imposta lo stato dei pannelli di disabilitazione in fonzione delle impostazioni correnti
+ * Imposta lo stato dei pannelli di disabilitazione in funzione delle impostazioni correnti
  _____________________________________________________________________________________________________________________________________ */
 void pannelloOpzioni::setEnables(void){
+
+    if(ApplicationDatabase.getDataI(_DB_LOCK_MODE)) disableFilmPix->show();
+    else disableFilmPix->hide();
+
     // Campi relativi al profilo corrente _____________________________
     if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_MANUAL){
 
@@ -378,9 +421,8 @@ void pannelloOpzioni::setEnables(void){
         selButtonODPix->hide();
         selButtonTechPix->hide();
         disableTechPix->show();
-        disableFilmPix->show();
+
     }else{
-        disableFilmPix->hide();
 
         // In caso di profilo CR disabilita la possibilità di selezionare la tecnica e la densità
         if(ApplicationDatabase.getDataI(_DB_PLATE_TYPE) != ANALOG_PLATE_FILM){
@@ -426,31 +468,20 @@ void pannelloOpzioni::setProfileLabel(QString name){
 /* _____________________________________________________________________________________________________________________________________
  * Impostazione icona plate
  _____________________________________________________________________________________________________________________________________ */
-void pannelloOpzioni::setPlate(unsigned char plateType){
+void pannelloOpzioni::setPlate(unsigned char plateType, unsigned char dr_mode){
 
     platePix->show();
-    if(plateType==ANALOG_PLATE_FILM) platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/film.png"));
-    else if(plateType==ANALOG_PLATE_CR) platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/CR.png"));
-    else platePix->hide();
+    if(plateType==ANALOG_PLATE_FILM) platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/film_button.png"));
+    else if(plateType==ANALOG_PLATE_CR){
+        if(!dr_mode) platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/cr_button.png"));
+        else platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/dr_button.png"));
+    } else platePix->hide();
 
 }
 
 /* _____________________________________________________________________________________________________________________________________
  * Impostazione icona plate
  _____________________________________________________________________________________________________________________________________ */
-void pannelloOpzioni::setProfileIndex(int index){
-
-    if(index==-1) {
-        indexLabel->hide();
-        return;
-    }
-    indexLabel->show();
-
-
-    indexLabel->setPlainText(QString("[%1]").arg(index).toAscii().data());
-    indexLabel->update();
-
-}
 
 // Imposta i range di funzionamento, kV e mAs in funzione
 // della modalità e del profilo corrente.

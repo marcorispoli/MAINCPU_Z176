@@ -26,6 +26,7 @@ public:
         QString symbolicName;                   // Nome simbolico profilo
         QString note;                           // Stringa con note dell'esecutore
 
+        bool dr_mode;                           // Activate the DR modality
         unsigned char   plateType;              // [0:1]
         unsigned char   technic;                // [0:2]    Selezione tra STD, LD, HC
         int             plog_threshold;           // Soglia di transizione filtro automatico

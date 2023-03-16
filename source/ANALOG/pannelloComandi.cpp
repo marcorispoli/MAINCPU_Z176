@@ -38,7 +38,7 @@ pannelloComandi::pannelloComandi(QGraphicsView* view){
     optionsPix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/options.png"));
     optionsPix->setOffset(54,186);
 
-    platePix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/film.png"));
+    platePix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/film_icon.png"));
     //platePix->setOffset(75,135);
     platePix->setOffset(315,135);
 
@@ -237,12 +237,12 @@ void pannelloComandi::open(void){
     // Aggiorna i campi del pannello profilo
     if(ApplicationDatabase.getDataI(_DB_NUMERO_PROFILI)==0){
         setProfileLabel("   ---   ");
-        setPlate(255);
+        setPlate(255,0);
         setTechnic(255);
         setOd(255);
     }else{
         setProfileLabel(ApplicationDatabase.getDataS(_DB_PROFILE_NAME));
-        setPlate((unsigned char) ApplicationDatabase.getDataI(_DB_PLATE_TYPE));
+        setPlate((unsigned char) ApplicationDatabase.getDataI(_DB_PLATE_TYPE), (unsigned char) ApplicationDatabase.getDataI(_DB_DRMODE));
         setTechnic(ApplicationDatabase.getDataI(_DB_TECHNIC));
         setOd(ApplicationDatabase.getDataI(_DB_OD));
     }
@@ -327,11 +327,14 @@ void pannelloComandi::setProfileLabel(QString name){
 /* _____________________________________________________________________________________________________________________________________
  * Impostazione icona plate
  _____________________________________________________________________________________________________________________________________ */
-void pannelloComandi::setPlate(unsigned char plateType){
+void pannelloComandi::setPlate(unsigned char plateType, unsigned char dr_mode){
 
     platePix->show();
-    if(plateType==ANALOG_PLATE_FILM) platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/film.png"));
-    else if(plateType==ANALOG_PLATE_CR) platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/CR.png"));
+    if(plateType==ANALOG_PLATE_FILM) platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/film_icon.png"));
+    else if(plateType==ANALOG_PLATE_CR){
+        if(!dr_mode) platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/cr_icon.png"));
+        else platePix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/dr_icon.png"));
+    }
     else platePix->hide();
 
 }
@@ -450,8 +453,10 @@ void pannelloComandi::valueChanged(int index,int opt)
     case _DB_PROFILE_NAME:
         setProfileLabel(ApplicationDatabase.getDataS(_DB_PROFILE_NAME));
         break;
+
+    case _DB_DRMODE:
     case _DB_PLATE_TYPE:
-        setPlate((unsigned char) ApplicationDatabase.getDataI(_DB_PLATE_TYPE));
+        setPlate((unsigned char) ApplicationDatabase.getDataI(_DB_PLATE_TYPE), (unsigned char) ApplicationDatabase.getDataI(_DB_DRMODE));
         break;
 
     case _DB_TECHNIC:

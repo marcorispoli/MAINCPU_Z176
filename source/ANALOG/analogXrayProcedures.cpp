@@ -265,11 +265,13 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         uG =ldose+pre_ldose;
         cumulativeXdose += uG;
 
+
         if(uG==0) ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: ----"));
         else if(pConfig->analogCnf.doseFormat == 'u'){
             ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (uG)").arg(QString::number(uG,'f',1)));
         }else if(pConfig->analogCnf.doseFormat == 'm'){
-            ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (mG)").arg(QString::number(uG/1000,'f',2)));
+            if(uG < 100) ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (uG)").arg(QString::number(uG,'f',1)));
+            else ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (mG)").arg(QString::number(uG/1000,'f',3)));
         }else{
             ApplicationDatabase.setData(_DB_X_UDOSE, QString("AGD: %1 (Zv)").arg(QString::number(uG*50/1000,'f',2)));
         }
