@@ -165,6 +165,8 @@ AEC::profileCnf_Str AEC::getProfile(QString filename){
     profile.technic = ANALOG_TECH_PROFILE_STD;
     profile.note = "NA";
 
+    profile.dr_mode = false; // Di default la modalità è CR non DR
+
     // Legge la prima riga che vale come stringa di note
     if(file.atEnd()){
         file.close();
@@ -190,6 +192,9 @@ AEC::profileCnf_Str AEC::getProfile(QString filename){
             }else if(dati.at(0)=="PLATE"){
                 if(dati.at(1)=="FILM")  profile.plateType = ANALOG_PLATE_FILM;
                 else if(dati.at(1)=="CR")  profile.plateType = ANALOG_PLATE_CR;
+            }else if(dati.at(0)=="DRMODE"){
+                if(dati.at(1)=="ON")  profile.dr_mode = true;
+                else profile.dr_mode = false;
             }else if(dati.at(0)=="PLOG_TH"){
                 profile.plog_threshold = dati.at(1).toInt();
             }else if(dati.at(0)=="PLOG_MIN"){
@@ -277,6 +282,10 @@ void AEC::saveProfile(AEC::profileCnf_Str profile){
         frame = QString("<PLATE,FILM>  \n");
     else if(profile.plateType==ANALOG_PLATE_CR)
         frame = QString("<PLATE,CR>  \n");
+    file.write(frame.toAscii().data());
+
+    if(profile.dr_mode) frame = QString("<DRMODE,ON>  \n");
+    else frame = QString("<DRMODE,OFF>  \n");
     file.write(frame.toAscii().data());
 
     frame = QString("<PLOG_TH,%1>  \n").arg(profile.plog_threshold);

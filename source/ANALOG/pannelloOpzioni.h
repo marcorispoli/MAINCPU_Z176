@@ -55,12 +55,13 @@ private:
     GLabel* profileLabel;
     void setProfileLabel(QString name);
 
-    GLabel* indexLabel;
-    void setProfileIndex(int index);
+
 
 
     QGraphicsPixmapItem* platePix;
-    void setPlate(unsigned char plateType);
+    QGraphicsPixmapItem* lockPix;
+
+    void setPlate(unsigned char plateType, unsigned char dr_mode);
 
 
     void setEnables(void);

@@ -339,6 +339,8 @@ void AnalogPageOpen::initializeStandardPage(void){
     ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_RIGHT, (int) pCollimatore->customR,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
     ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_BACK, (int) pCollimatore->customB,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
     ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_FRONT, (int) pCollimatore->customF,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+    ApplicationDatabase.setData(_DB_LOCK_MODE, (int) 1,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+
 
     ApplicationDatabase.setData(_DB_INFO_ALARM_MODE, (int) 0,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
 
@@ -398,6 +400,8 @@ void AnalogPageOpen::initializeStandardPage(void){
         ApplicationDatabase.setData(_DB_PROFILE_INDEX,(int) pConfig->analogCnf.current_profile ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
         ApplicationDatabase.setData(_DB_PROFILE_NAME,profilePtr->symbolicName ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
         ApplicationDatabase.setData(_DB_PLATE_TYPE,(int) profilePtr->plateType ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+        ApplicationDatabase.setData(_DB_DRMODE,(int) profilePtr->dr_mode ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+
         if(profilePtr->plateType == ANALOG_PLATE_FILM){
             ApplicationDatabase.setData(_DB_TECHNIC,(int) profilePtr->technic ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
             ApplicationDatabase.setData(_DB_OD,(int) profilePtr->odindex ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
@@ -841,6 +845,7 @@ not_ready_bits|=2000;  // TEmperatura cuffia
 void AnalogPageOpen::verifyStandardReady(void){
 
     int plate_type = ApplicationDatabase.getDataI(_DB_PLATE_TYPE);
+    bool dr_mode = ApplicationDatabase.getDataI(_DB_DRMODE);
 
     int flags = ApplicationDatabase.getDataI(_DB_ANALOG_FLAGS);
     int not_ready_bits=0;
@@ -858,7 +863,7 @@ void AnalogPageOpen::verifyStandardReady(void){
     if(!pPotter->getCassettePresence()){
             not_ready_bits|=0x10;   // Missing Cassette
     } else if(pPotter->getCassetteExposed()){
-        if(plate_type == ANALOG_PLATE_FILM)  not_ready_bits|=0x20;   // Exposed Cassette only with film, not CR
+        if((plate_type == ANALOG_PLATE_FILM) ||(dr_mode == false)) not_ready_bits|=0x20;   // Exposed Cassette only with film, or CR, not DR
     }
 
     // Gruppo OpenDoor
@@ -1175,7 +1180,8 @@ void AnalogPageOpen::manageCallbacks(int opt){
         //______________________________________________________________________________________________________
         // DISATTIVAZIONE PANNELLI
         //______________________________________________________________________________________________________
-        case CALLBACK_OPTIONEXIT_SELECTION:           
+        case CALLBACK_OPTIONEXIT_SELECTION:
+            saveOptions();
             changePanel(PANNELLO_COMANDI);
             break;
         case CALLBACK_BIOPSIAEXIT_SELECTION:

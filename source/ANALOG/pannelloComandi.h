@@ -31,7 +31,7 @@ public slots:
     void setKv(int val);
     void setdmAs(int dmAs);
     void setProfileLabel(QString name);
-    void setPlate(unsigned char plateType);
+    void setPlate(unsigned char plateType, unsigned char dr_mode);
     void setOd(int od);
     void setTechnic(int tech);
     void setTechMode(int tm);

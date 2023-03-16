@@ -75,6 +75,8 @@
 
 #define _DB_ANALOG_BIOPSY_ERR_CALC        _DB_SERVICE37_INT
 #define _DB_XFILTER                       _DB_SERVICE38_INT
+#define _DB_DRMODE                        _DB_SERVICE39_INT
+#define _DB_LOCK_MODE                     _DB_SERVICE40_INT
 
 
 #define PANNELLO_PROIEZIONI             1
