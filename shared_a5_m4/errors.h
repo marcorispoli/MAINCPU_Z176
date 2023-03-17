@@ -74,6 +74,18 @@ typedef enum{
 
 }_lenze_errors_t;
 
+//////////////////////////////////////////////////////////////////////////////
+//              CODICI DI ERRORE RELATIVI ALLE OPERAZIONI DI PARCHEGGIO
+//////////////////////////////////////////////////////////////////////////////
+#define ERROR_PARKING_TILT_SETTING          1
+#define ERROR_PARKING_LENZE_BUSY            2
+#define ERROR_PARKING_LENZE_TMO             3
+#define ERROR_PARKING_LENZE_POSITION        4
+#define ERROR_PARKING_ARM_TMO               5
+#define ERROR_PARKING_ARM_WRONG_ANGLE       6
+#define WARNING_PARKING_ACTIVATION_PROCEDURE       7
+#define WARNING_UNPARKING_ACTIVATION_PROCEDURE     8
+#define ERROR_PARKING_NOT_CALIBRATED        9
 
 
 //////////////////////////////////////////////////////////////////////////////

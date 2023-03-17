@@ -72,6 +72,7 @@ enum
     _PG_SERVICE_CALIB_POWER,
     _PG_SERVICE_CALIB_LENZE_POT,
     _PG_SERVICE_CALIB_CONSOLE,
+    _PG_SERVICE_CALIB_PARKING,
     _PG_SERVICE_TOOLS_TILT,
     _PG_SERVICE_TOOLS_ARM,
     _PG_SERVICE_TOOLS_LENZE,
@@ -81,6 +82,7 @@ enum
     _PG_SERVICE_TOOLS_POTTER,
     _PG_CALIB_ANALOG,
     _PG_SYSTEM_SETUP
+
 
 };
 
@@ -214,6 +216,8 @@ _DB_ALLARME_ARM_PUSH, // Diagnostica sui pulsanti di rotazione
 _DB_ALLARME_INFO_STAT,// Messaggi di informazione stato
 _DB_ALLARMI_SYSCONF,  // Allarmi relativi alla configurazione generale del sistema
 _DB_ALLARMI_ANALOGICA, // Allarmi specifici versioni analogiche
+_DB_ALLARMI_PARCHEGGIO, // Allarmi relativi alle operazioni di parcheggio
+
 _DB_ALLARMI_ALR_SOFT, // Questo è l'ultimo: non spostare
 // Fine Blocco allarmi_________________________________________________
 
@@ -248,6 +252,7 @@ _DB_POWER_STAT,
 _DB_REQ_POWEROFF,
 _DB_REVISION_ERROR_STRING,
 
+_DB_PARKING_MODE,
 
 
 // Variabili stringa di servizio

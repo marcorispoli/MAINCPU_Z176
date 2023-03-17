@@ -99,6 +99,7 @@ typedef struct
      unsigned short direction_memory; // Memoria direzione se presente
 } armConfig_Str;
 
+
 typedef struct
 {
     // ______  Alto Basso Braccio ________________________________________________________________
@@ -107,12 +108,15 @@ typedef struct
 
     unsigned short manual_speed;           // Hz movimento manuale      // Setpoint 1
     unsigned short automatic_speed;        // Hz movimento automatico   // Setpoint 2
+    unsigned short parking_speed;          // Hz movimento di posteggio // Setpoint 3
 
     unsigned char calibrated;              // 1 = CALIBRATED
-    unsigned char spare;
+    bool startupInParkingMode;             // True stato di parking mode alla partenza. Si esce solo alzando il braccio
+    int  parkingSafePoint;                 // Posizione di sicurezza anti urto
+    int  parkingTarget;                    // Posizione calibrata di posteggio
+    bool calibratedParkingTarget;          // Stato di calibrazione avvenuto correttamente
 
 } lenzeConfig_Str;
-
 
 
 

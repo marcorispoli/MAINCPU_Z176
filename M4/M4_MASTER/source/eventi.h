@@ -79,7 +79,7 @@
 #define _EV1_26                  0x02000000,Ev1      // Driver PCB 204 Connesso
 #define _EV1_UPDATE_REGISTERS    0x04000000,Ev1      // Abilitazione all'update di tutti i registri
 #define _EV1_28                  0x08000000,Ev1      //
-#define _EV1_29                  0x10000000,Ev1      //
+#define _EV1_LENZE_CONFIGURED    0x10000000,Ev1      //
 #define _EV1_TRX_CONFIGURED      0x20000000,Ev1      //
 #define _EV1_ARM_CONFIGURED      0x40000000,Ev1      //
 #define _EV1_DEV_CONFIG_OK       0x80000000,Ev1      // Configurazione dispositivi completata

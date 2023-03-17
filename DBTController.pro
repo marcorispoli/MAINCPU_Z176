@@ -90,7 +90,8 @@ HEADERS += \
     source/ANALOG/pannelloColli.h \
     source/Service/Tools/pottertool.h \
     source/ANALOG/pannelloBiopsia.h \
-    source/Service/Calib/calibconsole.h
+    source/Service/Calib/calibconsole.h \
+    source/Service/Calib/calibParking.h
 
 SOURCES += \
     source/main.cpp \
@@ -161,7 +162,8 @@ SOURCES += \
     source/ANALOG/pannelloColli.cpp \
     source/Service/Tools/pottertool.cpp \
     source/ANALOG/pannelloBiopsia.cpp \
-    source/Service/Calib/calibconsole.cpp
+    source/Service/Calib/calibconsole.cpp \
+    source/Service/Calib/calibParking.cpp
 
 
 FORMS += \
@@ -189,7 +191,8 @@ FORMS += \
     source/Service/Tools/audio.ui \
     source/Service/Tools/potter.ui \
     source/Service/Tools/toolCalibTube.ui \
-    source/Service/Calib/calibconsole.ui
+    source/Service/Calib/calibconsole.ui \
+    source/Service/Calib/calibParking.ui
 
 
 

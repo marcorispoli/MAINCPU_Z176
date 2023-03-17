@@ -68,7 +68,8 @@ void mcc_xray_analog_calib_tube(void);
 void mcc_audio(void);
 void mcc_rtc(void);
 void mcc_244_A_functions(void);
-
+void mcc_unparking_mode(void);
+void mcc_parking_mode(void);
 #else
   #define ext extern
   #define extrd extern const

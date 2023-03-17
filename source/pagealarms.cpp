@@ -2177,6 +2177,80 @@ void PageAlarms::createMessageList(void){
 
   errors.replace(_DB_ALLARMI_ANALOGICA-FIRST_ALR_CLASS,classitem);
 
+  // ___________________      _DB_ALLARMI_PARCHEGGIO ____________________________________________________________________________________________________________________________________________
+
+
+    classitem.className=QString("02000");
+    classitem.classDescription=QString("MESSAGGI DI ERRORE OPERAZIONI DI PARCHEGGIO");
+    classitem.errlist.clear();
+
+    erritem.codestr = QString("02001");
+    erritem.codeval = ERROR_PARKING_TILT_SETTING;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","ERRORE POSIZIONAMENTO TUBO", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("Impossibile riposizionare a 0 il Tubo");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("02002");
+    erritem.codeval = ERROR_PARKING_LENZE_BUSY;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","MOTORE ALTO-BASSO ATTIVO", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("Il motore Alto Basso è già in movimento");
+    classitem.errlist.append(erritem);
+
+
+    erritem.codestr = QString("02003");
+    erritem.codeval = ERROR_PARKING_LENZE_TMO;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","TIMEOUT MOTORE ALTO-BASSO", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("Timeout durante posizionamento Alto-Basso");
+    classitem.errlist.append(erritem);
+
+
+    erritem.codestr = QString("02004");
+    erritem.codeval = ERROR_PARKING_LENZE_POSITION;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","FALLIO POSIZIONAMENTO ALTO-BASSO", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("La posizione finale Alto-Basso è errata");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("02005");
+    erritem.codeval = ERROR_PARKING_ARM_TMO;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","TIMEOUT ROTAZIONE C-ARM\n", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("Il Braccio non ha completato in tempo la rotazione a 180°");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("02006");
+    erritem.codeval = ERROR_PARKING_ARM_WRONG_ANGLE;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","ERRORE ARM NON IN POSIZIONE", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(WARN_PIX);
+    erritem.errdescr= QString("Errore con arm a sblocco meccanico. il braccio deve essere a 180°");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("02007");
+    erritem.codeval = WARNING_PARKING_ACTIVATION_PROCEDURE;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","START PARCHEGGIO", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(WARN_PIX);
+    erritem.errdescr= QString("Messaggio di avviso procedura di parcheggio attivata");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("02008");
+    erritem.codeval = WARNING_UNPARKING_ACTIVATION_PROCEDURE;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","START USCITA DA PARCHEGGIO", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(WARN_PIX);
+    erritem.errdescr= QString("Messaggio di avviso procedura di uscita parcheggio attivata");
+    classitem.errlist.append(erritem);
+
+    erritem.codestr = QString("02009");
+    erritem.codeval = ERROR_PARKING_NOT_CALIBRATED;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-PARCHEGGIO","POSIZIONE DI PARCHEGGIO NON CALIBRATA", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("La posizione di parcheggio non è stata calibrata");
+    classitem.errlist.append(erritem);
+
+
+    errors.replace(_DB_ALLARMI_PARCHEGGIO-FIRST_ALR_CLASS,classitem);
   //___________________________________________________________________________________________________________________________________________________________________
 }
 

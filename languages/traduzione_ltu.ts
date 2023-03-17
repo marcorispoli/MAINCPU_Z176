@@ -70,20 +70,20 @@ LEFT SIDE</source>
 <context>
     <name>COLLIMATORE</name>
     <message>
-        <location filename="../source/collimatore.cpp" line="275"/>
-        <location filename="../source/collimatore.cpp" line="295"/>
-        <location filename="../source/collimatore.cpp" line="304"/>
+        <location filename="../source/collimatore.cpp" line="274"/>
+        <location filename="../source/collimatore.cpp" line="294"/>
+        <location filename="../source/collimatore.cpp" line="303"/>
         <location filename="../source/echodisplay.cpp" line="308"/>
         <source>NON DEFINITA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="283"/>
+        <location filename="../source/collimatore.cpp" line="282"/>
         <source>MANUALE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="322"/>
+        <location filename="../source/collimatore.cpp" line="320"/>
         <source>APERTA</source>
         <translation type="unfinished"></translation>
     </message>
@@ -91,24 +91,24 @@ LEFT SIDE</source>
 <context>
     <name>COMPRESSORE</name>
     <message>
-        <location filename="../source/compressor.cpp" line="352"/>
-        <location filename="../source/compressor.cpp" line="363"/>
+        <location filename="../source/compressor.cpp" line="560"/>
+        <location filename="../source/compressor.cpp" line="571"/>
         <source>NON RICONOSCIUTO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="353"/>
-        <location filename="../source/compressor.cpp" line="365"/>
+        <location filename="../source/compressor.cpp" line="561"/>
+        <location filename="../source/compressor.cpp" line="573"/>
         <source>CODICE ERRATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="360"/>
+        <location filename="../source/compressor.cpp" line="568"/>
         <source>COMPRESSORE NON BLOCCATO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="362"/>
+        <location filename="../source/compressor.cpp" line="570"/>
         <source>NACCHERA NON BLOCCATA</source>
         <translation type="unfinished"></translation>
     </message>
@@ -603,6 +603,55 @@ CORRENTE SHIFT KEEP-MIN</source>
         <location filename="../source/pagealarms.cpp" line="1297"/>
         <source>ACCESSORIO DISCONNESSO
 </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ERRORE-PARCHEGGIO</name>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2189"/>
+        <source>ERRORE POSIZIONAMENTO TUBO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2196"/>
+        <source>MOTORE ALTO-BASSO ATTIVO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2204"/>
+        <source>TIMEOUT MOTORE ALTO-BASSO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2212"/>
+        <source>FALLIO POSIZIONAMENTO ALTO-BASSO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2219"/>
+        <source>TIMEOUT ROTAZIONE C-ARM
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2226"/>
+        <source>ERRORE ARM NON IN POSIZIONE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2233"/>
+        <source>START PARCHEGGIO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2240"/>
+        <source>START USCITA DA PARCHEGGIO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2247"/>
+        <source>POSIZIONE DI PARCHEGGIO NON CALIBRATA</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1188,42 +1237,42 @@ CONTATTARE L&apos;ASSISTENZA</source>
 <context>
     <name>MAIN-PAGE</name>
     <message>
-        <location filename="../source/mainpage.cpp" line="731"/>
+        <location filename="../source/mainpage.cpp" line="773"/>
         <source>INTESTAZIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="734"/>
+        <location filename="../source/mainpage.cpp" line="776"/>
         <source>ACCESSORIO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="737"/>
+        <location filename="../source/mainpage.cpp" line="779"/>
         <source>COMPRESSORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="740"/>
+        <location filename="../source/mainpage.cpp" line="782"/>
         <source>POSIZIONE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="742"/>
+        <location filename="../source/mainpage.cpp" line="784"/>
         <source>SPESSORE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="745"/>
+        <location filename="../source/mainpage.cpp" line="787"/>
         <source>FORZA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="747"/>
+        <location filename="../source/mainpage.cpp" line="789"/>
         <source>TARGET</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="787"/>
+        <location filename="../source/mainpage.cpp" line="829"/>
         <source>MESSAGGIO ATTIVAZIONE POWER OFF</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1309,6 +1358,41 @@ CONTATTARE L&apos;ASSISTENZA</source>
     <message>
         <location filename="../source/Service/Tools/audio.ui" line="148"/>
         <source>+</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>calibParkUI</name>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="135"/>
+        <source>STORE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="172"/>
+        <source>LENZE POSITION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="215"/>
+        <source>100%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../source/Service/Calib/calibParking.ui" line="288"/>
+        <source>ARM 
+0°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message utf8="true">
+        <location filename="../source/Service/Calib/calibParking.ui" line="315"/>
+        <source>ARM 
+180°</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

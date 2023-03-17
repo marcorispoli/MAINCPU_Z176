@@ -158,6 +158,12 @@ MainPage::MainPage(bool local, QString bgl, QString bgs , bool showLogo, int w,i
     pulsanteAudioMute->setEnable(true);
     pulsanteAudioMute->setVisible(false);
 
+    // Pannello parking mode
+    pulsanteOkUnpark = new GPush((GWindow*) this,setPointPath(8,  95,65,692,65,692,275,95,275),95,65,0,0,FALSE);
+    parkingPix = addPixmap(QPixmap("://MainPage/MainPage/parkingModeActivation.png"));
+    parkingPix->setPos(0,0);
+    parkingPix->hide();
+
 }
 
 MainPage::~MainPage()
@@ -193,6 +199,12 @@ void MainPage::childStatusPage(bool stat,int opt)
     changePannello(_MAIN_PANEL);
     paginaAllarmi->alarm_enable=true;
 
+    if(isMaster){
+        if(pConfig->lenzeConfig.startupInParkingMode)
+            ApplicationDatabase.setData(_DB_PARKING_MODE,(unsigned char) 1);
+        else
+            ApplicationDatabase.setData(_DB_PARKING_MODE,(unsigned char) 0);
+    }
 }
 
 void MainPage::timerEvent(QTimerEvent* ev)
@@ -283,6 +295,11 @@ void MainPage::valueChanged(int index,int opt)
 
     switch(index)
     {
+
+    case _DB_PARKING_MODE:
+            if(ApplicationDatabase.getDataU(index)) changePannello(_PARK_PANEL);
+            else changePannello(_MAIN_PANEL);
+            break;
 
     case _DB_REQ_POWEROFF:
         if(!isMaster) return;
@@ -485,6 +502,13 @@ void MainPage::buttonActivationNotify(int id, bool status,int opt)
 
         changePannello(_MAIN_PANEL);
         break;
+
+    case _PARK_PANEL:
+           if((isMaster) && (pbutton==pulsanteOkUnpark)){
+               activateUnpark();
+           }
+
+           break;
     }
 
 
@@ -621,6 +645,9 @@ void MainPage::changePannello(int newpanel){
     pulsanteCancPowerOff->setVisible(false);
     pulsanteOkPowerOff->setVisible(false);
     powerOffLabel->setVisible(false);
+    pulsanteOkUnpark->setVisible(false);
+    parkingPix->hide();
+
 
     switch(pannello){
     case _MAIN_PANEL:
@@ -663,6 +690,7 @@ void MainPage::changePannello(int newpanel){
         //pulsanteRot_90->setVisible(true);
         //pulsanteRot_90->pulsanteData=-20;
         break;
+
     case _PWROFF_PANEL:
         panelTool->setPixmap(QPixmap("://MainPage/MainPage/framePowerOff.png"));
         panelTool->show();
@@ -670,6 +698,12 @@ void MainPage::changePannello(int newpanel){
         pulsanteOkPowerOff->setVisible(true);
         powerOffLabel->setVisible(true);
         break;
+
+    case _PARK_PANEL:
+            panelTool->setPixmap(QPixmap("://MainPage/MainPage/parkingMode.png"));
+            panelTool->show();
+            pulsanteOkUnpark->setVisible(true);
+            break;
     }
 
     setWindowUpdate();
@@ -814,17 +848,26 @@ void MainPage::activateRot(int angolo)
 {
     if(!isMaster) return;
 
-    if(angolo!=200){
-        if(angolo > 180) angolo = 180;
-        else if(angolo<-180) angolo = -180;
-    }
+       // Parking mode: solo se la calibrazione è presente!
+       if(angolo==200){
+           if(!pConfig->lenzeConfig.calibratedParkingTarget){
+               PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,ERROR_PARKING_NOT_CALIBRATED,TRUE);
+               return;
+           }
+           activateParking();
+           return;
+       }
 
-    // Impostazione Parametro
-    unsigned char buffer[2];
-    buffer[0] =(unsigned char) (angolo&0xFF);
-    buffer[1] =(unsigned char) (angolo>>8);
+       if(angolo > 180) angolo = 180;
+       else if(angolo<-180) angolo = -180;
 
-    pConsole->pGuiMcc->sendFrame(MCC_CMD_ARM,0,buffer, 2);
+
+       // Impostazione Parametro
+       unsigned char buffer[2];
+       buffer[0] =(unsigned char) (angolo&0xFF);
+       buffer[1] =(unsigned char) (angolo>>8);
+
+       pConsole->pGuiMcc->sendFrame(MCC_CMD_ARM,0,buffer, 2);
 }
 
 // ____________________________________________
@@ -847,3 +890,38 @@ void MainPage::activateTilt(int angolo)
 }
 
 
+void MainPage::activateUnpark(void)
+{
+    if(!isMaster) return;
+    unsigned char buffer[2];
+
+    PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,WARNING_UNPARKING_ACTIVATION_PROCEDURE,TRUE);
+    buffer[0]=MCC_PARKING_MODE_COMMANDS_START_UNPARKING;
+    pConsole->pGuiMcc->sendFrame(MCC_PARKING_MODE_COMMANDS,1,buffer, sizeof(buffer));
+
+}
+
+void MainPage::activateParking(void)
+{
+    if(!isMaster) return;
+
+    unsigned char buffer[2];
+
+    if( !(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR)){
+        // Con rotazione meccanica occorreverificare la posizione del braccio prima di procedere
+        // Acquisisce l'angolo corrente
+        int dangolo = ApplicationDatabase.getDataI(_DB_DANGOLO);
+
+        // Se l'angolo non è a 180° non può proseguire
+        if( (dangolo < 1780) && (dangolo > -1780)){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,ERROR_PARKING_ARM_WRONG_ANGLE,TRUE);
+            return;
+        }
+    }
+
+
+    PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,WARNING_PARKING_ACTIVATION_PROCEDURE,TRUE);
+    buffer[0]=MCC_PARKING_MODE_COMMANDS_START_PARKING;
+    pConsole->pGuiMcc->sendFrame(MCC_PARKING_MODE_COMMANDS,1,buffer, sizeof(buffer));
+
+}

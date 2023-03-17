@@ -162,6 +162,8 @@ typedef struct{
     bool           success;  // Ultimo comando eseguito con successo
     bool           completed;// Comando completato
     bool           lenze_run; // Indica se il lenze è in aggiornamento automatico
+    int            lenze_pot; // Dato potenziometro
+
 
     // Fault corrente
     unsigned char  faultcode;
@@ -201,6 +203,7 @@ typedef struct
     _trxCommand_Str    trxExecution;    // Dati relativi a comandi in corso
     _armCommand_Str    armExecution;    // Dati relativi a comandi in corso
     unsigned char      manual_mode_activation; // Modalità di attivazione TRX / ARM da pulsanti per calibrazioni
+    bool               lenze_park_enable_run;  // Abilita il movimento lenze nelle fasi di parcheggio
 
     compressoreCfg_Str  comprCfg;       // Parametri compressore
     potterCfg_Str       potterCfg;      // Configurazione Potter

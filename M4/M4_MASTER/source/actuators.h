@@ -20,6 +20,9 @@ Data Ultima Modifica:22/09/2014
   #define extrd extern const
 #endif
 
+ext void actuatorsLenzeUnpark(void);
+ext void actuatorsLenzPark(void);
+
 ext void actuatorsRxFromArm(uint8_t* data);
 ext void actuatorsRxFromTrx(uint8_t* data);
 ext void actuatorsRxFromLenze(uint8_t* data);

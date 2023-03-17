@@ -104,8 +104,10 @@ typedef struct
     bool deviceConnected;
 
     bool lenzeCalibPot; // Attiva il rilevamento frequente del potenziometro
+    bool lenzeCalibPark; // Attiva il rilevamento posizionamento di parcheggio
 
 }deviceCfg_Str;
+
 
 ext deviceCfg_Str generalConfiguration;
 ext void mainStartProcesses(void);

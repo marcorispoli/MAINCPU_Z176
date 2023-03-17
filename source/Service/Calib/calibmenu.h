@@ -34,6 +34,7 @@ public slots:
      void onDetectorCalibButton(void);
      void onColliCalibButton(void); // Calibrazione collimazione
      void onConsoleButton(void);    // Calibrazione cursore console
+     void onParkingCalibButton(void); // Calibrazione posizione di parcheggio
 
 private:
     Ui::CalibMenuObject *ui;
