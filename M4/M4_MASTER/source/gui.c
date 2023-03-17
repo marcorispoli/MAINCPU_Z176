@@ -601,6 +601,13 @@ void manageMccConfig(){
             case MCC_RTC_COMMANDS:
                 mcc_rtc();
             break;
+
+            case MCC_PARKING_MODE_COMMANDS:
+
+                if(mcc_cmd.buffer[0] == MCC_PARKING_MODE_COMMANDS_START_PARKING)  mcc_parking_mode();
+                else if(mcc_cmd.buffer[0] == MCC_PARKING_MODE_COMMANDS_START_UNPARKING)  mcc_unparking_mode();
+            break;
+
             default:
               // printf("Ricevuto buffer di %d\n",mcc_len);
               break;
@@ -626,7 +633,7 @@ void mcc_cmd_trx(void)
    // Se il comando è già in esecuzione deve rispondere un errore
     if((generalConfiguration.trxExecution.run == true)||(generalConfiguration.trxExecution.completed == false)){
         unsigned char buffer[2];
-        printf("RICHIESTA MCC MOVIMENTO TRX: BUSY!");
+        printf("RICHIESTA MCC MOVIMENTO TRX: BUSY!\n");
         buffer[0] = TRX_BUSY;
         buffer[1] = 0; // sub codice in caso di errore da fault
         mccGuiNotify(mcc_cmd.id,MCC_CMD_TRX,buffer,2);
@@ -678,7 +685,7 @@ void mcc_cmd_arm(void)
 
     // Se il comando è già in esecuzione deve rispondere un errore
     if((generalConfiguration.armExecution.run == true)||(generalConfiguration.armExecution.completed == false)){
-        printf("RICHIESTA MCC MOVIMENTO ARM: BUSY!");
+        printf("RICHIESTA MCC MOVIMENTO ARM: BUSY!\n");
         buffer[0] = ARM_BUSY;
         buffer[1] = 0; // sub codice in caso di errore da fault
         mccGuiNotify(mcc_cmd.id,MCC_CMD_ARM,buffer,2);
@@ -950,7 +957,7 @@ void mcc_test(void)
 
       switch(mcc_cmd.buffer[0]){
       case 0:
-          printf("GPIO INIT");
+          printf("GPIO INIT\n");
           spiInit();
           break;
       case 1:
@@ -2038,4 +2045,177 @@ void mcc_244_A_functions(void){
     }
 }
 
+
+// Procedura per il resume dal parking mode
+void mcc_parking_mode(void)
+{
+    unsigned char buffer[2];
+    buffer[0] = MCC_PARKING_MODE_COMMANDS_START_PARKING;
+
+    printf("GUI PARKING MODE REQUEST\n");
+
+    // Posizionament del Tilt a 0
+    actuatorsTrxMove(0);
+
+    for(int i=0; i<10; i++){
+        if(!generalConfiguration.trxExecution.completed) _time_delay(1000);
+        else break;
+    }
+    if(!generalConfiguration.trxExecution.success){
+        // Errore timeout posizionamento lenze
+        printf("GUI TIMEOUT TRX PARKING");
+        buffer[1] = ERROR_PARKING_TILT_SETTING;
+        mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+        return;
+    }
+
+
+    // Posizionamento del Braccio in posizione Alta per assicurare una corretta rotazione del braccio
+    if(generalConfiguration.gantryCfg.armMotor){
+            if(generalConfiguration.armExecution.lenze_run){
+                printf("GUI LENZE BUSY DURING SAFE POSITIONING\n");
+                buffer[1] = ERROR_PARKING_LENZE_BUSY;
+                mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+                return;
+            }
+            printf("GUI LENZE UNPARK:%d,%d\n",generalConfiguration.armExecution.lenze_pot, generalConfiguration.lenzeCfg.parkingSafePoint);
+            actuatorsLenzeUnpark();
+
+            // Attesa fine movimento di parcheggio
+            for(int i=0; i<60; i++){
+                if(generalConfiguration.armExecution.lenze_run) _time_delay(1000);
+                else break;
+            }
+
+            if(generalConfiguration.armExecution.lenze_run){
+                // Errore timeout posizionamento lenze
+                printf("GUI TIMEOUT LENZE IN SAFE POSITIONING\n");
+                buffer[1] = ERROR_PARKING_LENZE_TMO;
+                mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+                return;
+            }
+
+            // Verifica se il potenziometro ha raggiunto il target atteso
+            if(generalConfiguration.armExecution.lenze_pot < generalConfiguration.lenzeCfg.parkingSafePoint){
+                printf("GUI LENZE NOT CORRECTLY POSITIONED:%d, %d\n",generalConfiguration.armExecution.lenze_pot, generalConfiguration.lenzeCfg.parkingSafePoint);
+
+                buffer[1] = ERROR_PARKING_LENZE_POSITION;
+                mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+                return;
+            }
+
+            printf("GUI ARM ROTATION FOR PARKING");
+
+            // Attivazione Arm a 180 in modo parking (senza correzione altezza)
+            if(generalConfiguration.armExecution.dAngolo>0) actuatorsArmMove(200);
+            else actuatorsArmMove(-200);
+            _time_delay(1000);
+
+            // Attesa fine movimento di rotazione
+            for(int i=0; i<20; i++){
+                if(!generalConfiguration.armExecution.completed) _time_delay(1000);
+                else break;
+            }
+            if(!generalConfiguration.armExecution.success){
+                // Errore timeout posizionamento lenze
+                printf("GUI TIMEOUT ARM DURING PARKING\n");
+                buffer[1] = ERROR_PARKING_ARM_TMO;
+                mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+                return;
+            }
+
+    }
+
+    // Disabilitazione generale ad eccezione del lenze
+    generalConfiguration.lenzeCfg.startupInParkingMode = 1;
+    generalConfiguration.lenze_park_enable_run = true;
+    actuatorsManageEnables();
+
+    // Attivazione parking
+    actuatorsLenzPark();
+
+    // Attesa fine movimento di parcheggio
+    for(int i=0; i<60; i++){
+        if(generalConfiguration.armExecution.lenze_run) _time_delay(1000);
+        else break;
+    }
+
+    if(generalConfiguration.armExecution.lenze_run){
+        // Errore timeout posizionamento lenze
+        printf("GUI TIMEOUT COMPRESSION PARKING LENZE\n");
+        buffer[1] = ERROR_PARKING_LENZE_TMO;
+        mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+        return;
+    }
+
+
+    // Operazione completata con successo
+    generalConfiguration.lenze_park_enable_run = false;
+    actuatorsManageEnables();
+
+    buffer[1] = 0;
+    mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+
+
+    return ;
+}
+
+
+
+// Procedura per il resume dal parking mode
+void mcc_unparking_mode(void)
+{
+    unsigned char buffer[2];
+    buffer[0] = MCC_PARKING_MODE_COMMANDS_START_UNPARKING;
+
+    printf("GUI UNPARKING MODE GUI REQUEST\n");
+    generalConfiguration.lenze_park_enable_run = true;
+    actuatorsManageEnables();
+    _time_delay(200);
+
+    // Attivazione della modalità di sblocco parcheggio
+    if(generalConfiguration.armExecution.lenze_run){
+        printf("GUI LENZE BUSY DURING UNPARKING\n");
+        buffer[1] = ERROR_PARKING_LENZE_BUSY;
+        mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+        return;
+    }
+
+    // Attivazione lenz verso Unpark.
+    // Se va a buon fine il Lenze si troverà sbloccato dalla condizione di parcheggio
+    actuatorsLenzeUnpark();
+
+    // Attesa fine movimento di parcheggio
+    for(int i=0; i<60; i++){
+        if(generalConfiguration.armExecution.lenze_run) _time_delay(1000);
+        else break;
+    }
+
+    if(generalConfiguration.armExecution.lenze_run){
+        // Errore timeout posizionamento lenze
+        printf("GUI TIMEOUT LENZE DURING UNPARKING\n");
+        buffer[1] = ERROR_PARKING_LENZE_TMO;
+        mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+        return;
+    }
+
+
+    printf("GUI UNPARKING LENZE OK, POT:%d\n", generalConfiguration.armExecution.lenze_pot);
+    generalConfiguration.lenzeCfg.startupInParkingMode = 0;
+    generalConfiguration.lenze_park_enable_run = true;
+    actuatorsManageEnables();
+    _time_delay(500);
+
+    if(generalConfiguration.gantryCfg.armMotor){
+        // Attivazione Arm a 0
+        actuatorsArmMove(0);
+    }
+
+    // DISPOSITIVO SBLOCCATO
+    buffer[1] = 0;
+    mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
+
+
+  return ;
+}
 /* EOF */

@@ -85,15 +85,17 @@ void  driver_Lenze_Stat(void);
 ext _i510_Status_t* lenzeGetStatus(void);
 ext lenzeConfig_Str lenzeConfig;
 
-ext void lenzeUpdateConfiguration(unsigned char* data);
+ext void lenzeUpdateConfiguration(void);
 ext bool lenzeReadPosition(void);
 ext bool lenzeSetSpeedManual(uint16_t soglia_bassa, uint16_t soglia_alta);
-ext bool lenzeSetSpeedAuto(uint16_t soglia_bassa, uint16_t soglia_alta);
+ext bool lenzeSetSpeedAuto(uint16_t soglia_bassa, uint16_t soglia_alta, uint32_t speed_preset);
 ext bool lenzeActivatePositionCompensation(int angolo_iniziale, int angolo_finale);
 ext bool lenzeActivateAuto(bool upward);
 ext int  lenzeGetVBUS(void);
 ext bool lenzeGetObstacleStat(void);
-
+ext void lenzeSetCommand(unsigned char command, unsigned char param);
+ext bool lenzeSetSpeedManualPark(bool state);
+ext bool lenzeActivateUnpark(void);
 
 ext uint32_t lenzeGetAn1(void);
 ext uint32_t lenzeGetAn2(void);
@@ -106,8 +108,11 @@ ext uint32_t lenzeGetTemp(void);
 
 #define PRESET_MANUAL   i510_2860_01_PRESET1
 #define PRESET_AUTO     i510_2860_01_PRESET2
+#define PRESET_PARKING  i510_2860_01_PRESET3
+
 #define SETPOINT_MANUAL i510_2911_01_OD // PRESET 1
 #define SETPOINT_AUTO   i510_2911_02_OD // PRESET 2
+#define SETPOINT_PARKING i510_2911_03_OD // PRESET 3
 
 // DEFINIZIONE IO DI COLLEGAMENTO LENZE
 #define ENABLE_TRIGGER          i510_TRIGGER_IN4
@@ -122,6 +127,9 @@ typedef enum{
     LENZE_IDLE ,
     LENZE_AUTO_MOVE,
     LENZE_MANUAL_MOVE,
+    LENZE_MOVE_TO_POSITION, // tbd
+    LENZE_UNLOCK_PARKING,
+    LENZE_SET_PARKING,
     LENZE_FAULT,
     LENZE_RUN,
     LENZE_POT_UPDATE

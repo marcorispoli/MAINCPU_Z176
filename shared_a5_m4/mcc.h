@@ -335,6 +335,14 @@ typedef enum
 
 }_MccPCB244A_Code;
 
+// Comandi per gestione Parcheggio
+#define MCC_PARKING_MODE_COMMANDS_START_PARKING         1
+#define MCC_PARKING_MODE_COMMANDS_START_UNPARKING       2
+#define MCC_PARKING_MODE_COMMANDS_START_CALIBRATION     3
+#define MCC_PARKING_MODE_COMMANDS_STOP_CALIBRATION      4
+#define MCC_PARKING_MODE_COMMANDS_GET_POT               5
+
+
 
 // Comandi tra MASTER GUI e MASTER M4 tramite MCC
 typedef enum
@@ -441,8 +449,9 @@ typedef enum
     MCC_244_A_FUNCTIONS, // Sezione di comandi deicati all'esposimetro
 
     // RTC
-    MCC_RTC_COMMANDS    // Sezione dedicata ai comandi RTC
+    MCC_RTC_COMMANDS,    // Sezione dedicata ai comandi RTC
 
+    MCC_PARKING_MODE_COMMANDS // Comandi per il parcheggio
 }_MccGuiToDevice_Cmd;
 
 

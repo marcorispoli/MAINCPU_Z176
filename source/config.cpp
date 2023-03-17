@@ -1818,11 +1818,17 @@ bool Config::saveArmConfig(void)
 // Lettura file di configurazione pendolazione
 bool Config::readLenzeConfig(void)
 {
-    lenzeConfig.calibrated = 0;
+    lenzeConfig.calibrated = 1;
     lenzeConfig.min_lenze_position = 15;  // %
     lenzeConfig.max_lenze_position = 85;  // %
     lenzeConfig.manual_speed =  50;       // 50Hz
-    lenzeConfig.automatic_speed =20;      // 20Hz
+    lenzeConfig.automatic_speed =50;      // 50Hz
+    lenzeConfig.parking_speed = 10;       // 10Hz
+    lenzeConfig.startupInParkingMode = false;
+    lenzeConfig.parkingTarget = 400;
+    lenzeConfig.parkingSafePoint = 410;
+    lenzeConfig.calibratedParkingTarget = false;
+
 
     // Apre il file se esiste
     QString filename = QString(LENZE_FILE_CFG);
@@ -1844,7 +1850,13 @@ bool Config::readLenzeConfig(void)
         else if(dati.at(0)=="MAXPOS")  lenzeConfig.max_lenze_position=dati.at(1).toInt();
         else if(dati.at(0)=="MANSPEED")  lenzeConfig.manual_speed=dati.at(1).toInt();
         else if(dati.at(0)=="AUTOSPEED")  lenzeConfig.automatic_speed=dati.at(1).toInt();
+        else if(dati.at(0)=="PARKSPEED")  lenzeConfig.parking_speed=dati.at(1).toInt();
         else if(dati.at(0)=="CALIBRATED") lenzeConfig.calibrated=dati.at(1).toInt();
+        else if(dati.at(0)=="PARKING") lenzeConfig.startupInParkingMode=dati.at(1).toInt();
+        else if(dati.at(0)=="PARKING_TARGET") lenzeConfig.parkingTarget=dati.at(1).toInt();
+        else if(dati.at(0)=="PARKING_SAFE") lenzeConfig.parkingSafePoint=dati.at(1).toInt();
+        else if(dati.at(0)=="CALIB_PARKING") lenzeConfig.calibratedParkingTarget=dati.at(1).toInt();
+
     }
 
     file.close();
@@ -1852,13 +1864,14 @@ bool Config::readLenzeConfig(void)
 
 }
 
+
 bool Config::saveLenzeConfig(void)
 {
     QString filename = QString(LENZE_FILE_CFG);
     QFile   file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
+        PRINT(QString("IMPOSSIBILE SALVARE IL FILE:")+filename);
         return FALSE;
     }
 
@@ -1877,14 +1890,31 @@ bool Config::saveLenzeConfig(void)
     frame = QString("<AUTOSPEED,%1>     \n").arg(lenzeConfig.automatic_speed);
     file.write(frame.toAscii().data());
 
+    frame = QString("<PARKSPEED,%1>     \n").arg(lenzeConfig.parking_speed);
+    file.write(frame.toAscii().data());
+
     frame = QString("<CALIBRATED,%1>    \n").arg(lenzeConfig.calibrated);
     file.write(frame.toAscii().data());
+
+    if(lenzeConfig.startupInParkingMode)  frame = QString("<PARKING,1>    \n");
+    else   frame = QString("<PARKING,0>    \n");
+    file.write(frame.toAscii().data());
+
+    frame = QString("<PARKING_TARGET,%1>     \n").arg(lenzeConfig.parkingTarget);
+    file.write(frame.toAscii().data());
+
+    frame = QString("<PARKING_SAFE,%1>     \n").arg(lenzeConfig.parkingSafePoint);
+    file.write(frame.toAscii().data());
+
+
+    if(lenzeConfig.calibratedParkingTarget)  frame = QString("<CALIB_PARKING,1>    \n");
+    else   frame = QString("<CALIB_PARKING,0>    \n");
+    file.write(frame.toAscii().data());
+
 
 
     file.close();
     file.flush();
-
-    pSysLog->log("CONFIG: LENZE CONFIGURATION FILE");
 
     // Effettua un sync
     QString command = QString("sync");
@@ -1892,8 +1922,6 @@ bool Config::saveLenzeConfig(void)
 
     return TRUE;
 }
-
-
 
 // PROTOCOLLO SUL COMANDO DI CONFIGURAZIONE:
 // mcc_cmd.buffer[0] = Dispositivo da configurare

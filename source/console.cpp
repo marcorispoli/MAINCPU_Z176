@@ -1720,6 +1720,29 @@ void console::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data
         if(data.at(0)) ApplicationDatabase.setData(_DB_AUDIO_PRESENT,(unsigned char) 1);
         else ApplicationDatabase.setData(_DB_AUDIO_PRESENT,(unsigned char) 0);
         break;
+
+    case MCC_PARKING_MODE_COMMANDS:
+
+            // Gestione errori
+            if(data.at(1)){
+                PageAlarms::activateNewAlarm(_DB_ALLARMI_PARCHEGGIO,(int) data.at(1),TRUE);
+                return;
+            }
+
+            if(data.at(0)==MCC_PARKING_MODE_COMMANDS_START_PARKING){
+                // Parking mode
+                pConfig->lenzeConfig.startupInParkingMode = true;
+                ApplicationDatabase.setData(_DB_PARKING_MODE, (unsigned char) 1, DBase::_DB_FORCE_SGN);
+                pConfig->saveLenzeConfig();
+                pConfig->activatePowerOff();
+            }else if(data.at(0)==MCC_PARKING_MODE_COMMANDS_START_UNPARKING){
+                ApplicationDatabase.setData(_DB_PARKING_MODE, (unsigned char) 0, DBase::_DB_FORCE_SGN);
+                pConfig->lenzeConfig.startupInParkingMode = false;
+                pConfig->saveLenzeConfig();
+            }
+
+            break;
+
     default:
             return;
         break;

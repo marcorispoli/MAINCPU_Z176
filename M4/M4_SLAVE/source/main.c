@@ -329,6 +329,42 @@ void main_task(uint32_t initial_data)
           mccGuiNotify(1,MCC_GET_LENZE_INPUTS,buffer,14);
           break;
 
+          // Comandi di calibrazione posizione di parcheggio
+                case MCC_PARKING_MODE_COMMANDS:
+                    if(mcc_cmd.buffer[0] == MCC_PARKING_MODE_COMMANDS_GET_POT) {
+
+                    }else if(mcc_cmd.buffer[0] == MCC_PARKING_MODE_COMMANDS_START_CALIBRATION) {
+                        printf("START PARK CALIBRATION\n");
+                        if(!generalConfiguration.lenzeCalibPark){
+                            if(lenzeGetStatus()->analog1 < lenzeConfig.parkingSafePoint){
+                                generalConfiguration.lenzeCalibPark = true;
+                                generalConfiguration.lenzeCalibPark = lenzeActivateUnpark();
+                            }else{
+                                lenzeSetSpeedManualPark(true);
+                                generalConfiguration.lenzeCalibPark = true;
+                            }
+                        }
+                    }else if(mcc_cmd.buffer[0] == MCC_PARKING_MODE_COMMANDS_STOP_CALIBRATION) {
+                        printf("STOP PARK CALIBRATION\n");
+                        if(generalConfiguration.lenzeCalibPark){
+                            generalConfiguration.lenzeCalibPark = ! lenzeSetSpeedManualPark(false);
+                        }
+                    }
+
+                    // Aggiorna il potenziometro verso terminale SLAVE
+                    lenzeReadPosition();
+                    buffer[0] = mcc_cmd.buffer[0];
+                    if(generalConfiguration.lenzeCalibPark) buffer[1] = 1;
+                    else buffer[1] = 0;
+                    buffer[2] = (unsigned char) lenzeGetStatus()->analog1;
+                    buffer[3] = (unsigned char) (lenzeGetStatus()->analog1>>8);
+
+
+                    if(lenzeGetStatus()->analog1 > lenzeConfig.parkingSafePoint) buffer[4]=1;
+                    else buffer[4]=0;
+
+                    mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS,buffer,5);
+                    break;
       default:
         printf("MCC NON DECODIFICATO:%d\n", mcc_cmd.cmd);
         break;

@@ -56,6 +56,8 @@
         <file>MainPage/audioOn.png</file>
         <file>MainPage/audioMuted.png</file>
         <file>MainPage/frameTilt.png</file>
+        <file>MainPage/parkingModeActivation.png</file>
+        <file>MainPage/parkingMode.png</file>
     </qresource>
     <qresource prefix="/LanguagePage">
         <file>LanguagePage/BandiereC.png</file>
@@ -77,12 +79,12 @@
         <file>AlarmPage/alarmPix.png</file>
     </qresource>
     <qresource prefix="/Translate">
-        <file>Translate/traduzione_spa.qm</file>
         <file>Translate/traduzione_rus.qm</file>
         <file>Translate/traduzione_por.qm</file>
         <file>Translate/traduzione_ita.qm</file>
         <file>Translate/traduzione_fra.qm</file>
         <file>Translate/traduzione_eng.qm</file>
+        <file>Translate/traduzione_spa.qm</file>
     </qresource>
     <qresource prefix="/ServicePanel">
         <file>ServicePanel/calib_menu.png</file>
@@ -126,6 +128,8 @@
         <file>Service_Calib/ColliCalib.png</file>
         <file>Service_Calib/selezione_pulsante_console.png</file>
         <file>Service_Calib/background_calibconsole.png</file>
+        <file>Service_Calib/parkingBackground.png</file>
+        <file>Service_Calib/parking.png</file>
     </qresource>
     <qresource prefix="/Service_Tools">
         <file>Service_Tools/tools_icon.png</file>

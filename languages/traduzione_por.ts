@@ -74,20 +74,20 @@ CONCLUSÃO</translation>
 <context>
     <name>COLLIMATORE</name>
     <message>
-        <location filename="../source/collimatore.cpp" line="275"/>
-        <location filename="../source/collimatore.cpp" line="295"/>
-        <location filename="../source/collimatore.cpp" line="304"/>
+        <location filename="../source/collimatore.cpp" line="274"/>
+        <location filename="../source/collimatore.cpp" line="294"/>
+        <location filename="../source/collimatore.cpp" line="303"/>
         <location filename="../source/echodisplay.cpp" line="308"/>
         <source>NON DEFINITA</source>
         <translation>INDEFINIDO</translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="283"/>
+        <location filename="../source/collimatore.cpp" line="282"/>
         <source>MANUALE</source>
         <translation>MANUAL</translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="322"/>
+        <location filename="../source/collimatore.cpp" line="320"/>
         <source>APERTA</source>
         <translation>ABRIR</translation>
     </message>
@@ -95,24 +95,24 @@ CONCLUSÃO</translation>
 <context>
     <name>COMPRESSORE</name>
     <message>
-        <location filename="../source/compressor.cpp" line="352"/>
-        <location filename="../source/compressor.cpp" line="363"/>
+        <location filename="../source/compressor.cpp" line="560"/>
+        <location filename="../source/compressor.cpp" line="571"/>
         <source>NON RICONOSCIUTO</source>
         <translation>NÃO DETECTADO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="353"/>
-        <location filename="../source/compressor.cpp" line="365"/>
+        <location filename="../source/compressor.cpp" line="561"/>
+        <location filename="../source/compressor.cpp" line="573"/>
         <source>CODICE ERRATO</source>
         <translation>CÓDIGO ERRADO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="360"/>
+        <location filename="../source/compressor.cpp" line="568"/>
         <source>COMPRESSORE NON BLOCCATO</source>
         <translation>DESBLOQUEADO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="362"/>
+        <location filename="../source/compressor.cpp" line="570"/>
         <source>NACCHERA NON BLOCCATA</source>
         <translation>DESBLOQUEADO</translation>
     </message>
@@ -793,6 +793,73 @@ Em caso de sessão de teste, ignore esta mensagem.</translation>
         <translation>[M:00705]
 COMPONENTE NÃO DETECTADO!
 O sistema não detectou um componente válido.</translation>
+    </message>
+</context>
+<context>
+    <name>ERRORE-PARCHEGGIO</name>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2189"/>
+        <source>ERRORE POSIZIONAMENTO TUBO</source>
+        <translation>[M:02001]
+ERRO DE CAMPO DO DETECTOR!
+Incapaz de completar a seleção do campo do detector.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2196"/>
+        <source>MOTORE ALTO-BASSO ATTIVO</source>
+        <translation>[M:02002]
+ERRO DE ESTACIONAMENTO DO C-ARM!
+Motor para cima e para baixo ocupado.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2204"/>
+        <source>TIMEOUT MOTORE ALTO-BASSO</source>
+        <translation>[M:02003]
+ERRO DE ESTACIONAMENTO DO C-ARM!
+Tempo limite de ativação do motor para cima/para baixo.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2212"/>
+        <source>FALLIO POSIZIONAMENTO ALTO-BASSO</source>
+        <translation>[M:02004]
+ERRO DE ESTACIONAMENTO DO C-ARM!
+O posicionamento para cima/para baixo falhou.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2219"/>
+        <source>TIMEOUT ROTAZIONE C-ARM
+</source>
+        <translation>[M:02005]
+ERRO DE ESTACIONAMENTO DO C-ARM!
+Tempo limite de rotação do C-ARM.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2226"/>
+        <source>ERRORE ARM NON IN POSIZIONE</source>
+        <translation>[M:02006]
+ERRO DE ESTACIONAMENTO DO C-ARM!
+O C-ARM deve ser girado 180 ° para prosseguir.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2233"/>
+        <source>START PARCHEGGIO</source>
+        <translation>[M:02007]
+ATIVAÇÃO DE ESTACIONAMENTO DO C-ARM!
+Cuidado, o C-ARM está se movendo.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2240"/>
+        <source>START USCITA DA PARCHEGGIO</source>
+        <translation>[M:02008]
+DESEMBARQUE DO C-ARM ATIVADO!
+Cuidado, o C-ARM está se movendo.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2247"/>
+        <source>POSIZIONE DI PARCHEGGIO NON CALIBRATA</source>
+        <translation>[M:02009]
+ERRO DE ATIVAÇÃO DO ESTACIONAMENTO C-ARM!
+A posição de estacionamento não está calibrada.</translation>
     </message>
 </context>
 <context>
@@ -1548,42 +1615,42 @@ O sistema detectou que o botão X-RAY foi bloqueado.</translation>
 <context>
     <name>MAIN-PAGE</name>
     <message>
-        <location filename="../source/mainpage.cpp" line="731"/>
+        <location filename="../source/mainpage.cpp" line="773"/>
         <source>INTESTAZIONE</source>
         <translation>ESTUDO FECHADO</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="734"/>
+        <location filename="../source/mainpage.cpp" line="776"/>
         <source>ACCESSORIO</source>
         <translation>COMPONENTE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="737"/>
+        <location filename="../source/mainpage.cpp" line="779"/>
         <source>COMPRESSORE</source>
         <translation>PADDLE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="740"/>
+        <location filename="../source/mainpage.cpp" line="782"/>
         <source>POSIZIONE</source>
         <translation>POSIÇÃO</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="742"/>
+        <location filename="../source/mainpage.cpp" line="784"/>
         <source>SPESSORE</source>
         <translation>ESPESSURA</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="745"/>
+        <location filename="../source/mainpage.cpp" line="787"/>
         <source>FORZA</source>
         <translation>FORÇA</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="747"/>
+        <location filename="../source/mainpage.cpp" line="789"/>
         <source>TARGET</source>
         <translation>TARGET</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="787"/>
+        <location filename="../source/mainpage.cpp" line="829"/>
         <source>MESSAGGIO ATTIVAZIONE POWER OFF</source>
         <translation>O SISTEMA DESLIGARÁ!
 Pressione a seta para a esquerda para cancelar.O SISTEMA DESLIGARÁ!
@@ -1674,6 +1741,41 @@ Por favor, vá embora após a confirmação.</translation>
     <message>
         <location filename="../source/Service/Tools/audio.ui" line="148"/>
         <source>+</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>calibParkUI</name>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="135"/>
+        <source>STORE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="172"/>
+        <source>LENZE POSITION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="215"/>
+        <source>100%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="288"/>
+        <source>ARM 
+0°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="315"/>
+        <source>ARM 
+180°</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

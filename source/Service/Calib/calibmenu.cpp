@@ -48,7 +48,7 @@ CalibMenu::CalibMenu(int rotview, QWidget *parent) :
     connect(ui->detectorButton,SIGNAL(released()),this,SLOT(onDetectorCalibButton()),Qt::UniqueConnection);
     connect(ui->ColliCalibButton,SIGNAL(released()),this,SLOT(onColliCalibButton()),Qt::UniqueConnection);
     connect(ui->consoleButton,SIGNAL(released()),this,SLOT(onConsoleButton()),Qt::UniqueConnection);
-
+    connect(ui->parkingCalibButton,SIGNAL(released()),this,SLOT(onParkingCalibButton()),Qt::UniqueConnection);
 
 }
 
@@ -187,4 +187,8 @@ void CalibMenu::onConsoleButton(void)
 {
     GWindowRoot.setNewPage(_PG_SERVICE_CALIB_CONSOLE,GWindowRoot.curPage,0);
 
+}
+void CalibMenu::onParkingCalibButton(void)
+{
+        GWindowRoot.setNewPage(_PG_SERVICE_CALIB_PARKING,GWindowRoot.curPage,0);
 }

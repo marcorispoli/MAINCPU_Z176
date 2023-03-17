@@ -370,6 +370,8 @@ void manageLenzeEvents(void){
     case LENZE_RUN:
         buffer[0]= ACTUATORS_LENZE_RUN_STAT;
         buffer[1]= event_code; // 1 = MANUALE, 0=AUTOMATICO
+        buffer[2] = (unsigned char) event_data;    // Valore potenziometro in percentuale * 10
+        buffer[3] = (unsigned char) (event_data>>8);
         sendActuatorFrameToMaster(buffer);
         break;
 
@@ -425,6 +427,14 @@ void masterCommandExecution(void){
     case ACTUATORS_CMD_TEST:
         printf("comando ricevuto\n");
         actuatorTestCommands();
+        break;
+    case ACTUATORS_LENZE_UNPARK:
+        printf("ACTUATORS UNPARK LENZE COMMAND\n");
+        lenzeSetCommand(LENZE_UNLOCK_PARKING,0);
+        break;
+    case ACTUATORS_LENZE_PARK:
+        printf("ACTUATORS PARK LENZE COMMAND\n");
+        lenzeSetCommand(LENZE_SET_PARKING,0);
         break;
 
 
@@ -533,11 +543,29 @@ void masterCommandExecution(void){
         mainStartProcesses();
 
         break;
+
     case ACTUATORS_SET_LENZE_CONFIG:
 
-        // The following command sets the configuration of the Lenze device
-        lenzeUpdateConfiguration(actuatorCommand.data);
-        break;
+            // The following command sets the configuration of the Lenze device
+            //lenzeUpdateConfiguration(actuatorCommand.data);
+            memcpy(buffer,actuatorCommand.data,8);
+            if(actuatorCommand.data[1]==255){
+                // Configurazione completata
+                lenzeUpdateConfiguration();
+            }else{
+
+                pLenzeStat->configured = false;
+                pData = (unsigned char*) &lenzeConfig;
+                for(i=0; i<actuatorCommand.data[2];i++){
+                    pData[actuatorCommand.data[1]+i] = actuatorCommand.data[3+i];
+                }
+
+                // Feedback al Master
+                sendActuatorFrameToMaster(buffer);
+            }
+
+            break;
+
 
     case ACTUATORS_SET_ARM_CONFIG:
         memcpy(buffer,actuatorCommand.data,8);

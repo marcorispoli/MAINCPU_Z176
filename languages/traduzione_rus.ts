@@ -74,20 +74,20 @@ LEFT SIDE</source>
 <context>
     <name>COLLIMATORE</name>
     <message>
-        <location filename="../source/collimatore.cpp" line="275"/>
-        <location filename="../source/collimatore.cpp" line="295"/>
-        <location filename="../source/collimatore.cpp" line="304"/>
+        <location filename="../source/collimatore.cpp" line="274"/>
+        <location filename="../source/collimatore.cpp" line="294"/>
+        <location filename="../source/collimatore.cpp" line="303"/>
         <location filename="../source/echodisplay.cpp" line="308"/>
         <source>NON DEFINITA</source>
         <translation>Не распознано</translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="283"/>
+        <location filename="../source/collimatore.cpp" line="282"/>
         <source>MANUALE</source>
         <translation>руководство</translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="322"/>
+        <location filename="../source/collimatore.cpp" line="320"/>
         <source>APERTA</source>
         <translation>открываться</translation>
     </message>
@@ -95,24 +95,24 @@ LEFT SIDE</source>
 <context>
     <name>COMPRESSORE</name>
     <message>
-        <location filename="../source/compressor.cpp" line="352"/>
-        <location filename="../source/compressor.cpp" line="363"/>
+        <location filename="../source/compressor.cpp" line="560"/>
+        <location filename="../source/compressor.cpp" line="571"/>
         <source>NON RICONOSCIUTO</source>
         <translation>Не обнаружено</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="353"/>
-        <location filename="../source/compressor.cpp" line="365"/>
+        <location filename="../source/compressor.cpp" line="561"/>
+        <location filename="../source/compressor.cpp" line="573"/>
         <source>CODICE ERRATO</source>
         <translation>Неверный код</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="360"/>
+        <location filename="../source/compressor.cpp" line="568"/>
         <source>COMPRESSORE NON BLOCCATO</source>
         <translation>отпирать</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="362"/>
+        <location filename="../source/compressor.cpp" line="570"/>
         <source>NACCHERA NON BLOCCATA</source>
         <translation>отпирать</translation>
     </message>
@@ -793,6 +793,73 @@ Tube Anode слишком горячий для дальнейших экспо�
         <translation>[M:00705]
 ОБОРУДОВАНИЕ НЕ ОБНАРУЖЕНО!
 Установите на съемочный узел отсеивающий растр или биопсийную приставку.</translation>
+    </message>
+</context>
+<context>
+    <name>ERRORE-PARCHEGGIO</name>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2189"/>
+        <source>ERRORE POSIZIONAMENTO TUBO</source>
+        <translation>[M:02001]
+ОШИБКА C-ARM ПАРКОВКА!
+Ошибка при перемещении рычага трубки.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2196"/>
+        <source>MOTORE ALTO-BASSO ATTIVO</source>
+        <translation>[M:02002]
+ОШИБКА C-ARM ПАРКОВКА!
+Двигатель вверх/вниз занят.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2204"/>
+        <source>TIMEOUT MOTORE ALTO-BASSO</source>
+        <translation>[M:02003]
+ОШИБКА C-ARM ПАРКОВКА!
+Время ожидания активации двигателя вверх/вниз.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2212"/>
+        <source>FALLIO POSIZIONAMENTO ALTO-BASSO</source>
+        <translation>[M:02004]
+ОШИБКА C-ARM ПАРКОВКА!
+Не удалось установить положение вверх/вниз.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2219"/>
+        <source>TIMEOUT ROTAZIONE C-ARM
+</source>
+        <translation>[M:02005]
+ОШИБКА C-ARM ПАРКОВКА!
+Время ожидания поворота C-РЫЧАГА.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2226"/>
+        <source>ERRORE ARM NON IN POSIZIONE</source>
+        <translation>[M:02006]
+ОШИБКА C-ARM ПАРКОВКА!
+Для продолжения работы рычаг C должен быть повернут на 180°.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2233"/>
+        <source>START PARCHEGGIO</source>
+        <translation>[M: 02007]
+АКТИВАЦИЯ ПАРКОВКИ C-ARM!
+Будьте осторожны, C-ARM движется.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2240"/>
+        <source>START USCITA DA PARCHEGGIO</source>
+        <translation>[M: 02008]
+C-ARM НЕПАРКОВАЯ АКТИВАЦИЯ!
+Будьте осторожны, C-ARM движется.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2247"/>
+        <source>POSIZIONE DI PARCHEGGIO NON CALIBRATA</source>
+        <translation>[M: 02009]
+ОШИБКА АКТИВАЦИИ ПАРКОВКИ C-ARM!
+Положение парковки не откалибровано.</translation>
     </message>
 </context>
 <context>
@@ -1545,42 +1612,42 @@ C-ARM или TUBE-ARM в данный момент работают.</translatio
 <context>
     <name>MAIN-PAGE</name>
     <message>
-        <location filename="../source/mainpage.cpp" line="731"/>
+        <location filename="../source/mainpage.cpp" line="773"/>
         <source>INTESTAZIONE</source>
         <translation>Обследование закрыто</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="734"/>
+        <location filename="../source/mainpage.cpp" line="776"/>
         <source>ACCESSORIO</source>
         <translation>Принадлежности</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="737"/>
+        <location filename="../source/mainpage.cpp" line="779"/>
         <source>COMPRESSORE</source>
         <translation>PADDLE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="740"/>
+        <location filename="../source/mainpage.cpp" line="782"/>
         <source>POSIZIONE</source>
         <translation>Позиционир</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="742"/>
+        <location filename="../source/mainpage.cpp" line="784"/>
         <source>SPESSORE</source>
         <translation>Толщина</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="745"/>
+        <location filename="../source/mainpage.cpp" line="787"/>
         <source>FORZA</source>
         <translation>сила</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="747"/>
+        <location filename="../source/mainpage.cpp" line="789"/>
         <source>TARGET</source>
         <translation>цель</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="787"/>
+        <location filename="../source/mainpage.cpp" line="829"/>
         <source>MESSAGGIO ATTIVAZIONE POWER OFF</source>
         <translation>СИСТЕМА ОТКЛЮЧИТСЯ!
 Нажмите стрелку влево для отмены.</translation>
@@ -1668,6 +1735,41 @@ C-ARM или TUBE-ARM в данный момент работают.</translatio
     <message>
         <location filename="../source/Service/Tools/audio.ui" line="148"/>
         <source>+</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>calibParkUI</name>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="135"/>
+        <source>STORE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="172"/>
+        <source>LENZE POSITION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="215"/>
+        <source>100%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="288"/>
+        <source>ARM 
+0°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="315"/>
+        <source>ARM 
+180°</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

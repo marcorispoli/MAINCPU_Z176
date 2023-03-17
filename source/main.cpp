@@ -17,6 +17,7 @@
 #include "Service/Calib/calibpot.h"
 #include "Service/Calib/calibconsole.h"
 #include "Service/Calib/calibstarter.h"
+#include "Service/Calib/calibParking.h"
 #include "Service/Setup/system.h"
 #include "Service/Tools/toolsmenu.h"
 #include "Service/Tools/tiltingtool.h"
@@ -53,6 +54,7 @@ invertertool* pInverterTool;
 audio* pAudio;
 audiotool* pAudioTool;
 pottertool* pPotterTool;
+calibParking* pCalibParking;
 
 /*
  *
@@ -194,6 +196,7 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((int) 0);            // _DB_ALLARME_INFO_STAT
     ApplicationDatabase.append((int) 0);            // _DB_ALLARMI_SYSCONF
     ApplicationDatabase.append((int) 0);            // _DB_ALLARMI_ANALOGICA
+    ApplicationDatabase.append((int) 0);            // _DB_ALLARMI_PARCHEGGIO
     ApplicationDatabase.append((int) 0);            // CAMPO ALLARMI ALR_SOFT
     //_____________________________________________________________________________
     ApplicationDatabase.append((unsigned char) 0);  // _DB_FAULT_CODE_GEN
@@ -224,6 +227,7 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((unsigned char) 0);  // _DB_REQ_POWEROFF
     ApplicationDatabase.append("");                 // _DB_REVISION_ERROR_STRING
 
+    ApplicationDatabase.append((unsigned char) 0);  // _DB_PARKING_MODE
 
     // DATABASE VARIABILI DI SERVIZIO ______________________________________________________
     ApplicationDatabase.append(""); // _DB_SERVICE1_STR
@@ -375,6 +379,7 @@ int main(int argc, char *argv[])
     pCalibPot = new calibpot(rotView) ;
     pCalibConsole = new calibconsole(rotView) ;
     pCalibStarter = new calibstarter(rotView) ;
+    pCalibParking = new calibParking(rotView) ;
     pToolsMenu = new toolsmenu(rotView) ;
     pTiltingTool = new tiltingtool(rotView) ;
     pArmTool = new armtool(rotView) ;

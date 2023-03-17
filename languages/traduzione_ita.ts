@@ -74,20 +74,20 @@ FINE MOVIMENTO</translation>
 <context>
     <name>COLLIMATORE</name>
     <message>
-        <location filename="../source/collimatore.cpp" line="275"/>
-        <location filename="../source/collimatore.cpp" line="295"/>
-        <location filename="../source/collimatore.cpp" line="304"/>
+        <location filename="../source/collimatore.cpp" line="274"/>
+        <location filename="../source/collimatore.cpp" line="294"/>
+        <location filename="../source/collimatore.cpp" line="303"/>
         <location filename="../source/echodisplay.cpp" line="308"/>
         <source>NON DEFINITA</source>
         <translation>NON DEFINITA</translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="283"/>
+        <location filename="../source/collimatore.cpp" line="282"/>
         <source>MANUALE</source>
         <translation>MANUALE</translation>
     </message>
     <message>
-        <location filename="../source/collimatore.cpp" line="322"/>
+        <location filename="../source/collimatore.cpp" line="320"/>
         <source>APERTA</source>
         <translation>APERTA</translation>
     </message>
@@ -95,24 +95,24 @@ FINE MOVIMENTO</translation>
 <context>
     <name>COMPRESSORE</name>
     <message>
-        <location filename="../source/compressor.cpp" line="352"/>
-        <location filename="../source/compressor.cpp" line="363"/>
+        <location filename="../source/compressor.cpp" line="560"/>
+        <location filename="../source/compressor.cpp" line="571"/>
         <source>NON RICONOSCIUTO</source>
         <translation>NON RICONOSCIUTO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="353"/>
-        <location filename="../source/compressor.cpp" line="365"/>
+        <location filename="../source/compressor.cpp" line="561"/>
+        <location filename="../source/compressor.cpp" line="573"/>
         <source>CODICE ERRATO</source>
         <translation>CODICE ERRATO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="360"/>
+        <location filename="../source/compressor.cpp" line="568"/>
         <source>COMPRESSORE NON BLOCCATO</source>
         <translation>SBLOCCATO</translation>
     </message>
     <message>
-        <location filename="../source/compressor.cpp" line="362"/>
+        <location filename="../source/compressor.cpp" line="570"/>
         <source>NACCHERA NON BLOCCATA</source>
         <translation>SBLOCCATA</translation>
     </message>
@@ -800,6 +800,74 @@ La compressione a Studio chiuso è sconsigliata ma non  inibita. In caso di sess
         <translation>[M:00705]
 COMPONENTE DISCONNESSO!
 Nessun componente è stato rilevato dal Mammografo.</translation>
+    </message>
+</context>
+<context>
+    <name>ERRORE-PARCHEGGIO</name>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2189"/>
+        <source>ERRORE POSIZIONAMENTO TUBO</source>
+        <translation>[M:02001]
+ERRORE PARCHEGGIO BRACCIO A C!
+Errore nel riposizionamento del Tubo a 0°.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2196"/>
+        <source>MOTORE ALTO-BASSO ATTIVO</source>
+        <translation>[M:02002]
+ERRORE PARCHEGGIO BRACCIO A C!
+Motore Alto/Basso già in uso.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2204"/>
+        <source>TIMEOUT MOTORE ALTO-BASSO</source>
+        <translation>[M:02003]
+ERRORE PARCHEGGIO BRACCIO A C!
+Motore Alto/Basso Timeout.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2212"/>
+        <source>FALLIO POSIZIONAMENTO ALTO-BASSO</source>
+        <translation>[M:02004]
+ERRORE PARCHEGGIO BRACCIO A C!
+Posizionamento Alto/Basso fallito.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2219"/>
+        <source>TIMEOUT ROTAZIONE C-ARM
+</source>
+        <translation>[M:02005]
+ERRORE PARCHEGGIO BRACCIO A C!
+Timeout rotazione Braccio a C.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2226"/>
+        <source>ERRORE ARM NON IN POSIZIONE</source>
+        <translation>[M:02006]
+ERRORE PARCHEGGIO BRACCIO A C!
+Il Braccio a C deve essere ruotato a 180°
+per proseguire.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2233"/>
+        <source>START PARCHEGGIO</source>
+        <translation>[M:02007]
+PROCEDURA DI PARCHEGGIO ATTIVATA!
+Prestare attenzione al braccio a C in movimento.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2240"/>
+        <source>START USCITA DA PARCHEGGIO</source>
+        <translation>[M:02008]
+PROCEDURA DI USCITA PARCHEGGIO ATTIVATA!
+Prestare attenzione al braccio a C in movimento.</translation>
+    </message>
+    <message>
+        <location filename="../source/pagealarms.cpp" line="2247"/>
+        <source>POSIZIONE DI PARCHEGGIO NON CALIBRATA</source>
+        <translation>[M:02009]
+ERRORE ATTIVAZIONE PROCEDURA DI PARCHEGGIO!
+La posizione di parcheggio non è stata calibrata.</translation>
     </message>
 </context>
 <context>
@@ -1563,42 +1631,42 @@ Il sistema ha rilevato che il pulsante RAGGI X è bloccato.</translation>
 <context>
     <name>MAIN-PAGE</name>
     <message>
-        <location filename="../source/mainpage.cpp" line="731"/>
+        <location filename="../source/mainpage.cpp" line="773"/>
         <source>INTESTAZIONE</source>
         <translation>STUDIO CHIUSO</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="734"/>
+        <location filename="../source/mainpage.cpp" line="776"/>
         <source>ACCESSORIO</source>
         <translation>COMPONENTE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="737"/>
+        <location filename="../source/mainpage.cpp" line="779"/>
         <source>COMPRESSORE</source>
         <translation>COMPRESSORE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="740"/>
+        <location filename="../source/mainpage.cpp" line="782"/>
         <source>POSIZIONE</source>
         <translation>POSIZIONE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="742"/>
+        <location filename="../source/mainpage.cpp" line="784"/>
         <source>SPESSORE</source>
         <translation>SPESSORE</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="745"/>
+        <location filename="../source/mainpage.cpp" line="787"/>
         <source>FORZA</source>
         <translation>FORZA</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="747"/>
+        <location filename="../source/mainpage.cpp" line="789"/>
         <source>TARGET</source>
         <translation>TARGET</translation>
     </message>
     <message>
-        <location filename="../source/mainpage.cpp" line="787"/>
+        <location filename="../source/mainpage.cpp" line="829"/>
         <source>MESSAGGIO ATTIVAZIONE POWER OFF</source>
         <translation>IL SISTEMA STA PER SPEGNERSI!
 Premere la freccia sinistra per Annullare.</translation>
@@ -1686,6 +1754,41 @@ Prestare attenzione al braccio in movimento</translation>
     <message>
         <location filename="../source/Service/Tools/audio.ui" line="148"/>
         <source>+</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>calibParkUI</name>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="135"/>
+        <source>STORE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="172"/>
+        <source>LENZE POSITION</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="215"/>
+        <source>100%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="288"/>
+        <source>ARM 
+0°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/Service/Calib/calibParking.ui" line="315"/>
+        <source>ARM 
+180°</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

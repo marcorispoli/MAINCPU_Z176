@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>calibParkUI</class>
+ <widget class="QWidget" name="calibParkUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgb(0,0,0,0);
+background-image:url(://Service_Calib/Service_Calib/parkingBackground.png);
+border: 0px;</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string notr="true"/>
+   </property>
+   <property name="statusTip">
+    <string notr="true"/>
+   </property>
+   <property name="whatsThis">
+    <string notr="true"/>
+   </property>
+   <property name="accessibleName">
+    <string notr="true"/>
+   </property>
+   <property name="accessibleDescription">
+    <string notr="true"/>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="serviceSetupDiagnosticLabel">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>10</y>
+      <width>671</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <italic>true</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image:url(/transparent.png);
+color: rgb(248, 248, 54);</string>
+    </property>
+    <property name="text">
+     <string notr="true">Service Panel/Calibrate/Parking calibration</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="exitButton">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>91</width>
+      <height>96</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frameStore">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>130</y>
+      <width>366</width>
+      <height>116</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/transparent.png);
+background-color: rgb(90, 90, 90);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="storeButton">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>121</width>
+       <height>76</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(0, 0, 0,150);
+color: rgb(255, 255, 255);
+background-image: url(:/transparent.png);</string>
+     </property>
+     <property name="text">
+      <string>STORE</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>155</x>
+       <y>30</y>
+       <width>196</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>18</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 127);
+background-color: rgb(0, 0, 0,0);</string>
+     </property>
+     <property name="text">
+      <string>LENZE POSITION</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="potLabel">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>60</y>
+       <width>166</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string notr="true"/>
+     </property>
+     <property name="statusTip">
+      <string notr="true"/>
+     </property>
+     <property name="whatsThis">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleName">
+      <string notr="true"/>
+     </property>
+     <property name="accessibleDescription">
+      <string notr="true"/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 0,0);</string>
+     </property>
+     <property name="text">
+      <string>100%</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="activateButton">
+    <property name="geometry">
+     <rect>
+      <x>295</x>
+      <y>125</y>
+      <width>226</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Bitstream Charter</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/transparent.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QFrame" name="armFrame">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>255</y>
+      <width>366</width>
+      <height>146</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/transparent.png);
+background-color: rgb(88, 88, 88);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="arm0Button">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>15</y>
+       <width>121</width>
+       <height>116</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(0, 0, 0,150);
+color: rgb(255, 255, 255);
+background-image: url(:/transparent.png);</string>
+     </property>
+     <property name="text">
+      <string>ARM 
+0°</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="arm180Button">
+     <property name="geometry">
+      <rect>
+       <x>225</x>
+       <y>15</y>
+       <width>121</width>
+       <height>116</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(0, 0, 0,150);
+color: rgb(255, 255, 255);
+background-image: url(:/transparent.png);</string>
+     </property>
+     <property name="text">
+      <string>ARM 
+180°</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="frameStoring">
+    <property name="geometry">
+     <rect>
+      <x>45</x>
+      <y>135</y>
+      <width>111</width>
+      <height>66</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/transparent.png);
+background-color: rgb(90, 90, 90);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="serviceSetupDiagnosticLabel_2">
+     <property name="geometry">
+      <rect>
+       <x>75</x>
+       <y>135</y>
+       <width>226</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Bitstream Charter</family>
+       <pointsize>24</pointsize>
+       <weight>75</weight>
+       <italic>true</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image:url(/transparent.png);
+color: rgb(248, 248, 54);</string>
+     </property>
+     <property name="text">
+      <string notr="true">STORING ...</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

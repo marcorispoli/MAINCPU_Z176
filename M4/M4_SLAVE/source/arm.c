@@ -681,7 +681,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
 
 void funcCiA402_OperationEnabled(_PD4_Status_t* pStat)
 {
-    printf("PASSATO!\n");
+
 
     // Verifies if the Application shutdown the operations
     if(!pStat->switch_on){
@@ -739,12 +739,17 @@ bool InitPositionSetting(_PD4_Status_t* pStat){
     if(canopenReadSDO(&od, CANOPEN_ARM_CONTEXT)==false) return false;
     positioningData.initEncoder = od.val; // Device Units
 
-    // Attiva contestualmente il riposizionamento del LENZE
-    lenzeActivatePositionCompensation(positioningData.initPosition,positioningData.targetPosition);
 
-    // Parcheggio
-    if(positioningData.targetPosition==2000) positioningData.targetPosition = 1810;
-    else if(positioningData.targetPosition==-2000) positioningData.targetPosition = -1810;
+    // Se l'angolo corrisponde al parcheggio allora attiva il lenze in modalità parcheggio
+    if( (positioningData.targetPosition==2000) || (positioningData.targetPosition==-2000)){
+        //lenzeActivateParkingMode();
+        if(positioningData.targetPosition==2000) positioningData.targetPosition = 1810;
+        else if(positioningData.targetPosition==-2000) positioningData.targetPosition = -1810;
+    }else{
+        // Attiva contestualmente il riposizionamento del LENZE
+        lenzeActivatePositionCompensation(positioningData.initPosition,positioningData.targetPosition);
+    }
+
 
     // Set the Position target
     long deltaP = dGRAD_TO_POS((long) (positioningData.targetPosition - positioningData.initPosition)); // Trasformato in device units

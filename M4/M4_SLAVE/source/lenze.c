@@ -29,7 +29,7 @@
 #include "dbt_m4.h"
 #include "i510.h"
 #include "lenze.h"
-//#include "math.h"
+#include "math.h"
 
 // Context to be used with the canopen SDO functions (compliance with CANOPEN_CONTEXT_DEC)
 #define CANOPEN_LENZE_CONTEXT  MB_TX_TO_LENZE, &txmb_to_lenze, CANOPEN_LENZE_NODE, MB_RX_FROM_LENZE, &driver_stat.tmo_sdo_tk
@@ -44,7 +44,6 @@ static int lenzeVBUS=-1;
 
 #define ERR_SOGLIA_H 0x7081
 #define ERR_SOGLIA_L 0x7082
-
 
 static const _canopen_ObjectDictionary_t lenzeGeneralMotorProfile[]={
 
@@ -89,7 +88,7 @@ void driver_Lenze_Stat(void){
 
 #ifdef _CANDEVICE_SIMULATION
     while(1){
-        printf("%s: SIMULATOR MODULE RESTART...........\n\n",DEVICE);
+        debugPrint("LENZE SIMULATOR MODULE RESTART");
         generalConfiguration.lenzeConnected = true;
         driver_stat.analog1 = driver_stat.analog2 = 500;
 
@@ -121,20 +120,20 @@ void driver_Lenze_Stat(void){
 
     while(1){
     // Reset moule starts here
-        printf("%s: MODULE RESTART...........\n\n",DEVICE);
+        printf("LENZE MODULE RESTART\n");
 
         // Init Driver status
         driver_stat.memNetworkStat = -1; // Force the next change status
         driver_stat.resetModule = false;
 
-        printf("%s: INIT CONFIGURATION....\n\n",DEVICE);
+        printf("LENZE INIT CONFIGURATION\n");
 
         // Upload of the Object Dictionary general parameters to configure the motor device
         while(canopenUploadObjectDictionaryList(lenzeGeneralMotorProfile,10,CANOPEN_LENZE_CONTEXT)==false){
-            printf("%s: ERROR IN UPLOADING THE GENERAL OBJECT DICTIONARY ITEMS\n",DEVICE);
+            printf("LENZE ERROR IN UPLOADING THE GENERAL OBJECT DICTIONARY ITEMS\n");
             _time_delay(500);
         }
-        printf("%s: UPLOAD PARAMETRI GENERALI, COMPLETATO\n",DEVICE);
+        printf("LENZE UPLOAD PARAMETRI GENERALI, COMPLETATO\n");
 
         switch_on = driver_stat.switch_on;
         canopenSetNetworkPreOperation(1000, CANOPEN_LENZE_CONTEXT);
@@ -148,18 +147,19 @@ void driver_Lenze_Stat(void){
         // Attende infine l'ok generale prima di iniziare il ciclo di lavoro
         while(!generalConfiguration.deviceConnected) _time_delay(500);
 
+
         while(1){
 
             if(!SystemOutputs.CPU_MASTER_ENA) driver_stat.switch_on = false;
             else driver_stat.switch_on = true;
 
            if(SystemInputs.CPU_POWER_DOWN){
-               printf("%s: POWER DOWN CONDITION \n\n",DEVICE);
+               printf("LENZE POWER DOWN CONDITION\n");
                while(SystemInputs.CPU_POWER_DOWN){
                    // Attende che il Powerdown finisca
                    _time_delay(1000);
                }
-               printf("%s: POWER DOWN TERMINATED: RECONFIGURATION.. \n\n",DEVICE);
+               printf("LENZE POWER DOWN TERMINATED: RECONFIGURATION..\n");
                canopenSetNetworkPreOperation(1000, CANOPEN_LENZE_CONTEXT);
                lenzeRunConfiguration();
                switch_on = driver_stat.switch_on ;
@@ -168,14 +168,14 @@ void driver_Lenze_Stat(void){
            // Set the switch_on flag based on the MAINS_ON system flag
            if(switch_on!=driver_stat.switch_on){
                 switch_on = driver_stat.switch_on ;
-                printf("%s: SWITCH ON CHANGED !!\n",DEVICE);
+                printf("LENZE SWITCH ON CHANGED\n");
                 driver_stat.switch_on = !driver_stat.switch_on;
                 lenzeRunConfiguration();
            }
 
            // Get the current internal status
            if(getI510NetworkStatus(CANOPEN_LENZE_CONTEXT, &driver_stat)==false){
-                printf("%s: Read Status FAILED!!\n",DEVICE);
+                printf("LENZE Read Status FAILED\n");
                  _time_delay(100);
                 continue;
             }
@@ -223,7 +223,7 @@ void lenzeLoop(void)
                 driver_stat.event_code = driver_stat.analog1;
                 driver_stat.event_data = driver_stat.analog2;
                 _EVSET(_EV0_LENZE_EVENT);
-                printf("LENZE: POSITION1 = %d POSITION2 = %d\n",driver_stat.analog1, driver_stat.analog2);
+                printf("LENZE POSITION1:%d POS2:%d\n",driver_stat.analog1,driver_stat.analog2);
             }
         }
     }else{
@@ -233,7 +233,7 @@ void lenzeLoop(void)
                 if((driver_stat.analog1 > position1+10)||(driver_stat.analog1 < position1-10)){
                     position1 = driver_stat.analog1;
                     position2 = position1;
-                    printf("LENZE: POSITION = %d\n",driver_stat.analog1);
+                    printf("LENZE POSITION:%d\n",driver_stat.analog1);
                 }
             }
 
@@ -288,7 +288,8 @@ void lenzeLoop(void)
 
     if(driver_stat.internal_errors){
         if(driver_stat.internal_errors!=error){
-            printf("%s: ERRORE INTERNO <%s>\n",DEVICE,i510ErrorString(driver_stat.internal_errors));
+            printf("LENZE ERRORE INTERNO:\n");
+            printf(i510ErrorString(driver_stat.internal_errors));
             driver_stat.event_type = LENZE_FAULT;
             driver_stat.event_code = LENZE_DEVICE_ERROR;
             driver_stat.event_data = driver_stat.internal_errors;
@@ -297,7 +298,7 @@ void lenzeLoop(void)
         }
     }else if(driver_stat.diagnostic_errors){
         if(driver_stat.diagnostic_errors!=error){
-            printf("%s: ERRORE DIAGNOSTICO <%d>\n",DEVICE,driver_stat.diagnostic_errors);
+            printf("LENZE ERRORE DIAGNOSTICO:%d\n",driver_stat.diagnostic_errors);
             driver_stat.event_type = LENZE_FAULT;
             driver_stat.event_code = driver_stat.diagnostic_errors;
             driver_stat.event_data = 0;
@@ -307,7 +308,7 @@ void lenzeLoop(void)
     }else{
         if(error) {
             // Reset Errors
-            printf("%s: RESET ERRORS\n",DEVICE);
+            printf("LENZE RESET ERRORS\n");
             driver_stat.event_type = LENZE_FAULT;
             driver_stat.event_code = 0;
             driver_stat.event_data = 0;
@@ -325,17 +326,20 @@ void lenzeLoop(void)
         }
     }else lenzeVBUS=-1;
 
+
+
+    // Segnale di notifica di fine movimento automatizzato
     if(manual_mode!=driver_stat.manual_mode){
         manual_mode = driver_stat.manual_mode;
 
         // Segnalazione cambio di stato
-        if(manual_mode) printf("%s: CAMBIO STATO -> MANUAL MODE\n",DEVICE);
-        else printf("%s: CAMBIO STATO -> AUTO MODE\n",DEVICE);
+        if(manual_mode) printf("LENZE CAMBIO STATO -> MANUAL MODE\n");
+        else printf("LENZE CAMBIO STATO -> AUTO MODE\n");
 
         driver_stat.event_type = LENZE_RUN;
-        if(manual_mode) driver_stat.event_code = 1;
-        else driver_stat.event_code = 0;
-        driver_stat.event_data = 0;
+        if(manual_mode) driver_stat.event_code = 1; // Manual Mode
+        else driver_stat.event_code = 0; // Auto mode
+        driver_stat.event_data = driver_stat.analog1; // Posizione corrente
         _EVSET(_EV0_LENZE_EVENT);
     }
 
@@ -348,24 +352,33 @@ _i510_Status_t* lenzeGetStatus(void){
     return &driver_stat;
 }
 
+void printLenzeConfig(void){
+    printf("---------- LENZE CONFIG:-----------------------\n");
+    printf("MIN POSITION:%d\n", lenzeConfig.min_lenze_position);
+    printf("MAX POSITION:%d\n", lenzeConfig.max_lenze_position);
+    printf("MANUAL SPEED:%d\n", lenzeConfig.manual_speed);
+    printf("AUTO SPEED:%d\n", lenzeConfig.automatic_speed);
+    printf("PARK SPEED:%d\n", lenzeConfig.parking_speed);
+    printf("PARK TARGET:%d\n", lenzeConfig.parkingTarget);
+    printf("PARK SAFE POINT:%d\n", lenzeConfig.parkingSafePoint);
 
+    if(lenzeConfig.startupInParkingMode){
+        printf("LENZE PARTE IN MODALITA PARCHEGGIO\n");
+    }
+    printf("---------------------------------\n");
+
+}
 
 // Aggiorna la configurazione dei registri lenze e aggiorna il device
-void lenzeUpdateConfiguration(unsigned char* data){
+void lenzeUpdateConfiguration(void){
 
-    if(data[BYTE_SET_LENZE_CALIBRATED]==0)
-        lenzeConfig.calibrated = false;
-    else
-        lenzeConfig.calibrated = true;
-    lenzeConfig.min_lenze_position = data[BYTE_SET_LENZE_CONFIG_MINLIM];
-    lenzeConfig.max_lenze_position = data[BYTE_SET_LENZE_CONFIG_MAXLIM];
-    lenzeConfig.manual_speed = data[BYTE_SET_LENZE_CONFIG_MANSPEED];
-    lenzeConfig.automatic_speed = data[BYTE_SET_LENZE_CONFIG_AUTOSPEED];
     driver_stat.configured = true;
+    printLenzeConfig();
 
 #ifdef _CANDEVICE_SIMULATION
     return;
 #endif
+
     // Prova ad attivare la configurazione operativa
     lenzeRunConfiguration();
 }
@@ -403,7 +416,11 @@ int lenzeReadMotorFreq(void){
 // Questa funzione attiva Lenze per compensare la posizione corrente
 // dovuta ad una rotazione del braccio a C
 // angolo: espresso in decimi di grado con il segno
-//
+// Se l'angolo richiesto è 200 o - 200 allora si intende che il
+// movimento è una richiesta di parcheggio. Il braccio dunque
+// viene portato all'altezza necessaria per evitare impatti con il
+// basamento e viene attivata la movimentazione lenta fino al successivo
+// comando automatico
 //
 #define _PIGRECO 3.141592
 #define _LBRACCIO 166 //238 // 10x % potenziometro rispetto alla corsa 850mm:70%=198.25:L
@@ -413,11 +430,12 @@ bool lenzeActivatePositionCompensation(int angolo_iniziale, int angolo_finale){
 #endif
 
     uint16_t targetPosition;
+    uint16_t currentPosition;
+
     bool     upward_dir;
+    if(generalConfiguration.lenzeCalibPark) return false;
     if(driver_stat.configured==false) return false;
     if(lenzeReadMotorFreq()!=0) return false;
-
-    printf("LENZE: ATTIVAZIONE COMPENSAZIONE: INIT=%d, TARGET=%d\n",angolo_iniziale, angolo_finale);
 
     float rad_iniziale = angolo_iniziale * _PIGRECO/1800;
     float rad_finale = angolo_finale * _PIGRECO/1800;
@@ -426,19 +444,16 @@ bool lenzeActivatePositionCompensation(int angolo_iniziale, int angolo_finale){
 
     // Acquisisce il valore della posizione attuale
     if(lenzeReadPosition()==false) return false;
-    targetPosition = driver_stat.analog1 + Lfine - Linit;
+    currentPosition = driver_stat.analog1;
 
-    if((Lfine-Linit) >= 0) upward_dir = true; // Deve salire
+
+    printf("LENZE ATTIVAZIONE COMPENSAZIONE: INIZIO %d, TRAGET:%d\n",angolo_iniziale, angolo_finale);
+    targetPosition = currentPosition + Lfine - Linit;
+
+
+    // Decide la direzione
+    if(targetPosition > currentPosition) upward_dir = true;
     else upward_dir = false; // Deve scendere;
-
-    if(upward_dir) printf("UP\n");
-    else printf("DWN\n");
-
-    // Posizione di parcheggio
-    if((angolo_finale==2000)||(angolo_finale==-2000)){
-        targetPosition =  lenzeConfig.min_lenze_position*10;
-        upward_dir = false;
-    }
 
     // Controllo sui limiti
     if(targetPosition > lenzeConfig.max_lenze_position*10) targetPosition =  lenzeConfig.max_lenze_position*10;
@@ -446,14 +461,99 @@ bool lenzeActivatePositionCompensation(int angolo_iniziale, int angolo_finale){
 
     // Imposta le finestre di movimento
     if(upward_dir){
-        if(targetPosition-driver_stat.analog1 < 10) return true; // Distanza troppo piccola
-        //lenzeSetSpeedAuto(lenzeConfig.min_lenze_position*10,targetPosition);
-        lenzeSetSpeedAuto(0,targetPosition);
+        if(targetPosition-driver_stat.analog1 < 10) return true; // Distanza troppo piccola    
+        lenzeSetSpeedAuto(0,targetPosition,PRESET_AUTO);
      }else{
         if(driver_stat.analog1 - targetPosition < 10) return true; // Distanza troppo piccola
-        //lenzeSetSpeedAuto(targetPosition,lenzeConfig.max_lenze_position*10);
-        lenzeSetSpeedAuto(targetPosition,1000);
+        lenzeSetSpeedAuto(targetPosition,1000,PRESET_AUTO);
     }
+
+    // Partenza braccio
+    lenzeActivateAuto(upward_dir);
+    return true;
+}
+
+bool lenzeActivateUnpark(void){
+#ifdef _CANDEVICE_SIMULATION
+    return true;
+#endif
+
+    uint16_t targetPosition;
+    uint16_t currentPosition;
+
+
+    bool     upward_dir;
+    if(driver_stat.configured==false) return false;
+    if(lenzeReadMotorFreq()!=0) return false;
+
+    // Acquisisce il valore della posizione attuale
+    if(lenzeReadPosition()==false) return false;
+    currentPosition = driver_stat.analog1;
+
+    targetPosition =  lenzeConfig.parkingSafePoint + 50;
+    printf("LENZE UNPARKING. TARGET: %d, POSITION:%d\n", targetPosition, driver_stat.analog1);
+
+    // Controllo sui limiti
+    if(targetPosition > lenzeConfig.max_lenze_position*10) targetPosition =  lenzeConfig.max_lenze_position*10;
+    else if(targetPosition < lenzeConfig.min_lenze_position*10) targetPosition =  lenzeConfig.min_lenze_position*10;
+
+    // Già in posizione di sblocco
+    if(targetPosition <= currentPosition){
+        printf("LENZE UNPARKING ALREADY IN POSITION. TARGET: %d, POSITION:\n", targetPosition, driver_stat.analog1);
+        driver_stat.event_type = LENZE_RUN;
+        driver_stat.event_code = 1; // Manual Mode
+        driver_stat.event_data = driver_stat.analog1; // Posizione corrente
+        _EVSET(_EV0_LENZE_EVENT);
+        return true;
+    }
+
+    if(targetPosition-driver_stat.analog1 < 10) targetPosition = driver_stat.analog1 + 20;
+
+    upward_dir = true; // Deve salire;
+    lenzeSetSpeedAuto(0,targetPosition,PRESET_MANUAL);
+
+    // Partenza braccio
+    printf("LENZE UNPARKING: ACTIVATION\n");
+    lenzeActivateAuto(upward_dir);
+    return true;
+}
+
+bool lenzeActivatePark(void){
+#ifdef _CANDEVICE_SIMULATION
+    return true;
+#endif
+
+    uint16_t targetPosition;
+    uint16_t currentPosition;
+
+
+    bool     upward_dir;
+    if(driver_stat.configured==false) return false;
+    if(lenzeReadMotorFreq()!=0) return false;
+
+    // Acquisisce il valore della posizione attuale
+    if(lenzeReadPosition()==false) return false;
+    currentPosition = driver_stat.analog1;
+
+    targetPosition =  lenzeConfig.parkingTarget;
+    printf("LENZE PARKING. TARGET:%d\n", targetPosition);
+
+    // Controllo sui limiti
+    if(targetPosition > lenzeConfig.max_lenze_position*10) targetPosition =  lenzeConfig.max_lenze_position*10;
+    else if(targetPosition < lenzeConfig.min_lenze_position*10) targetPosition =  lenzeConfig.min_lenze_position*10;
+
+    // Già in posizione di sblocco
+    if(targetPosition >= currentPosition){
+        driver_stat.event_type = LENZE_RUN;
+        driver_stat.event_code = 1; // Manual Mode
+        driver_stat.event_data = driver_stat.analog1; // Posizione corrente
+
+        _EVSET(_EV0_LENZE_EVENT);
+        return true;
+    }
+
+    upward_dir = false; // Deve scendere;
+    lenzeSetSpeedAuto(targetPosition,1000,PRESET_PARKING);
 
     // Partenza braccio
     lenzeActivateAuto(upward_dir);
@@ -463,7 +563,7 @@ bool lenzeActivatePositionCompensation(int angolo_iniziale, int angolo_finale){
 bool lenzeSetSpeedManual(uint16_t soglia_bassa, uint16_t soglia_alta){
     if(lenzeReadMotorFreq()!=0) return false;
 
-    printf("IMPOSTAZIONE LENZE IN MODO MANUALE\n");
+    printf("LENZE IN MANUAL MODE\n");
 
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2631_01_OD, ENABLE_TRIGGER);         // ENABLE
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2631_02_OD, ENABLE_TRIGGER);         // RUN = ENABLE
@@ -473,25 +573,38 @@ bool lenzeSetSpeedManual(uint16_t soglia_bassa, uint16_t soglia_alta){
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2631_08_OD, RUNCW_MANUAL_TRIGGER); // RUN-CW  // Direzione Down
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2631_09_OD, RUNCCW_MANUAL_TRIGGER);// RUN-CCW  // Direzione UP
 
-    // Impostazione velocità
-    setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2860_01_OD, PRESET_MANUAL);        // SELEZIONA PRESET PER MOVIMENTO MANUALE
 
-    // Assegna la soglia alta
+    if(generalConfiguration.lenzeCalibPark) setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2860_01_OD, PRESET_PARKING);
+    else setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2860_01_OD, PRESET_MANUAL);
+
+    driver_stat.upmode_enable = true;
+    driver_stat.dwnmode_enable = true;
+
+    // Assegna la soglia alta e bassqa
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2636_08_OD, soglia_alta);
-
-    // Assegna la soglia bassa
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2637_08_OD, soglia_bassa);
 
     driver_stat.manual_mode = true;
     driver_stat.manual_mode_limit = false;
-    driver_stat.upmode_enable = true;
-    driver_stat.dwnmode_enable = true;
 
     return true;
 }
 
+bool lenzeSetSpeedManualPark(bool state){
+    if(lenzeReadMotorFreq()!=0) return false;
+
+    if(state){
+        printf("LENZE IN CALIBRATION PARKING MANUAL MODE\n");
+        setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2860_01_OD, PRESET_PARKING);
+    }else{
+        printf("LENZE IN MANUAL MODE\n");
+        setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2860_01_OD, PRESET_MANUAL);
+    }
+    return true;
+}
+
 // Imposta la modalità automatica e le relative sogloie di funzionamento
-bool lenzeSetSpeedAuto(uint16_t soglia_bassa, uint16_t soglia_alta){
+bool lenzeSetSpeedAuto(uint16_t soglia_bassa, uint16_t soglia_alta, uint32_t  speed_preset){
 
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2631_01_OD, ENABLE_TRIGGER);         // ENABLE
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2631_02_OD, ENABLE_TRIGGER);         // RUN = ENABLE
@@ -500,7 +613,7 @@ bool lenzeSetSpeedAuto(uint16_t soglia_bassa, uint16_t soglia_alta){
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2634_02_OD, i510_TRIGGER_NC);    // Spegnere uscita DIGOUT1
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2631_08_OD, RUNCW_AUTO_TRIGGER); // RUN-CW
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2631_09_OD, i510_TRIGGER_NC);    // RUN-CCW  = NC
-    setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2860_01_OD, PRESET_AUTO);        // SELEZIONA PRESET PER MOVIMENTO AUTOMATICO
+    setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2860_01_OD, speed_preset);        // SELEZIONA PRESET PER MOVIMENTO AUTOMATICO
 
     // Assegna la soglia alta
     setI510WriteSDO(CANOPEN_LENZE_CONTEXT,i510_2636_08_OD, soglia_alta);
@@ -516,6 +629,7 @@ bool lenzeSetSpeedAuto(uint16_t soglia_bassa, uint16_t soglia_alta){
 
     return true;
 }
+
 
 bool lenzeActivateAuto(bool upward){
 
@@ -537,8 +651,9 @@ void lenze_manage_soglie(void){
     driver_stat.gestione_soglie = false;
 
     if(!driver_stat.manual_mode){
+
         // Fine aggiustamento automatico
-        printf("LENZE: FINE MOVIMENTO AUTOMATICO, SET MANUAL MODE\n");
+        printf("LENZE FINE MOVIMENTO AUTOMATICO, SET MANUAL MODE\n");
         lenzeSetSpeedManual(lenzeConfig.min_lenze_position*10, lenzeConfig.max_lenze_position*10);        
 
     }else{
@@ -572,7 +687,7 @@ void lenze_manage_soglie(void){
 
 //  Configurazione operativa Lenze
 void lenzeRunConfiguration(void){
-     printf("LENZE: RUN CONFIGURATION\n");
+    printf("LENZE: RUN CONFIGURATION\n");
 
     // In caso di cambio stato da switch_off/ switch_on
     // si verifica se ci sono le condizioni per l'attivazione
@@ -584,7 +699,7 @@ void lenzeRunConfiguration(void){
         return;
     }
     if(driver_stat.configured==0){
-        printf("%s, DRIVER DISABILITATO: NON CONFIGURATO",DEVICE);
+        printf("%s, DRIVER DISABILITATO: NON CONFIGURATO\n",DEVICE);
         driver_stat.upmode_enable = false;
         driver_stat.dwnmode_enable = false;
         if(driver_stat.run_configuration) lenzeStartupConfiguration();
@@ -602,8 +717,10 @@ void lenzeRunConfiguration(void){
 
 
     // Impostazione caratteristice soglie per fine movimento su analog1 e analog2
-    setI510WriteSDO(CANOPEN_LENZE_CONTEXT,SETPOINT_AUTO, lenzeConfig.automatic_speed*10); // ASSEGNA LA VELOCITA' AL PRESET
-    setI510WriteSDO(CANOPEN_LENZE_CONTEXT,SETPOINT_MANUAL, lenzeConfig.manual_speed*10); // ASSEGNA LA VELOCITA' AL PRESET
+    setI510WriteSDO(CANOPEN_LENZE_CONTEXT,SETPOINT_AUTO, lenzeConfig.automatic_speed * 10); // ASSEGNA LA VELOCITA' AL SETPOINT AUTO
+    setI510WriteSDO(CANOPEN_LENZE_CONTEXT,SETPOINT_MANUAL, lenzeConfig.manual_speed *  10); // ASSEGNA LA VELOCITA' AL SETPOINT MANUAL
+    setI510WriteSDO(CANOPEN_LENZE_CONTEXT,SETPOINT_PARKING, lenzeConfig.parking_speed *10); // ASSEGNA LA VELOCITA' AL SETPOINT DI PARCHEGGIO
+
 
     lenzeSetSpeedManual(lenzeConfig.min_lenze_position*10, lenzeConfig.max_lenze_position*10);
 
@@ -725,7 +842,24 @@ bool lenzeGetObstacleStat(void){
 }
 
 /*
-
+bool isParkingMode(void){
+    if(lenzeConfig.startupInParkingMode) return true;
+    return false;
+}
+*/
+void lenzeSetCommand(unsigned char command, unsigned char param){
+    if(command==LENZE_UNLOCK_PARKING){
+        lenzeActivateUnpark();
+    }else if(command==LENZE_SET_PARKING){
+        lenzeActivatePark();
+    }
+}
+/*
+void lenzeActivateParkingMode(void){
+    lenzeConfig.startupInParkingMode = true;
+}
+*/
+/*
 
 */
 /* EOF */
