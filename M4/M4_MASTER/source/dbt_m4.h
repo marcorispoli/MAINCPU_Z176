@@ -1,9 +1,9 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.3.0"
+#define REVISIONE "1.4.0"
 #define REVMAJ 1
-#define REVMIN 3
+#define REVMIN 4
 #define REV_BETA 0
 
 #define M4_MASTER
@@ -11,11 +11,9 @@
 /*______________________________________________________________________________
 
 
-    1.0 RILASCIO ID01
+   1.4.0
 
-    -----
-
-    1.1: modifiche gestione Biopsia analogica
+   - Modifiche per gestione Parcheggio
 _____________________________________________________________________________*/
 
 //////////////////////////////////////////////////////////////////////////////

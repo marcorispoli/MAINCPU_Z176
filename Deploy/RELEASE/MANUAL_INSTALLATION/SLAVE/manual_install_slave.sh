@@ -1,7 +1,7 @@
 ##############################################################
 # Definizione del Package di riferimento
 ##############################################################
-PKGCODE=ID04
+PKGCODE=ID05
 
 # Definizione delle directory
 HOME=/home/user
@@ -23,13 +23,17 @@ rm -f $HOME/*
 rm -r $HOME/*
 mv /PACKAGE_$PKGCODE.tar $HOME/
 
+
 # Estrazione contenuto in home/user  
 echo PACKAGE EXTRACTING ..
 cd $HOME
-tar -xf PACKAGE_$PKGCODE.tar SWPackage.tar
-tar -xf SWPackage.tar
+tar -xf PACKAGE_$PKGCODE.tar 
+tar -xf SWPackage.tar 
+
 cp ./BIN/DBTController /
 cp ./BIN/m4_slave.bin /
+sync
+chmod 777 /DBTController
 
 
 ##############################################################
@@ -41,9 +45,10 @@ cp ./BIN/m4_slave.bin /
 
 ##############################################################
 # Pulitura home directory
-echo CLEANING UP HOME DIRECTORY ...
+mv $HOME/PACKAGE_$PKGCODE.tar /
 rm -f $HOME/*
 rm -r $HOME/*
+mv /PACKAGE_$PKGCODE.tar $HOME/
 
 sync
 
