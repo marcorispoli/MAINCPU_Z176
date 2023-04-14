@@ -54,4 +54,9 @@ ext void actuatorsGetStatus(void);
 ext void actuatorsUpdateAngles(void);
 ext void actuatorsManageEnables(void);
 ext void actuatorsStartProcess(bool lenze, bool trx, bool arm);
+
+ext bool actuatorEnaTest;
+ext bool actuatorArmEna;
+ext bool actuatorTrxEna;
+
 #endif

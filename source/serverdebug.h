@@ -207,6 +207,17 @@ private:
     bool isCommand;
     bool isSpecial;
 
+    int trxloop;
+    int trx_angle;
+    int armloop;
+    int arm_angle;
+
+private slots:
+    void handleRodaggioTuboSlot(void);
+    void handleRodaggioArmSlot(void);
+    void handleRodaggioArm(QByteArray data);
+    void handleRodaggioSwitchArmOnSlot(void);
+    void handleRodaggioSwitchArmOffSlot(void);
 
 };
 

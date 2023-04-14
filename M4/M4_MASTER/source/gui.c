@@ -950,72 +950,37 @@ void  mccSetColli(unsigned char id, unsigned char mcccode)
 
 void mcc_test(void)
 {
-    unsigned long val;
-    unsigned char data;
-    char cdata;
-
-
       switch(mcc_cmd.buffer[0]){
-      case 0:
-          printf("GPIO INIT\n");
-          spiInit();
-          break;
       case 1:
-          printf("SYNC");
-          if(vmSync()) printf("SYNC OK\n");
-          else printf("SYNC FAILED\n");
+          printf("TEST ENA ARM ON\n");
+          actuatorEnaTest = true;
+          actuatorArmEna = true;
+          actuatorsManageEnables();
           break;
-
       case 2:
-          printf("SCARICA LE SCRITTE");
-          vmPrint(true,1000);
+          printf("TEST ENA ARM OFF\n");
+          actuatorEnaTest = true;
+          actuatorArmEna = false;
+          actuatorsManageEnables();
           break;
       case 3:
-          printf("SHORT MSG MODE... ");
-          if(!vmShortMsg()) printf("NOK!\n");
-          else     printf("OK\n");
+          printf("TEST ENA TRX ON\n");
+          actuatorEnaTest = true;
+          actuatorTrxEna = true;
+          actuatorsManageEnables();
           break;
       case 4:
-          if(!vmPrompt()) printf("USB BOMS NOT AVAILABLE!\n");
-          else {
-              printf("DIR:\n");
-              vmDir();
-          }
+          printf("TEST ENA TRX OFF\n");
+          actuatorEnaTest = true;
+          actuatorTrxEna = false;
+          actuatorsManageEnables();
           break;
 
-      case 5:
-
-          break;
-      case 6:
-
-          break;
-      case 7:
-
-           break;
-
-      case 8:
-
-          break;
-
-      case 9:
-
-          break;
 
       default:
-          spiInit();
-
-          // Scarica le scritte varie
-          vmPrint(true,100);
-
-          printf("SHORT MSG MODE... ");
-          if(!vmShortMsg()) printf("NOK!\n");
-          else     printf("OK\n");
-
-          if(!vmPrompt()) printf("USB BOMS NOT AVAILABLE!\n");
-          else {
-              printf("DIR:\n");
-              vmDir();
-          }
+          printf("TEST ENA OFF\n");
+          actuatorEnaTest = false;
+          actuatorsManageEnables();
       }
 
     return;

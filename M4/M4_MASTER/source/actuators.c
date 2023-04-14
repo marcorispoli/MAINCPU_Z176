@@ -9,6 +9,9 @@ static bool actuatorStartConfirmed = false;
 void actuatorsStartProcess(bool lenze, bool trx, bool arm){
     uint8_t buffer[8];
 
+    actuatorEnaTest = false;
+
+
     // Ripete il comando fino a che lo SLAVE non conferma di averlo gestito
     actuatorStartConfirmed = false;
     while(!actuatorStartConfirmed){
@@ -686,6 +689,26 @@ void actuatorsManageEnables(void){
     bool rotena = SystemOutputs.CPU_ROT_ENA;
     bool liftena = SystemOutputs.CPU_LIFT_ENA;
     bool pendena = SystemOutputs.CPU_PEND_ENA;
+
+    if(actuatorEnaTest){
+        if(!actuatorTrxEna) SystemOutputs.CPU_PEND_ENA = 0;
+        else SystemOutputs.CPU_PEND_ENA = 1;
+        if(!actuatorArmEna) SystemOutputs.CPU_ROT_ENA = 0;
+        else SystemOutputs.CPU_ROT_ENA = 1;
+
+        // Verifica se deve aggiornare gli IO
+        if((SystemOutputs.CPU_PEND_ENA!=pendena) ||
+           (SystemOutputs.CPU_ROT_ENA!=rotena) ||
+           (SystemOutputs.CPU_LIFT_ENA!=liftena)){
+
+            _mutex_lock(&output_mutex);
+            _EVSET(_EV0_OUTPUT_CAMBIATI);
+            _mutex_unlock(&output_mutex);
+        }
+        return;
+    }
+
+
 
     // Se c'è un allarme caduta braccio, disabilita tutto
     if(SystemInputs.CPU_LIFT_DROP)  lift_drop=true; // Non ripristinabile!

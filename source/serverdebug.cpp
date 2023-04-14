@@ -1876,52 +1876,206 @@ void serverDebug::handleGetRevisions(void)
 
 
 
+void serverDebug::handleRodaggioTuboSlot(void){
+    static unsigned char fase = 0;
+    int angolo;
+
+    unsigned char buffer[10];
+
+    if(!trxloop){
+        fase = 0;
+        buffer[0] = 100; // TEST OFF
+        pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1);
+        return;
+    }
+
+    switch(fase){
+        case 9:
+        case 6:
+        case 3:
+        case 0:
+            buffer[0] = 4; // OFF
+            pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1);
+            fase++;
+            QTimer::singleShot(5000,this,SLOT(handleRodaggioTuboSlot(void)));
+            break;
+
+        case 10:
+        case 7:
+        case 4:
+        case 1:
+            buffer[0] = 3; // ON
+            pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1);
+            fase++;
+            QTimer::singleShot(5000,this,SLOT(handleRodaggioTuboSlot(void)));
+            break;
+
+        case 2:
+            buffer[0]=TRX_MOVE_ANGLE;
+            angolo = trx_angle;
+            fase++;
+            buffer[2] = (unsigned char) angolo;
+            buffer[3] = (unsigned char) (angolo>>8);
+            pConsole->pGuiMcc->sendFrame(MCC_CMD_TRX,0,buffer, sizeof(buffer));
+            QTimer::singleShot(10000,this,SLOT(handleRodaggioTuboSlot(void)));
+            break;
+
+        case 5:
+            buffer[0]=TRX_MOVE_ANGLE;
+            angolo = -trx_angle;
+            fase++;
+            buffer[2] = (unsigned char) angolo;
+            buffer[3] = (unsigned char) (angolo>>8);
+            pConsole->pGuiMcc->sendFrame(MCC_CMD_TRX,0,buffer, sizeof(buffer));
+            QTimer::singleShot(10000,this,SLOT(handleRodaggioTuboSlot(void)));
+            break;
+
+        case 8:
+            buffer[0]=TRX_MOVE_ANGLE;
+            angolo = 0;
+            fase++;
+            buffer[2] = (unsigned char) angolo;
+            buffer[3] = (unsigned char) (angolo>>8);
+            pConsole->pGuiMcc->sendFrame(MCC_CMD_TRX,0,buffer, sizeof(buffer));
+            QTimer::singleShot(10000,this,SLOT(handleRodaggioTuboSlot(void)));
+            break;
+
+        default:
+            trxloop = 1;
+        case 11:
+            trxloop--;
+            if(!trxloop){
+                fase = 0;
+                buffer[0] = 100; // TEST OFF
+                pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1);
+                return;
+            } else{
+                fase = 2;
+                QTimer::singleShot(0,this,SLOT(handleRodaggioTuboSlot(void)));
+            }
+
+    }
+
+
+}
+
+void serverDebug::handleRodaggioSwitchArmOnSlot(void){
+    unsigned char buffer[10];
+    buffer[0] = 1; // Enable Switch
+    if(pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1))  QTimer::singleShot(5000,this,SLOT(handleRodaggioArmSlot(void)));
+    else{
+        serviceTcp->txData("Error in MCC_TEST\n\r");
+        armloop = 0;
+    }
+}
+
+void serverDebug::handleRodaggioSwitchArmOffSlot(void){
+    unsigned char buffer[10];
+    buffer[0] = 2; // Disable Switch
+    if(pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1))  QTimer::singleShot(5000,this,SLOT(handleRodaggioSwitchArmOnSlot(void)));
+    else{
+        serviceTcp->txData("Error in MCC_TEST\n\r");
+        armloop = 0;
+    }
+}
+
+void serverDebug::handleRodaggioArmSlot(void){
+    unsigned char buffer[10];
+
+    if(!armloop){
+        buffer[0] = 100;
+        pConsole->pGuiMcc->sendFrame(MCC_TEST,0,buffer, 1);
+        return;
+    }
+
+    arm_angle=-arm_angle;
+    if(arm_angle > 180) arm_angle = 180;
+    else if(arm_angle<-180) arm_angle = -180;
+
+    // Impostazione Parametro
+    buffer[0] =(unsigned char) (arm_angle&0xFF);
+    buffer[1] =(unsigned char) (arm_angle>>8);
+
+    // Invio comando
+    pConsole->pGuiMcc->sendFrame(MCC_CMD_ARM,0,buffer, 2);
+    serviceTcp->txData(QString("ARM MOVE - CICLI:%1\n\r").arg(armloop).toAscii());
+
+    if(armloop){
+        armloop--;
+        QTimer::singleShot(25000,this,SLOT(handleRodaggioSwitchArmOffSlot(void)));
+    }
+}
+
 /*
  *
  *  Attivazione procedura di rodaggio. Occorre spegnere la macchina per
  *  fermare la pendolazione
 
-    buffer[0] = num cicli
-    buffer[1] = angolo
-    buffer[2] = velocita: 0 = STD, 1 = WIDE, 2 = NARROW
- */
+    param[0] = num cicli
+    param[1] = angolo
+
+*/
 void serverDebug::handleRodaggioTubo(QByteArray data)
 {
+
     QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("LOOP"));
 
-    if(parametri.size()!=3){
+    if(parametri.size()!=2){
         serviceTcp->txData("Wrong parameters\n\r");
+        trxloop = 0;
         return;
     }
 
     if(parametri[0].toInt()>255){
         serviceTcp->txData("Wrong num cycles\n\r");
+        trxloop = 0;
         return;
     }
     if(parametri[1].toInt()>22){
         serviceTcp->txData("Wrong Angle\n\r");
         return;
     }
-    if((parametri[2]!="N")&&(parametri[2]!="W")&&(parametri[2]!="S")){
-        serviceTcp->txData("Wrong Speed\n\r");
+
+    trxloop = parametri[0].toInt();
+    trx_angle = parametri[1].toInt();
+    QTimer::singleShot(0,this,SLOT(handleRodaggioTuboSlot(void)));
+
+
+}
+
+/*
+ *
+ *  Attivazione procedura di rodaggio. Occorre spegnere la macchina per
+ *  fermare la pendolazione
+
+    param[0] = num cicli
+    param[1] = angolo
+
+*/
+void serverDebug::handleRodaggioArm(QByteArray data)
+{
+
+    QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("LOOP"));
+
+    if(parametri.size()!=2){
+        serviceTcp->txData("Wrong parameters\n\r");
+        armloop = 0;
         return;
     }
 
-    QByteArray buf;
-    buf.append((unsigned char) parametri[0].toInt());
-    buf.append((unsigned char) parametri[1].toInt());
-    if(parametri[2]=="S"){
-        buf.append((char) 0);
-    }else if(parametri[2]=="W"){
-        buf.append((unsigned char) 1);
-    }else if(parametri[2]=="N"){
-        buf.append((unsigned char) 2);
+    if(parametri[0].toInt()>255){
+        serviceTcp->txData("Wrong num cycles\n\r");
+        armloop = 0;
+        return;
     }
 
-    if(mccService(0,SRV_RODAGGIO_TUBO,buf)== FALSE) serviceTcp->txData("MCC FALLITO");
-    else serviceTcp->txData(QString("TRX LOOP START: %1 %2 %3\n\r").arg(buf[0]).arg(buf[1]).arg(buf[2]).toAscii());
+    armloop = parametri[0].toInt();
+    arm_angle = parametri[1].toInt();
+    QTimer::singleShot(0,this,SLOT(handleRodaggioSwitchArmOnSlot(void)));
+
 
 }
+
 
 
 void serverDebug:: handleReadConfig(QByteArray data)
@@ -2534,9 +2688,10 @@ void serverDebug::handleRotazioni(QByteArray data)
         serviceTcp->txData(QByteArray("TRX WEND      Muove tubo a Wide End  \r\n"));
         serviceTcp->txData(QByteArray("TRX NEND      Muove tubo a Wide End  \r\n"));
         serviceTcp->txData(QByteArray("TRX IEND      Muove tubo a Intermediate End  \r\n"));
-        serviceTcp->txData(QByteArray("TRX LOOP val  Attiva la procedura di rodaggio tubo\r\n"));
         serviceTcp->txData(QByteArray("TRX [angolo]  Muove tubo a Angolo (+/-)  \r\n"));
         serviceTcp->txData(QByteArray("ARM [angolo]  Muove braccio a Angolo (+/-)  \r\n"));
+        serviceTcp->txData(QByteArray("TRX LOOP cicli angolo  Attiva la procedura di rodaggio Trx\r\n"));
+        serviceTcp->txData(QByteArray("ARM LOOP cicli angolo  Attiva la procedura di rodaggio Arm\r\n"));
         serviceTcp->txData(QByteArray("resetGonio    Reset Inclinometri\r\n"));
         serviceTcp->txData(QByteArray("getGonio      Legge inclinometro\r\n"));
         serviceTcp->txData(QByteArray("readTrxConfig Rilegge TRX config e download\r\n"));
@@ -2631,6 +2786,9 @@ void serverDebug::handleRotazioni(QByteArray data)
     {
         handleMoveTrx("TRX ", data);
 
+    }else if(data.contains("ARM LOOP"))
+    {
+        handleRodaggioArm(data);
     } else if(data.contains("ARM"))
     {
         handleMoveArm("ARM ", data);
