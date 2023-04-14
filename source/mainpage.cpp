@@ -421,10 +421,6 @@ void MainPage::buttonActivationNotify(int id, bool status,int opt)
     switch(pannello){
     case _MAIN_PANEL:
         if(pbutton==pulsanteRotazioni){
-
-            // Se la rotazione non è configurata allora NON mostra MAI il pannello di rotazioni
-            if(!(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR)) return;
-
             changePannello(_ROT_PANEL);
             return;
         }
@@ -468,6 +464,7 @@ void MainPage::buttonActivationNotify(int id, bool status,int opt)
                 changePannello(_MAIN_PANEL);
                 return;
             }
+
             if(pbutton==pulsanteOkRot){
                 activateRot(selRotAngolo);
                 changePannello(_MAIN_PANEL);
@@ -566,9 +563,9 @@ void MainPage::setRotGroupEnaView(void){
         trxerr=ApplicationDatabase.getDataI(_DB_ALLARMI_ALR_TRX);
         armerr=ApplicationDatabase.getDataI(_DB_ALLARMI_ALR_ARM);
 
-        if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR){
+        //if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR){
 
-            if(armerr){
+           if(armerr){
                 // Errori sulla rotazione
                 pulsanteRotazioni->setVisible(false);
                 rotDisabledPix->show();
@@ -579,10 +576,10 @@ void MainPage::setRotGroupEnaView(void){
                 pulsanteRotazioni->setVisible(false);
                 rotDisabledPix->show();
             }
-        }else{
-            pulsanteRotazioni->setVisible(false);
-            rotDisabledPix->show();
-        }
+        //}else{
+        //        pulsanteRotazioni->setVisible(false);
+        //    rotDisabledPix->show();
+        //}
 
         // Se il TRX non è configurato non viene MAI visto il pulsante
         if(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_TRX_MOTOR){
@@ -857,6 +854,9 @@ void MainPage::activateRot(int angolo)
            activateParking();
            return;
        }
+
+       // Se la rotazione non è configurata allora NON prosegue
+       if(!(ApplicationDatabase.getDataU(_DB_SYSTEM_CONFIGURATION)&_ARCH_ARM_MOTOR)) return;
 
        if(angolo > 180) angolo = 180;
        else if(angolo<-180) angolo = -180;
