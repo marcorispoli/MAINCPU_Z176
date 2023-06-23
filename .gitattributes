@@ -1,5 +1,6 @@
 * text eol=lf
 *.bin -text
+*.qm -text
 *.a -text
 *.d -text
 *.o -text
