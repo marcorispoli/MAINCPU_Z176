@@ -2492,15 +2492,12 @@ void serverDebug::handleGeneratore(QByteArray data)
     }else if(data.contains("getKvDac")){
 
         QList<QByteArray> parametri = getNextFieldsAfterTag(data, QString("getKvDac"));
-        float kv = parametri[0].toFloat();
-        unsigned char kvc;
-        unsigned short dac;
-        if(pGeneratore->getValidKv(kv, &kvc, &dac) == FALSE){
+        unsigned short dac = pGeneratore->getKvDac(parametri[0].toFloat());
+        if(!dac){
             serviceTcp->txData(QString("KV SELEZIONATI NON VALIDI\r\n").toAscii());
             return;
         }
-
-        serviceTcp->txData(QString("DAC(%1) = %2\r\n").arg(kvc).arg(dac).toAscii());
+        serviceTcp->txData(QString("DAC(%1) = %2\r\n").arg(parametri[0].toFloat()).arg(dac).toAscii());
 
     }else if(data.contains("getStatistics")){
         if(data.contains("store")) pGeneratore->statChanged = true;

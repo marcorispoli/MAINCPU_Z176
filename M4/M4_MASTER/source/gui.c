@@ -1510,6 +1510,14 @@ void mcc_xray_analog_pre_calib(void){
 // Il dato in posizione 18 indica se si tratta del PRE o dei dati dell'impulso
 void mcc_xray_analog_calib_profile(void){
     unsigned char chk,i;
+        // Errore comunicato dalla GUI dopo il pre impulso
+        if((mcc_cmd.buffer[21] !=0 ) && (mcc_cmd.buffer[20])){
+            rxStdParam.guiError = mcc_cmd.buffer[21];
+            printf("AEC Error code: %d\n", mcc_cmd.buffer[21] );
+            _EVSET(_EV2_WAIT_AEC);
+            return;
+        }
+        rxStdParam.guiError = 0;
 
         // Codice sequenza
         rxStdParam.analog_sequence = AEC_MODE_EXPOSURE;

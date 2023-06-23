@@ -14,6 +14,7 @@ Potter::Potter(QObject *parent) :
     potterId = POTTER_UNDEFINED;
     potterFactor=255;
     potterValidFactor = FALSE;
+    selected_field = 255;
 
 }
 
@@ -95,7 +96,10 @@ bool Potter::setDetectorField(unsigned char val){
 #ifdef __ONLY_ONE_DET_FIELD
     data[0] =  __ONLY_ONE_DET_FIELD;
 #endif
-    return pConsole->pGuiMcc->sendFrame(MCC_244_A_DETECTOR_FIELD,1,data, sizeof(data));
+    if(pConsole->pGuiMcc->sendFrame(MCC_244_A_DETECTOR_FIELD,1,data, sizeof(data))) {
+        selected_field = val;
+        return true;
+    }else return false;
 }
 
 void Potter::startTestGrid(int nTest){

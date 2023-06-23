@@ -1825,6 +1825,12 @@ void PageAlarms::createMessageList(void){
     erritem.errdescr= QString("");
     classitem.errlist.append(erritem);
 
+    erritem.codestr = QString("00969");
+    erritem.codeval = ESPOSIMETRO_INVALID_AEC_DATA ;
+    erritem.errmsg  = QString(QApplication::translate("ERRORE-RAGGI","INVALID AEC DATA", 0, QApplication::UnicodeUTF8));
+    erritem.errpix =  QPixmap(ERR_PIX);
+    erritem.errdescr= QString("");
+    classitem.errlist.append(erritem);
 
 
 

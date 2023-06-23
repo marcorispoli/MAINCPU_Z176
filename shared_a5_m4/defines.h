@@ -2,7 +2,7 @@
 #define _DEFINES_H
   
 
-#define __PRODUCTION_COMPILATION
+//define __PRODUCTION_COMPILATION
 
 
 //_________________________________________________________________________________
