@@ -400,6 +400,8 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
             XselectedDmAs = pGeneratore->selectedDmAs;
             XselectedIa = pGeneratore->selectedIn;
 
+            PRINT(QString("OPERATIVO AEC DATA IN: PROFILE=%1 PLOG=%2, FILTRO=%3, ANODO=%4").arg(pGeneratore->pAECprofiles->getCurrentProfilePtr()->filename).arg(rxplog).arg(rxfiltro).arg( pGeneratore->selectedAnodo));
+            PRINT(QString("OPERATIVO AEC DATA OUT: KV=%1(%2) MAS=%3, PULSES =%4").arg(rxkV).arg(pGeneratore->selectedVdac).arg((float) rxdmas/10).arg(rxpulses));
 
             data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
             data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);

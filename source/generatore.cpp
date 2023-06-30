@@ -1903,56 +1903,29 @@ int Generatore::getITabIndex(unsigned char kV)
 
 // Restituisce il valore di VDAC come interpolazione lineare tra i valore piÃ¹ prossimi
 // disponibili nel file di configurazione
-// val rappresenta la selezione corrente;
-// *kv conterrÃ  il valore da utilizzare per reperire il resto dei parametri
-// ( Correnti / Mas) con la regola che si utilizzerÃ  se possibile i valori dei KV
-// piÃ¹ vicini alla selezione corrente
-// Al valore DAC calibrato viene inoltre aggiunto il valore dell'offset assegnato
-// per compensare eventuali variazioni introdotte oltre la calibrazione standard
-bool  Generatore::getValidKv(float val, unsigned char* kv, unsigned short* vdac)
+unsigned short  Generatore::getKvDac(float fkv)
 {
     unsigned short valL, valH;
     float indice;
 
-    // Controllo coerenza
-    if(kv==NULL) return FALSE;
-    if((val>(float)_MAX_KV)||(val<(float)_MIN_KV))  return FALSE;
-
-
-    // Controllo abilitazioni
-    valL = (unsigned short) (val);
+    // Cerca i due interi attorno al valore float
+    valL = (unsigned short) (fkv);
     valH = valL + 1;
 
-    // Calcola l'indice di vicinanza [0:1]
-    if((tube[valL-_MIN_KV].vRef.enable==FALSE)&&(tube[valH -_MIN_KV].vRef.enable==FALSE)) return FALSE;
-    if((tube[valL-_MIN_KV].vRef.enable==FALSE)||(tube[valL-_MIN_KV].vRef.Vdac==0)) indice=1.0;
-    if((tube[valH-_MIN_KV].vRef.enable==FALSE)||(tube[valH-_MIN_KV].vRef.Vdac==0)) indice=0.0;
-    else indice = val - valL;
+    // Controllo coerenza
+    if((valH > _MAX_KV) || (valL < _MIN_KV))  return 0;
+    if(tube[valL-_MIN_KV].vRef.enable==FALSE) return 0;
+    if(tube[valH-_MIN_KV].vRef.enable==FALSE) return 0;
 
-    if(indice==0)
-    {
-       *kv = valL;
-       *vdac = (unsigned short) (((long) tube[*kv-_MIN_KV].vRef.Vdac) + tube[*kv-_MIN_KV].vRef.Voffset * 80 / 100);
-    }else if(indice==1)
-    {
-        *kv = valH;
-        *vdac = (unsigned short) (((long) tube[*kv-_MIN_KV].vRef.Vdac) + tube[*kv-_MIN_KV].vRef.Voffset * 80 / 100);
-    }else
-    {        
-        float dacH = (float) (((float) tube[valH-_MIN_KV].vRef.Vdac) + (float) tube[valH-_MIN_KV].vRef.Voffset * 8 / 10);
-        float dacL = (float) (((float) tube[valL-_MIN_KV].vRef.Vdac) + (float) tube[valL-_MIN_KV].vRef.Voffset * 8 / 10);
-        float dac = (dacH * indice + dacL * (1-indice));
-        if(dac < 0) return FALSE;
-        *vdac = (unsigned short) (dac);
-        //*vdac = (unsigned short) ((float) tube[valH-_MIN_KV].vRef.Vdac * (indice) + (float) tube[valL-_MIN_KV].vRef.Vdac * (1-indice));
+    // Calcola l'indice di vicinanza (0:1)
+    indice = fkv - (float) valL;
 
-        if(indice>=0.5) *kv = valH;
-        else *kv = valL;
-    }
+    float dacH = (float) tube[valH-_MIN_KV].vRef.Vdac;
+    float dacL = (float) tube[valL-_MIN_KV].vRef.Vdac;
+    return (unsigned short) (dacH * indice + dacL * (1-indice));
 
-    return TRUE;
+
 }
-
 
 
 // Restituisce Idac da utilizzare per esposizione di Kv nominali
@@ -1974,171 +1947,6 @@ bool Generatore::getIdacForKvCalibration(int kV, QString anodo, int* Idac, int* 
 }
 
 
-// Questa funzione calcola i valori dei DAC sulla base delle
-// impostazioni correnti.
-// La funzione restituisce false in caso di dati non consentiti
-// Restituisce un codice generale di errore
-unsigned char Generatore::validateData(void)
-{
-    int i;
-    unsigned char kV;
-
-    if(pConfig->generator_configured == FALSE) return ERROR_TUBE_NOT_CONFIGURED;
-    validated = FALSE;
-
-    // In Tomo il fuoco  SEMPRE LARGE
-    if((tomoMode)&&(selectedFSize==FUOCO_SMALL)) return ERROR_INVALID_FUOCO;
-    if(!isValidFuoco()) return ERROR_INVALID_FUOCO;
-
-    // Verifica mAs impostati
-    if(tomoMode)
-    {
-        //if((selectedmAsTomo==0) || (selectedmAsTomo>_MAX_MAS*10)) return ERROR_INVALID_MAS;
-        if((selectedmAsTomo==0) || (selectedmAsTomo>_MAX_MAS)) return ERROR_INVALID_MAS;
-
-    }else
-    {
-        if((selectedDmAs==0) || (selectedDmAs>_MAX_MAS*10)) return ERROR_INVALID_MAS;
-    }
-
-
-    /*
-     *  I KV selezionati possono essere a virgola mobile mentre quelli configurati sono a valori interi.
-     *  La regola che verrÃ  adottata sarÃ  quella di impostare i VDAC come interpolazione tra i valori
-     *  discreti piÃ¹ prossimi.
-     *  I valori di corrente saranno selezionati considerando i KV interi piÃ¹ vicini.
-     */
-    // Cerca i Kv a partire dal valore float richiesto
-    if(getValidKv(selectedKv, &kV, &selectedVdac)==FALSE) return ERROR_INVALID_KV;
-    if(selectedVdac > 4095) return ERROR_INVALID_GEN_CONFIG;
-    if(selectedVdac == 0) return ERROR_NOT_CALIBRATED_KV;
-
-    // Impostazione scambio primari
-    SWA = tube[kV-_MIN_KV].vRef.SWA;
-    SWB = tube[kV-_MIN_KV].vRef.SWB;
-
-    // Verifica dell'intervallo richiesto ma solo in 2D
-    if(tomoMode)
-    {
-        // Non è possibile effettuare la Tomo senza starter
-        if(pConfig->sys.highSpeedStarter == FALSE)
-              return ERROR_INVALID_GEN_CONFIG;
-
-        selectedIdac = 0;
-        selectedIn = 0;
-        for(i=0; i<tube[kV-_MIN_KV].tomo.count();i++)
-        {
-            if((tube[kV-_MIN_KV].tomo[i].anode == selectedAnodo) &&(tube[kV-_MIN_KV].tomo[i].enabled))
-            {
-                selectedIn = tube[kV-_MIN_KV].tomo[i].In;
-                selectedIdac = tube[kV-_MIN_KV].tomo[i].Idac;
-                break;
-            }
-        }
-
-        if(selectedIn > _MAX_In) return ERROR_INVALID_GEN_CONFIG;
-        if(selectedIdac > genCnf.pcb190.IFIL_MAX_SET) return ERROR_INVALID_GEN_CONFIG;
-        if(selectedIdac == 0) return ERROR_NOT_CALIBRATED_I;
-
-        starterHS=TRUE;
-
-        // Conversione di dmAs per il driver PCB190 (50 unitÃ  per mAs)
-        selectedmAsDacTomo = (unsigned short) (selectedmAsTomo * 50.0);//selectedmAsTomo * 5;
-
-        // Timeout massimo finestra di integrazione
-        timeoutExp = 3; // 300ms
-
-        // In 3D il limite inferiore Ã¨ posto al 50% della corrente nominale
-        // Ed il limite superiore non viene fissato. La protezione avviene grazie al timeout
-        // massimo di 300ms
-        minI = convertPcb190IanodeToRaw(selectedIn / 2);
-        maxI = 255;
-
-    }else
-    {
-        /*   I dati di corrente da utilizzare in funzione dei mas sono determinati dalla seguente funzione
-         *   tube[kV-_MIN_KV].mas(anodo+fuoco+mas) -> sym   DETERMINA IL SYMBOLO
-         *   iTab(sym) -> Idac,In                           DAL SIMBOLO SI OTTENGONO I VALORI DI CORRENTE
-         *
-         */
-        i=getITabIndex(kV);
-        if(i<0) return ERROR_INVALID_MAS; // Nessun intervallo disponibile
-
-        // Carica i valori di corrente cercati e controllo valori
-        float derivata;
-        selectedIn = tube[kV-_MIN_KV].iTab.at(i).In;    // Corrente nominale
-        selectedIdac = tube[kV-_MIN_KV].iTab.at(i).Idac;    // Corrente nominale
-        if(selectedIn > _MAX_In) return ERROR_INVALID_GEN_CONFIG;
-        if(selectedIdac > genCnf.pcb190.IFIL_MAX_SET) return ERROR_INVALID_GEN_CONFIG;
-        if(selectedIdac == 0) return ERROR_NOT_CALIBRATED_I;
-        derivata = tube[kV-_MIN_KV].iTab.at(i).derivata;
-
-        // Carica le impostazioni relative allo starter:
-        if(pConfig->sys.highSpeedStarter == FALSE) starterHS=FALSE;
-        else{
-            if(selectedFSize==FUOCO_SMALL) starterHS=TRUE;        // Alta VelocitÃ
-            else if((!aecMode)&&(pGeneratore->selectedDmAs>=400*10)) starterHS=TRUE;    // Alta VelocitÃ
-            else starterHS=FALSE;
-        }
-
-        // Conversione di dmAs per il driver PCB190 (50 unitÃ  per mAs)
-        selectedmAsDac = selectedDmAs * 5;
-
-        // Timeout dell'esposizione
-        timeoutExp = 50;
-
-        // In 2D il limite inferiore Ã¨ posto al 50% della corrente nominale
-        // Ed il limite superiore ad una corrente che dipende dalla gamma di tensione
-        minI = convertPcb190IanodeToRaw(selectedIn / 2);
-
-        if(selectedFSize==FUOCO_SMALL){
-                if(selectedKv<=35) maxI = convertPcb190IanodeToRaw(75);
-                else if(selectedKv<=40) maxI = convertPcb190IanodeToRaw(70);
-                else if(selectedKv<=45) maxI = convertPcb190IanodeToRaw(60);
-                else maxI = convertPcb190IanodeToRaw(50);
-        }else{
-            // LIMITI FUOCO GRANDE
-            if(starterHS){
-
-                // Caso per gestire i 640 mAs: la corrente viene aumentata di 10mA
-                // rispetto al valore calibrato e il timeout, per evitare errori antipatici
-                // viene portato a 6 secondi
-                if(selectedmAsDac>20000){
-                    timeoutExp = 60;
-
-                    // Aggiunta di circa 10ms alla corrente nominale
-                    selectedIdac += (unsigned short)(10.0 / derivata);
-                    if(selectedIdac > genCnf.pcb190.IFIL_MAX_SET)
-                        selectedIdac = genCnf.pcb190.IFIL_MAX_SET;
-
-                }
-
-                if(selectedKv<=35) maxI = 255;
-                else if(selectedKv<=40) maxI = convertPcb190IanodeToRaw(190);
-                else if(selectedKv<=45) maxI = convertPcb190IanodeToRaw(170);
-                else maxI = convertPcb190IanodeToRaw(150);
-            }else{
-
-                // Caso Manuale oltre i 400 mAs ma senza lo starter (la corrente nn può essere maggiorata
-                if((!aecMode)&&(pGeneratore->selectedDmAs>=400*10)) timeoutExp = 60;
-
-                if(selectedKv<=32) maxI = convertPcb190IanodeToRaw(170);
-                else if(selectedKv<=35) maxI = convertPcb190IanodeToRaw(150);
-                else if(selectedKv<=40) maxI = convertPcb190IanodeToRaw(130);
-                else if(selectedKv<=45) maxI = convertPcb190IanodeToRaw(110);
-                else  maxI = convertPcb190IanodeToRaw(100);
-            }
-        }
-    }
-
-    // Caricamento valori limite
-    maxV = convertPcb190KvToRaw(kV+3);
-    minV = convertPcb190KvToRaw(kV-3);
-
-
-    validated=TRUE;
-    return 0; // Nessun errore rilevato
-}
 
 // Cerca l'indice corrispondente alla corrente minima
 // per i parametri indicati
@@ -2178,18 +1986,22 @@ int Generatore::getImaxIndex(int kV, QString anode, int fsize){
 unsigned char Generatore::validateAnalogData(unsigned char modo, bool calibMode, bool isPre)
 {
     int i;
-    unsigned char kV;
+
 
     if(pConfig->generator_configured  == FALSE) return ERROR_TUBE_NOT_CONFIGURED;
     validated = FALSE;
 
     if(!isValidFuoco()) return ERROR_INVALID_FUOCO;
-    if((selectedDmAs==0) || (selectedDmAs>_MAX_MAS*10)) return ERROR_INVALID_MAS;
+    if((selectedDmAs==0) || (selectedDmAs>_MAX_MAS*10)){
+        PRINT(QString("ERRORE VALIDATE DATA DMAS: selected=%1").arg(selectedDmAs));
+        return ERROR_INVALID_MAS;
+    }
 
     // Cerca i Kv a partire dal valore float richiesto
-    if(getValidKv(selectedKv, &kV, &selectedVdac)==FALSE) return ERROR_INVALID_KV;
+    selectedVdac = getKvDac(selectedKv);
     if(selectedVdac > 4095) return ERROR_INVALID_GEN_CONFIG;
     if(selectedVdac == 0) return ERROR_NOT_CALIBRATED_KV;
+    int kV = (int) round(selectedKv);
 
     // Impostazione scambio primari
     SWA = tube[kV-_MIN_KV].vRef.SWA;
@@ -2228,13 +2040,13 @@ unsigned char Generatore::validateAnalogData(unsigned char modo, bool calibMode,
 
     // Tubi a bassa velocità
     if(pConfig->sys.highSpeedStarter == FALSE){
-        i=getITabIndex(kV); // Correnti determinate dall'intervallo mAs selezionato
+        i=getITabIndex(kV); // Correnti determinate dall'intervallo mAs selezionato        
     }else if(isPre){
         // Se si tratta di un pre impulso seleziona sempre la corrente a bassa velocità
         i=getIminIndex(kV,selectedAnodo,selectedFSize); // Corrente low speed
     }else if(calibMode){
         // In calibrazione per risparmiare il tubo meglio usare correnti basse
-        i=getIminIndex(kV,selectedAnodo,selectedFSize); // Corrente low speed
+        i=getIminIndex(kV,selectedAnodo,selectedFSize); // Corrente low speed        
     }else if(!starterHS){
         // Per una corrente di impulso, con bassa velocità seleziona la corrente minore
         i=getIminIndex(kV,selectedAnodo,selectedFSize); // Corrente low speed
@@ -2288,18 +2100,6 @@ bool Generatore::setmAs(double mAs)
     if(mAs > (double) _MAX_MAS ) return FALSE;
 
     selectedDmAs = (unsigned int) (mAs * 10);
-
-    return TRUE;
-}
-
-bool Generatore::setMasTomo(unsigned short index, double mAs)
-{
-    validated = FALSE;
-    selectedmAsTomo = 0;
-
-    if(mAs > (float) _MAX_MAS ) return FALSE;
-
-    selectedmAsTomo = mAs;//mAs * 10;
 
     return TRUE;
 }
@@ -2648,25 +2448,31 @@ void Generatore::initAnodeHU(void){
 // ___________________________________________________________________________________
 // Rerstituisce il valore massimo dei Mas selezionabili per quel dato kV e fuoco
 // Restituisce 0 se non ci sono intervalli possibili
+// Il valore dei kV è selezionato sulla base dell'arrotondamento dell'input float
+// al decimale più vicino.
 // ___________________________________________________________________________________
-int Generatore::getMaxDMas(unsigned char kV, QString anodo, unsigned char fuoco)
+int Generatore::getMaxDMas(float fKv, QString anodo, unsigned char fuoco)
 {
     int i;
     int mas=0;
+    int kV = (int) round(fKv);
 
-    if(kV<_MIN_KV) return 0; // kV non ancora selezionati!
-    if(kV>_MAX_KV) return 0; // kV non ancora selezionati!
+    // Controllo di coerenza
+    if(kV<_MIN_KV) return 0;
+    if(kV>_MAX_KV) return 0;
 
-    if(tube[kV-_MIN_KV].mAs.isEmpty()) return 0; // Nessun intervallo disponibile
+    // Nessun intervallo disponibile
+    if(tube[kV-_MIN_KV].mAs.isEmpty()) return 0;
 
     for(i=0; i<tube[kV-_MIN_KV].mAs.size(); i++)
     {
         // Seleziona solo gli intervalli associati al fuoco e anodo selezionati
         if(tube[kV-_MIN_KV].mAs.at(i).anode!=anodo) continue;
         if(tube[kV-_MIN_KV].mAs.at(i).fsize!=fuoco) continue;
-
         if(mas<=tube[kV-_MIN_KV].mAs.at(i).a) mas = tube[kV-_MIN_KV].mAs.at(i).a; // Assegna il valore massimo possibile
     }
+
+    PRINT(QString("GET MAX DMAS: selkv= %1 kv=%2, mAs =%3").arg(fKv).arg(kV).arg(mas));
     return mas;
 
 }
@@ -2675,20 +2481,25 @@ int Generatore::getMaxDMas(void)
 {
     int i;
     int mas=0;
-    int kv=(int) selectedKv;
+    int kv = (int) round(selectedKv);
 
-    if(kv<_MIN_KV) return 0; // kV non ancora selezionati!
-    if(kv>_MAX_KV) return 0; // kV non ancora selezionati!
-    if(tube[kv-_MIN_KV].mAs.isEmpty()) return 0; // Nessun intervallo disponibile
+
+    // Controllo di coerenza
+    if(kv<_MIN_KV) return 0;
+    if(kv>_MAX_KV) return 0;
+
+    // Nessun intervallo disponibile
+    if(tube[kv-_MIN_KV].mAs.isEmpty()) return 0;
 
     for(i=0; i<tube[kv-_MIN_KV].mAs.size(); i++)
     {
         // Seleziona solo gli intervalli associati al fuoco e anodo selezionati
         if(tube[kv-_MIN_KV].mAs.at(i).anode!=selectedAnodo) continue;
         if(tube[kv-_MIN_KV].mAs.at(i).fsize!=selectedFSize) continue;
-
         if(mas<=tube[kv-_MIN_KV].mAs.at(i).a) mas = tube[kv-_MIN_KV].mAs.at(i).a; // Assegna il valore massimo possibile
     }
+
+    PRINT(QString("GET MAX DMAS: selkv= %1 kv=%2, mAs =%3").arg(selectedKv).arg(kv).arg(mas));
     return mas;
 
 }

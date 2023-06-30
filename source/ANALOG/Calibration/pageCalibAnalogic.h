@@ -39,7 +39,7 @@ public:
     unsigned char   pc_selected_filtro;           // Filtro impostato da pc
     unsigned char   pc_selected_pmmi;             // mm di plexiglass richiesti per la calibrazione
     unsigned char   pc_selected_fuoco;            // 0=fuoco grande; 1 = fuoco piccolo
-    unsigned char   pc_selected_profile_index;    // Indice nell'array dei profili presenti
+    int             pc_selected_profile_index;    // Indice nell'array dei profili presenti
     unsigned char   pc_selected_field;            // Indice del campo da utilizzare
     int             pc_selected_pulses;           // impulsi di bypass AEC
 

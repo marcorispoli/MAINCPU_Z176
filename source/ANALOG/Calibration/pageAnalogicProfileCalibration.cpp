@@ -109,49 +109,58 @@ void AnalogCalibPageOpen::setProfileData(void){
 
 
     // Impostazione collimazione aperta
-    pCollimatore->manualCollimation = true;
-    pCollimatore->manualF = 0;
-    pCollimatore->manualB = 0;
-    pCollimatore->manualL = 0;
-    pCollimatore->manualR = 0;
-    if(!pCollimatore->manualColliUpdate()) {
-        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO,TRUE);
-        colli_ok=false;
-    }else colli_ok=true;
+    if((!pCollimatore->manualCollimation) ||(!colli_ok)){
+        pCollimatore->manualCollimation = true;
+        pCollimatore->manualF = 0;
+        pCollimatore->manualB = 0;
+        pCollimatore->manualL = 0;
+        pCollimatore->manualR = 0;
+        if(!pCollimatore->manualColliUpdate()) {
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_UPDATE_FALLITO,TRUE);
+            colli_ok=false;
+        }else colli_ok=true;
+    }
 
     // Impostazione filtro: il pre impulso deve comunque essere fatto con il Molibdeno (primo filtro)
-    pCollimatore->manualFiltroCollimation = true;
-    pCollimatore->manualFilter = pConfig->analogCnf.primo_filtro; //pc_selected_filtro;
-    if(!pCollimatore->manualSetFiltro()){
-        filter_ok=false;
-        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_FILTRO_FALLITO,TRUE);
-    }else filter_ok=true;
+    if((!pCollimatore->manualFiltroCollimation) || (pCollimatore->manualFilter != pConfig->analogCnf.primo_filtro) ||(!filter_ok)){
+        pCollimatore->manualFiltroCollimation = true;
+        pCollimatore->manualFilter = pConfig->analogCnf.primo_filtro; //pc_selected_filtro;
+        if(!pCollimatore->manualSetFiltro()){
+            filter_ok=false;
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_COLLI, COLLI_FILTRO_FALLITO,TRUE);
+        }else filter_ok=true;
+    }
     ApplicationDatabase.setData(_DB_CALIB_PROFILE_FILTRO, (int) pc_selected_filtro , DBase::_DB_FORCE_SGN);
 
+
     // Impostazione fuoco sulla base del potter presente
-    // ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
-    if(pc_selected_fuoco==Generatore::FUOCO_SMALL){
-        pGeneratore->setFuoco(Generatore::FUOCO_SMALL);
-        ApplicationDatabase.setData(_DB_CALIB_PROFILE_PC_POTTER, (int)  1, DBase::_DB_FORCE_SGN);
-    }else{
-        // Impostazione Fuoco grande
-        pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
-        ApplicationDatabase.setData(_DB_CALIB_PROFILE_PC_POTTER, (int)  0, DBase::_DB_FORCE_SGN);
+    if((pc_selected_fuoco != pGeneratore->selectedFSize) ||(!focus_ok)){
+        if(pc_selected_fuoco==Generatore::FUOCO_SMALL){
+            pGeneratore->setFuoco(Generatore::FUOCO_SMALL);
+            ApplicationDatabase.setData(_DB_CALIB_PROFILE_PC_POTTER, (int)  1, DBase::_DB_FORCE_SGN);
+        }else{
+            // Impostazione Fuoco grande
+            pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
+            ApplicationDatabase.setData(_DB_CALIB_PROFILE_PC_POTTER, (int)  0, DBase::_DB_FORCE_SGN);
+        }
+
+        if(!pGeneratore->updateFuoco()){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, GEN_SET_FUOCO,TRUE);
+            focus_ok=false;
+        }else focus_ok=true;
     }
-    if(!pGeneratore->updateFuoco()){
-        PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, GEN_SET_FUOCO,TRUE);
-        focus_ok=false;
-    }else focus_ok=true;
 
     // Impostazione campo esposimetro
     ApplicationDatabase.setData(_DB_CALIB_PROFILE_CAMPO, (int)  pc_selected_field, DBase::_DB_FORCE_SGN);
-    if(!pPotter->setDetectorField(pc_selected_field)){
-        PageAlarms::activateNewAlarm(_DB_ALLARMI_ANALOGICA, ERROR_SETTING_DET_FIELD,TRUE);
-        field_ok=false;
-    }else{
-        field_ok=true;
-    }
 
+    if((pc_selected_field != pPotter->selected_field) ||(!field_ok)){
+        if(!pPotter->setDetectorField(pc_selected_field)){
+            PageAlarms::activateNewAlarm(_DB_ALLARMI_ANALOGICA, ERROR_SETTING_DET_FIELD,TRUE);
+            field_ok=false;
+        }else{
+            field_ok=true;
+        }
+    }
 
     // Verifica se è possibile abilitare i dati
     if((pc_selected_profile_index==-1)||(!field_ok)||(!focus_ok)||(!filter_ok)||(!colli_ok)){
@@ -504,30 +513,39 @@ void AnalogCalibPageOpen::profileGuiNotify(unsigned char id, unsigned char mccco
 
 
         // Preleva i dati per la nuova esposizione
-        int error = pGeneratore->pAECprofiles->getAecData(profile_rxplog,ANALOG_FILTRO_FISSO, pc_selected_filtro, 5,ANALOG_TECH_PROFILE_STD,pGeneratore->selectedAnodo, pGeneratore->selectedFSize, &profile_rxfiltro,&profile_rxkV,&profile_rxdmas,&profile_rxpulses);
+
+        int error = pGeneratore->pAECprofiles->getAecProfileCalibration(profile_rxplog, pc_selected_filtro, pGeneratore->selectedAnodo, pGeneratore->selectedFSize, &profile_rxkV, &profile_rxdmas, &profile_rxpulses);
         if(error<0){
-            xrayErrorInCommand(ESPOSIMETRO_INVALID_AEC_DATA);
-            PRINT(QString("PROFILE ERROR AEC:%1 ").arg(error));
+            // xrayErrorInCommand(ESPOSIMETRO_INVALID_AEC_DATA);
+            // In caso di errore, comunica il codice di errore con cui il driver deve uscire
+            stopAttesaDati();
+            data[20] = 1;
+            data[21] =  ESPOSIMETRO_INVALID_AEC_DATA;
+            pConsole->pGuiMcc->sendFrame(MCC_XRAY_ANALOG_CALIB_PROFILE,1,data,22);
+            PRINT(QString("PROFILE ERROR AEC:%1 ").arg(error));           
             return;
         }
 
         if(pc_selected_pulses) profile_rxpulses = pc_selected_pulses; // bypass da PC sugli impulsi
 
-
-
         pGeneratore->setkV(profile_rxkV);
         pGeneratore->setmAs((float) profile_rxdmas/10);
         pCollimatore->manualFilter = pc_selected_filtro;
         if(!pCollimatore->manualSetFiltro()){
-          // TBD
+          PRINT(QString("ERRORORE IMPOSTAZIONE FILTRO MANUALE"));
         }
 
         // Impostazione dati di esposizione
         unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL, true, false);
         if(errcode){
+            PRINT(QString("ERRORORE VALIDAZIONE GENERATORE:%1 ").arg(error));
             xrayErrorInCommand(errcode);
             return;
         }
+
+        PRINT(QString("PROFILE AEC DATA IN: PROFILE=%1 PLOG=%2, FILTRO=%3, ANODO=%4").arg(pGeneratore->pAECprofiles->getCurrentProfilePtr()->filename).arg(profile_rxplog).arg(pc_selected_filtro).arg( pGeneratore->selectedAnodo));
+        PRINT(QString("PROFILE AEC DATA OUT: KV=%1(%2) MAS=%3, PULSES =%4").arg(profile_rxkV).arg(pGeneratore->selectedVdac).arg((float) profile_rxdmas/10).arg(profile_rxpulses));
+
 
         data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
         data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);
@@ -564,9 +582,9 @@ void AnalogCalibPageOpen::profileGuiNotify(unsigned char id, unsigned char mccco
         data[18] = (unsigned char) (profile_rxpulses);
         data[19] = (unsigned char) (profile_rxpulses>>8);
         data[20] = 1; // 0=pre-pulse, 1 = Pulse
-
+        data[21] = 0;
         // Prova ad inviare il comando
-        if(pConsole->pGuiMcc->sendFrame(MCC_XRAY_ANALOG_CALIB_PROFILE,1,data,21)==FALSE)
+        if(pConsole->pGuiMcc->sendFrame(MCC_XRAY_ANALOG_CALIB_PROFILE,1,data,22)==FALSE)
         {
             xrayErrorInCommand(ERROR_MCC_COMMAND);
             return;

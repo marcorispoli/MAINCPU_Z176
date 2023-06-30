@@ -75,11 +75,10 @@ public:
         int getImaxIndex(int kV, QString anodo, int fsize);
 
 
-    unsigned char validateData(void) ;       // Validazione dei dati del generatore per modelli digitali
     unsigned char validateAnalogData(unsigned char modo, bool calibMode, bool isPre);// Validazione dei dati del generatore per modelli analogici
 
     bool setmAs(double mAs);           // Imposta i mAs
-    bool setMasTomo(unsigned short index, double mAs);           // Imposta i mAs
+
 
     bool setkV(float kV);   // Imposta i kV
 
@@ -368,9 +367,8 @@ public:
     bool getTLine(QByteArray* dato, int* index, unsigned char kV);
 
     int  getITabIndex(unsigned char kV);
-    bool isStarterHS(unsigned char kV, int mAs);
-    bool getValidKv(float val, unsigned char* kv, unsigned short* vdac);
-
+    bool isStarterHS(unsigned char kV, int mAs);    
+    unsigned short getKvDac(float val);
 
     // Contatori statistici
     void notifyStatisticData(int datakv, unsigned int datamAs, bool isStandard);
@@ -432,7 +430,7 @@ public:
     void initAnodeHU(int Y, int M, int D, int h, int m, int s);
 
 
-    int     getMaxDMas(unsigned char kV, QString anodo, unsigned char fuoco); // GEnerico
+    int     getMaxDMas(float kV, QString anodo, unsigned char fuoco); // GEnerico
     int     getMaxDMas(void);    // Lavora sulla selezione corrente
     float   getCurrentAnalogKv(void);   // Restituisce i kV correnti
     int     getCurrentAnalogDmAs(void);    // Restituisce i mAs correnti

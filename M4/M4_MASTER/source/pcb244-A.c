@@ -594,7 +594,7 @@ bool PCB244_A_GetPreRad(int attempt){
         if((_DEVREGL(RG244_A_SETTINGS,CONTEST) & ENABLE_RD_RAD)) break;
      }
      if(!attempt) return false;
-
+ printf("READ RAD abilitato\n\r");
      // Legge i RAD campionati
      if(!PCB244_A_GetRad1(10)) return false;
      if(!PCB244_A_GetRad5(10)) return false;

@@ -79,6 +79,7 @@ public:
 
 
     int getAecData(int plog, int modo_filtro,  int selected_filtro, int odindex, int techmode, QString selectedAnodo, int selectedFSize, int* filtro,float* kV, int* dmAs, int* pulses);
+    int getAecProfileCalibration(int plog, int selected_filtro, QString selectedAnodo, int selectedFSize, float* kV, int* dmAs, int* pulses);
 
 };
 

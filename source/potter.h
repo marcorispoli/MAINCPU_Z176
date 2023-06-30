@@ -24,6 +24,7 @@ public:
 
     void startTestGrid(int nTest); // Attivazione test griglia
 
+    unsigned char selected_field;
 public slots:
     void guiNotify(unsigned char id, unsigned char mcccode, QByteArray data); // Notifiche da GUI
 

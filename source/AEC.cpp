@@ -637,23 +637,42 @@ int AEC::getAecData(int plog, int modo_filtro, int selected_filtro, int odindex,
     *dmAs = pGeneratore->getMaxDMas(*kV,selectedAnodo, selectedFSize);
 
     // Assegnazione filtro
-    if(modo_filtro == ANALOG_FILTRO_FISSO){
+    if(modo_filtro == ANALOG_FILTRO_FISSO){            
         *filtro = selected_filtro; // Filtro attualmente selezionato
+        PRINT(QString("AEC MODO FILTRO FISSO: SELEZIONATO %1").arg(*filtro));
     }else{
         if(pConfig->analogCnf.secondo_filtro != Collimatore::FILTRO_ND){
-            if( plog < profilePtr->plog_threshold ) *filtro = pConfig->analogCnf.secondo_filtro;
-            else *filtro = pConfig->analogCnf.primo_filtro;
-        }else *filtro = pConfig->analogCnf.primo_filtro;
+            if( plog < profilePtr->plog_threshold ){
+                *filtro = pConfig->analogCnf.secondo_filtro;
+                PRINT(QString("AEC FILTRO PER PLOG MINIMO: SELEZIONATO %1").arg(*filtro));
+            }else{
+                *filtro = pConfig->analogCnf.primo_filtro;
+                PRINT(QString("AEC FILTRO PER PLOG NORMALE: SELEZIONATO %1").arg(*filtro));
+            }
+        }else{
+            *filtro = pConfig->analogCnf.primo_filtro;
+            PRINT(QString("AEC SECONDO FILTRO NON CONFIGURATO: SELEZIONATO %1").arg(*filtro));
+        }
     }
 
     // Lettura impulso assegnato
     QList<profilePoint_Str>* ptr ;
     if(selectedFSize == Generatore::FUOCO_LARGE){
-        if(*filtro == Collimatore::FILTRO_Mo) ptr = &profilePtr->pulseStd_Mo_G;
-        else ptr = &profilePtr->pulseStd_Rh_G;
+        if(*filtro == Collimatore::FILTRO_Mo){
+            PRINT("AEC SELEZIONATO CURVE FUOCO GRANDE MOLIBDENO");
+            ptr = &profilePtr->pulseStd_Mo_G;
+        }else{
+            ptr = &profilePtr->pulseStd_Rh_G;
+            PRINT("AEC SELEZIONATO CURVE FUOCO GRANDE RODIO");
+        }
     }else{
-        if(*filtro == Collimatore::FILTRO_Mo) ptr = &profilePtr->pulseStd_Mo_P;
-        else ptr = &profilePtr->pulseStd_Rh_P;
+        if(*filtro == Collimatore::FILTRO_Mo){
+            PRINT("AEC SELEZIONATO CURVE FUOCO PICCOLO MOLIBDENO");
+            ptr = &profilePtr->pulseStd_Mo_P;
+        }else{
+            PRINT("AEC SELEZIONATO CURVE FUOCO PICCOLO RODIO");
+            ptr = &profilePtr->pulseStd_Rh_P;
+        }
     }
 
     // Controlla se ci sono punti disponibili
@@ -697,12 +716,76 @@ int AEC::getAecData(int plog, int modo_filtro, int selected_filtro, int odindex,
     if(*pulses<=0) return -6;
 
     // Correzione OD solo per FILM SCREEN
-    if(profilePtr->plateType!=ANALOG_PLATE_CR){
+    if(profilePtr->plateType != ANALOG_PLATE_CR){
         *pulses = (int) ((float) profilePtr->od[odindex] * (float) (*pulses) / 100);
     }
 
     if(*pulses<=0) return -6;
 
 
+    return 0;
+}
+
+int AEC::getAecProfileCalibration(int plog, int selected_filtro, QString selectedAnodo, int selectedFSize, float* kV, int* dmAs, int* pulses){
+
+    profileCnf_Str* profilePtr = getCurrentProfilePtr();
+    if(profilePtr==null)        return -1;   // Nessun profilo caricato
+
+    // Calcolo kV da utilizzare
+    if(plog>=MAX_PLOG) plog=MAX_PLOG;
+    *kV = 29 - (float) plog * 5 / MAX_PLOG ;
+
+    // Correzione kV secondo tecnica desiderata: il CR vuole sempre Low Dose
+    if(profilePtr->plateType==ANALOG_PLATE_CR) *kV +=  2;
+
+    // Assegnazione mAs in relazione ai kV selezionati
+    *dmAs = pGeneratore->getMaxDMas(*kV,selectedAnodo, selectedFSize);
+
+    // Lettura impulso assegnato
+    QList<profilePoint_Str>* ptr ;
+    if(selectedFSize == Generatore::FUOCO_LARGE){
+        if(selected_filtro == Collimatore::FILTRO_Mo) ptr = &profilePtr->pulseStd_Mo_G;
+        else ptr = &profilePtr->pulseStd_Rh_G;
+    }else{
+        if(selected_filtro == Collimatore::FILTRO_Mo) ptr = &profilePtr->pulseStd_Mo_P;
+        else ptr = &profilePtr->pulseStd_Rh_P;
+    }
+
+    // Controlla se ci sono punti disponibili
+    if(ptr==null) return -5;
+    if(ptr->size() < 2) return -5;
+
+
+    bool pulseFound=false;
+    if(plog<=(*ptr)[0].plog){
+        int i0 = 0;
+        int i1 = 1;
+        float k = ((float) (*ptr)[i1].pulse - (float) (*ptr)[i0].pulse) / ((float) (*ptr)[i1].plog - (float) (*ptr)[i0].plog);
+        *pulses = (*ptr)[i0].pulse - k * (float) ((*ptr)[i0].plog-plog);
+        pulseFound=true;
+    }else if(plog >= (*ptr)[(*ptr).size()-1].plog){
+        int i0 = (*ptr).size()-2;
+        int i1 = (*ptr).size()-1;
+        float k = ((float)(*ptr)[i1].pulse - (float)(*ptr)[i0].pulse) / ((float)(*ptr)[i1].plog - (float)(*ptr)[i0].plog);
+        *pulses = (*ptr)[i1].pulse + k * (float)(plog-(*ptr)[i1].plog);
+        pulseFound=true;
+
+    }else{
+        for(int i=1; i < (*ptr).size(); i++){
+            if(plog <= (*ptr)[i].plog){
+                int i0 = i-1;
+                int i1 = i;
+                float k = ((float) (*ptr)[i1].pulse - (float) (*ptr)[i0].pulse) / ((float) (*ptr)[i1].plog - (float) (*ptr)[i0].plog);
+                *pulses = (*ptr)[i0].pulse + k * (float) (plog-(*ptr)[i0].plog);
+                pulseFound=true;
+                break;
+            }
+        }
+
+    }
+
+
+    if(!pulseFound) return -5;
+    if(*pulses<=0) return -6;
     return 0;
 }

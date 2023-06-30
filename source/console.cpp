@@ -2809,12 +2809,9 @@ bool console::handleSetAnalogIaCalibTubeData(protoConsole* frame, protoConsole* 
     // Selezione filtro
     paginaCalibAnalogic->pc_selected_filtro = pConfig->analogCnf.primo_filtro;
 
-    // Valore atteso tensione dac e atteso
-    unsigned char KV;
-    unsigned short KVDAC;
-    pGeneratore->getValidKv((float)frame->parametri[1].toInt(), &KV , &KVDAC );
-    paginaCalibAnalogic->pc_selected_kV = KV;
-    paginaCalibAnalogic->pc_selected_vdac = KVDAC;
+    // Valore atteso tensione dac e atteso   
+    paginaCalibAnalogic->pc_selected_kV = frame->parametri[1].toInt();
+    paginaCalibAnalogic->pc_selected_vdac = pGeneratore->getKvDac(paginaCalibAnalogic->pc_selected_kV);
 
     // Corrente nominale
     paginaCalibAnalogic->pc_selected_Ia = frame->parametri[2].toInt();

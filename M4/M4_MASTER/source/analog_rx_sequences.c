@@ -434,7 +434,10 @@ int AnalogAECModeExposure(void){
     int attempt=20; // Attesa di circa 8 secondi
     while(--attempt){
         if(PCB244_A_GetPreRad(10)==true) break; // 40ms * 10 = 400ms ogni blocco di tentativi
-        if(SystemInputs.CPU_XRAY_REQ==0)  return ERROR_PUSHRX_NO_PREP;
+        if(SystemInputs.CPU_XRAY_REQ==0){
+            return ERROR_PUSHRX_NO_PREP;
+        }
+
     }
     if(!attempt) return  _SEQ_WAIT_AEC_DATA;
 
