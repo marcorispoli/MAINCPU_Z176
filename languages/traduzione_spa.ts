@@ -1626,7 +1626,7 @@ El sistema detectó el botón de rayos X bloqueado.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="779"/>
         <source>COMPRESSORE</source>
-        <translation>COMPRESIÓN</translation>
+        <translation>PALA</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="782"/>

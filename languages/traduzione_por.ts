@@ -1627,7 +1627,7 @@ O sistema detectou que o botão X-RAY foi bloqueado.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="779"/>
         <source>COMPRESSORE</source>
-        <translation>PADDLE</translation>
+        <translation>PÁ</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="782"/>
@@ -1647,14 +1647,12 @@ O sistema detectou que o botão X-RAY foi bloqueado.</translation>
     <message>
         <location filename="../source/mainpage.cpp" line="789"/>
         <source>TARGET</source>
-        <translation>TARGET</translation>
+        <translation>ALVO</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="829"/>
         <source>MESSAGGIO ATTIVAZIONE POWER OFF</source>
         <translation>O SISTEMA DESLIGARÁ!
-Pressione a seta para a esquerda para cancelar.O SISTEMA DESLIGARÁ!
-Pressione a seta para a esquerda para cancelar.O SISTEMA DESLIGARÁ!
 Pressione a seta para a esquerda para cancelar.</translation>
     </message>
 </context>
