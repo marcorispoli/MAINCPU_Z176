@@ -1624,7 +1624,7 @@ C-ARM или TUBE-ARM в данный момент работают.</translatio
     <message>
         <location filename="../source/mainpage.cpp" line="779"/>
         <source>COMPRESSORE</source>
-        <translation>PADDLE</translation>
+        <translation>ВЕСЛО</translation>
     </message>
     <message>
         <location filename="../source/mainpage.cpp" line="782"/>

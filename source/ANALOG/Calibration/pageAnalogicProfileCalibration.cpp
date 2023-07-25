@@ -29,7 +29,7 @@ bool AnalogCalibPageOpen::getProfileCalibrationReady(unsigned char opt){
     if(!ApplicationDatabase.getDataU(_DB_READY_EXPOSURE)) ready_stat|=4;                            // PC not READY
     if(pc_selected_pmmi==0) ready_stat|=8;                                                          // PC non ha selezionato i pmmi
     if(!pCompressore->isValidPad()) ready_stat|=0x10;                                               // Compressore non riconosciuto
-    if(abs(pc_selected_pmmi-ApplicationDatabase.getDataI(_DB_SPESSORE))>10) ready_stat|=0x20;       // Spessore non compatibile con PMMI
+    if(abs(pc_selected_pmmi-ApplicationDatabase.getDataI(_DB_SPESSORE))>15) ready_stat|=0x20;       // Spessore non compatibile con PMMI
 
 
     ApplicationDatabase.setData(_DB_CALIB_PROFILE_READY_STAT,ready_stat,opt);
@@ -290,12 +290,11 @@ void AnalogCalibPageOpen::profileValueChanged(int index,int opt)
         else ui->profileFilter->setText(QString("Filter:Mo"));
         break;
     case _DB_CALIB_PROFILE_PMMI:
-        if(ApplicationDatabase.getDataI(index)==45){
-            ui->frameProfilePhantom->setStyleSheet(QString("border-image: url(:/Sym/Sym/PMMI45.png);background-color: rgb(0, 85, 255,0);"));
-        }else{
-            ui->frameProfilePhantom->setStyleSheet(QString("border-image: url(:/Sym/Sym/PMMI%1.png);background-color: rgb(0, 85, 255,0);").arg(ApplicationDatabase.getDataI(index)/10));
-        }
-
+        ui->profilePhantomLabel->setText(QString("%1 (mm)").arg(ApplicationDatabase.getDataI(index)));
+        ui->profilePhantomLabel->show();
+        if(ApplicationDatabase.getDataI(index) > 70){
+            ui->frameProfilePhantom->setStyleSheet(QString("border-image: url(:/Sym/Sym/PMMI7.png);background-color: rgb(0, 85, 255,0);"));
+        }else  ui->frameProfilePhantom->setStyleSheet(QString("border-image: url(:/Sym/Sym/PMMI%1.png);background-color: rgb(0, 85, 255,0);").arg(ApplicationDatabase.getDataI(index)/10));
         break;
 
     case _DB_CALIB_PROFILE_PC_POTTER:
@@ -344,7 +343,7 @@ void AnalogCalibPageOpen::profileValueChanged(int index,int opt)
                      ui->profilePhantomLabel->show();
                 }else{
                     // Tutto OK
-                    ui->profilePhantomLabel->hide();
+                    ui->profilePhantomLabel->show();
                     ui->warningPhantomProfile->hide();
                 }
             }else{

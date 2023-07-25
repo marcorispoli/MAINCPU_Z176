@@ -790,7 +790,7 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         }
 
 
-        if(protocollo.parametri[1].toInt() > 70){
+        if(protocollo.parametri[1].toInt() > 75){
             emit consoleTxHandler( answ.answToQByteArray("NOK 4 INVALID-PMMI"));
             return;
         }

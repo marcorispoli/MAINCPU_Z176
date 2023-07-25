@@ -638,7 +638,7 @@ int AEC::getAecData(int plog, int modo_filtro, int selected_filtro, int odindex,
 
     // Assegnazione filtro
     if(modo_filtro == ANALOG_FILTRO_FISSO){            
-        *filtro = selected_filtro; // Filtro attualmente selezionato
+        *filtro = pConfig->analogCnf.selected_filtro; // Filtro attualmente selezionato come filtro fisso
         PRINT(QString("AEC MODO FILTRO FISSO: SELEZIONATO %1").arg(*filtro));
     }else{
         if(pConfig->analogCnf.secondo_filtro != Collimatore::FILTRO_ND){
@@ -651,7 +651,7 @@ int AEC::getAecData(int plog, int modo_filtro, int selected_filtro, int odindex,
             }
         }else{
             *filtro = pConfig->analogCnf.primo_filtro;
-            PRINT(QString("AEC SECONDO FILTRO NON CONFIGURATO: SELEZIONATO %1").arg(*filtro));
+            PRINT(QString("AEC SECONDO FILTRO NON CONFIGURATO: SELEZIONATO PRIMO FILTRO %1").arg(*filtro));
         }
     }
 

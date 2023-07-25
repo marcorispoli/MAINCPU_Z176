@@ -159,7 +159,9 @@ void AnalogPageOpen::xrayFullAutoSequence(void){
 
     XspessoreSeno = ApplicationDatabase.getDataI(_DB_SPESSORE);
     XselectedFuoco = pGeneratore->selectedFSize;
-    XselectedFiltro = pConfig->analogCnf.selected_filtro;
+
+
+    XselectedFiltro = pCollimatore->getFiltroStat();
 
 
     data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
@@ -233,10 +235,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
     int   campi;
 
     QString logstring;
-    QString fuoco_string;
-    QString exposure_string;
-    QString pfilter_string;
-    QString Pfilter_string;
+    QString fuoco_string;    
     QString field_string;
 
 
@@ -255,8 +254,13 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         else offset = ApplicationDatabase.getDataI(_DB_MAG_OFFSET);
 
         // Calcolo dose pre impulso + impulso
-        pre_ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, Xpre_selectedDmAs,Xpre_selectedkV*10,XselectedFiltro); // Contributo pre impulso se presente
-        ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, ldmas,XselectedkV*10,XselectedFiltro); // Contributo impulso se presente
+        if(mcccode == MCC_XRAY_ANALOG_MANUAL){
+            pre_ldose = 0;
+            ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, ldmas,XselectedkV*10,XselectedFiltro); // Contributo impulso se presente
+        }else{
+            pre_ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, Xpre_selectedDmAs,Xpre_selectedkV*10,pConfig->analogCnf.primo_filtro); // Contributo pre impulso se presente
+            ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, ldmas,XselectedkV*10,XselectedFiltro); // Contributo impulso se presente
+        }
 
         ApplicationDatabase.setData(_DB_XDMAS,(int) ldmas);
         ApplicationDatabase.setData(_DB_XDKV,(int) (XselectedkV * 10) );
@@ -344,7 +348,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         io->setXrayLamp(false);
 
         // Reimposta se necessario il filtro selezionato (in caso di AEC con cambio filtro)
-        emit queuedExecution(QUEUED_SELECTED_FILTER,0,""); // Impostazione Filtro
+        emit queuedExecution(QUEUED_SELECTED_FILTER,0,""); // Impostazione Filtro di base
         emit queuedExecution(QUEUED_LOG_FLUSH,0,logstring); // Impostazione Filtro
 
         break;

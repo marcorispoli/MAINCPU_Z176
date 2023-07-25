@@ -432,12 +432,14 @@ void AnalogPageOpen::initializeStandardPage(void){
     // Se la modalità è manuale allora vale l'ultimo filtro selezionato e viene disabilitao il modo filtro automatico
     ApplicationDatabase.setData(_DB_PRIMO_FILTRO,(int) pConfig->analogCnf.primo_filtro ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
     ApplicationDatabase.setData(_DB_SECONDO_FILTRO,(int) pConfig->analogCnf.secondo_filtro ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+
     if(pConfig->analogCnf.tech_mode == ANALOG_TECH_MODE_MANUAL) pConfig->analogCnf.auto_filtro_mode = false;
 
+
     if(pConfig->analogCnf.auto_filtro_mode){
-        ApplicationDatabase.setData(_DB_FILTER_MODE,(int) ANALOG_FILTRO_AUTO ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
-        pConfig->analogCnf.selected_filtro = pConfig->analogCnf.primo_filtro;
+        ApplicationDatabase.setData(_DB_FILTER_MODE,(int) ANALOG_FILTRO_AUTO ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);        
     }else ApplicationDatabase.setData(_DB_FILTER_MODE,(int) ANALOG_FILTRO_FISSO ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
+
     ApplicationDatabase.setData(_DB_SELECTED_FILTER,(int) pConfig->analogCnf.selected_filtro ,DBase::_DB_FORCE_SGN|DBase::_DB_NO_CHG_SGN);
     emit queuedExecution(QUEUED_SELECTED_FILTER,0,""); // Impostazione Filtro
 
@@ -883,7 +885,7 @@ void AnalogPageOpen::verifyStandardReady(void){
                else if(!pGeneratore->pAECprofiles->isCurrentProfileCalibrated(pConfig->analogCnf.secondo_filtro, pGeneratore->selectedFSize))  not_ready_bits|=0x400;
             }else{
                 // Si controlla solo il filtro selezionato
-                if(!pGeneratore->pAECprofiles->isCurrentProfileCalibrated(pConfig->analogCnf.selected_filtro, pGeneratore->selectedFSize))  not_ready_bits|=0x400;
+                if(!pGeneratore->pAECprofiles->isCurrentProfileCalibrated(ApplicationDatabase.getDataI(_DB_SELECTED_FILTER), pGeneratore->selectedFSize))  not_ready_bits|=0x400;
             }
 
         }
@@ -1315,12 +1317,22 @@ bool AnalogPageOpen::closePageRequest(void){
     return true;
 }
 
+
  void AnalogPageOpen::queuedExecutionSlot(int code, int val, QString str){
+     int locval;
      switch(code){
-     case QUEUED_SELECTED_FILTER: // Seleziona filtro corrente
+
+     case QUEUED_SELECTED_FILTER: // Impostazione filtro pre impulso/impulso manuale
+         if(pConfig->analogCnf.tech_mode != ANALOG_TECH_MODE_MANUAL){
+             locval = pConfig->analogCnf.primo_filtro;
+         }
+         else{
+             locval = ApplicationDatabase.getDataI(_DB_SELECTED_FILTER);
+         }
+
          // Impostazione filtro pre impulso
-         if(pCollimatore->getFiltroStat() != (Collimatore::_FilterCmd_Enum) pConfig->analogCnf.selected_filtro){
-             pCollimatore->setFiltro((Collimatore::_FilterCmd_Enum) pConfig->analogCnf.selected_filtro, true);
+         if(pCollimatore->getFiltroStat() != (Collimatore::_FilterCmd_Enum) locval){
+             pCollimatore->setFiltro((Collimatore::_FilterCmd_Enum) locval, true);
          }
          break;
      case QUEUED_SELECTED_FUOCO:
