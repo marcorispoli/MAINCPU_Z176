@@ -302,8 +302,6 @@ void pannelloOpzioni::valueChanged(int index,int opt)
             else pConfig->analogCnf.auto_filtro_mode = false;
 
             paginaOpenStudyAnalogic->emitQueuedExecution(QUEUED_SELECTED_FILTER,0,""); // Impostazione Filtro
-            //pCollimatore->setFiltro((Collimatore::_FilterCmd_Enum)  pConfig->analogCnf.selected_filtro, true);
-
 
         }
         break;
