@@ -1913,13 +1913,16 @@ unsigned short  Generatore::getKvDac(float fkv)
     valH = valL + 1;
 
     // Controllo coerenza
-    if((valH > _MAX_KV) || (valL < _MIN_KV))  return 0;
+    if((valH > _MAX_KV) || (valL < _MIN_KV))  return 0;    
     if(tube[valL-_MIN_KV].vRef.enable==FALSE) return 0;
-    if(tube[valH-_MIN_KV].vRef.enable==FALSE) return 0;
+
+    // Se il valore alto non è ammissibile allora ritorna il valore basso
+    if(tube[valH-_MIN_KV].vRef.enable==FALSE){
+        return tube[valL-_MIN_KV].vRef.Vdac;
+    }
 
     // Calcola l'indice di vicinanza (0:1)
     indice = fkv - (float) valL;
-
     float dacH = (float) tube[valH-_MIN_KV].vRef.Vdac;
     float dacL = (float) tube[valL-_MIN_KV].vRef.Vdac;
     return (unsigned short) (dacH * indice + dacL * (1-indice));

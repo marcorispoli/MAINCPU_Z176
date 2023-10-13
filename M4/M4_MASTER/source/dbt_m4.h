@@ -1,9 +1,9 @@
 #ifndef _DBT_M4_H
 #define _DBT_M4_H
 
-#define REVISIONE "1.4.0"
+#define REVISIONE "1.5.0"
 #define REVMAJ 1
-#define REVMIN 4
+#define REVMIN 5
 #define REV_BETA 0
 
 #define M4_MASTER
@@ -11,9 +11,8 @@
 /*______________________________________________________________________________
 
 
-   1.4.0
+   1.5.0
 
-   - Modifiche per gestione Parcheggio
 _____________________________________________________________________________*/
 
 //////////////////////////////////////////////////////////////////////////////
