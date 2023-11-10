@@ -673,11 +673,19 @@ int AnalogManualModeExposure(void){
     if(_TEST_BIT(PCB190_FAULT)) return(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));
 
     // Tempo medio impulso in mS
-    //float time_pulse = (unsigned short)((float) _DEVREG(REG190_RX_TIME_PLS,PCB190_CONTEST) * 1.115);
+    // Razionale:
+    // Per il calcolo del rad per la calibrazione invece di utilizzare la tensione (rad)
+    // si calcola indirettamente a partire dagli impulsi.
+    // Nell'ipotesi in cui il VFO è tarato a 1V/KHz e 10V -> 1024 rad
+    // si ottiene la formula per derivare rad dal totale degli impulsi:
+    // RAD = Impulsi * 1024 (10 * Tms)
+
     float time_pulse = Param->mAs_nom*1000 / Param->In;
     float meanRad = ((float) Param->pulses_released * 1024)/(10*time_pulse);
     unsigned int  rad = (unsigned int) meanRad;
     if((meanRad-(float) rad) >0.5) rad++;
+
+    if(radraw > 1000) rad = radraw; // Correzione dovuto al troppo alto valore di rad che rende l'integrazione degli impulsi non affidabile.
     printf("mAs = %f, Pulse = %d, Time=%d, PLOG=%d, RAD=%d, RADRAW=%d, PRERAD=%d\n", ((float)Param->dmAs_released)/10, Param->pulses_released, (unsigned int) time_pulse, plog, rad,radraw,prerad);
 
     float KV,IMED;
