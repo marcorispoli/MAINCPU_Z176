@@ -1,6 +1,7 @@
 #define POTTER_C
 #include "application.h"
 #include "appinclude.h"
+#include "ANALOG/analog.h"
 #include "globvar.h"
 
 void Potter::activateConnections(void){
@@ -22,6 +23,7 @@ void Potter::guiNotify(unsigned char id, unsigned char mcccode, QByteArray data)
 {
     unsigned char i,ii;
     unsigned char potter;
+    bool change_device = false;
 
 #ifdef __APPLICATION_DISABLE_POTTER
 return;
@@ -35,8 +37,13 @@ return;
         }
         if(pBiopsy->connected) return; // Con la biopsia non servono altre info dall'esposimetro
 
-        potterId = data.at(0);
+        if(potterId != data.at(0)){
+            potterId = data.at(0);
+            change_device = true;
+        }
+
         potterValidFactor = FALSE;
+
         // Se la Biopsia è presente allora il codice accessorio è impostato dalla biopsia
         if(data.at(0)==POTTER_2D){
             ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
@@ -44,6 +51,11 @@ return;
             potter = POTTER_2D;
         } else if(data.at(0)==POTTER_MAGNIFIER)
         {
+            // If the Magnifier is just detected, the collimation of the Magnifier is invalidated
+            if(change_device){
+                ApplicationDatabase.setData(_DB_MAGNIFIER_COLLI_FORMAT, (int) _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED);
+            }
+
             ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
             // Verifica se l'ingranditore Ã¨ definito
             if(data.at(1)==255){

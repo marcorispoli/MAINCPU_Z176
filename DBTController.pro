@@ -91,7 +91,8 @@ HEADERS += \
     source/Service/Tools/pottertool.h \
     source/ANALOG/pannelloBiopsia.h \
     source/Service/Calib/calibconsole.h \
-    source/Service/Calib/calibParking.h
+    source/Service/Calib/calibParking.h \
+    source/ANALOG/pannelloMag.h
 
 SOURCES += \
     source/main.cpp \
@@ -163,7 +164,8 @@ SOURCES += \
     source/Service/Tools/pottertool.cpp \
     source/ANALOG/pannelloBiopsia.cpp \
     source/Service/Calib/calibconsole.cpp \
-    source/Service/Calib/calibParking.cpp
+    source/Service/Calib/calibParking.cpp \
+    source/ANALOG/pannelloMag.cpp
 
 
 FORMS += \

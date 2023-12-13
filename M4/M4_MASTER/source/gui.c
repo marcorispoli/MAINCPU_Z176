@@ -830,8 +830,19 @@ void mcc_set_lamp(unsigned char id, unsigned char mcccode)
   steps = mcc_cmd.buffer[2] + mcc_cmd.buffer[3] * 256;
   if(Ser422WriteRegister(_REGID(RG249U2_PR_MIRROR_STEPS),steps,10,&PCB249U2_CONTEST) == _SER422_NO_ERROR)
   {
-    if(pcb249U2Lamp(mcc_cmd.buffer[0],mcc_cmd.buffer[1],TRUE)==TRUE) data[0]=1;
-    else data[0] = 0;
+
+    // Repeats more times
+    printf("MCC LAMP: lamp try to activate..\n");
+    for(int i=0; i<10; i++){
+        if(pcb249U2Lamp(mcc_cmd.buffer[0],mcc_cmd.buffer[1],TRUE)==TRUE){
+            data[0]=1;
+            printf("MCC LAMP: lamp activate ok\n");
+            break;
+        }
+        _time_delay(1000);
+        data[0] = 0;
+    }
+
   }
 
   // Consulta il registro RG249U2_MIRROR_STAT per lo stato corrente dello specchio

@@ -43,12 +43,13 @@ signals:
     
 
 public:
-    #define _COLLI_FORMAT_UNDEFINED     0
-    #define _COLLI_FORMAT_24x30         1
-    #define _COLLI_FORMAT_18x24         2
-    #define _COLLI_FORMAT_BIOPSY        3
-    #define _COLLI_FORMAT_MAGNIFIER     4
-    #define _COLLI_FORMAT_MANUAL        5
+    #define _COLLI_FORMAT_UNDEFINED         0
+    #define _COLLI_FORMAT_24x30             1
+    #define _COLLI_FORMAT_18x24             2
+    #define _COLLI_FORMAT_BIOPSY            3
+    #define _COLLI_FORMAT_MAGNIFIER_18x24   4
+    #define _COLLI_FORMAT_MAGNIFIER_24x30   5
+    #define _COLLI_FORMAT_CUSTOM            6
 
     #define _FACTORY_MIRROR_STEPS_ASSY01 1530
     #define _FACTORY_MIRROR_STEPS_ASSY02 1760
@@ -58,22 +59,25 @@ public:
     #define _FACTORY_FRONT_SMALL_FOCUS  20
     #define _FACTORY_LEFT_24x30         70
     #define _FACTORY_LEFT_18x24         120
-    #define _FACTORY_LEFT_MAGNIFIER     230
+    #define _FACTORY_LEFT_MAGNIFIER_18x24     120
+    #define _FACTORY_LEFT_MAGNIFIER_24x30     70
+
     #define _FACTORY_LEFT_BIOPSY        230
     #define _FACTORY_RIGHT_24x30        65
     #define _FACTORY_RIGHT_18x24        120
-    #define _FACTORY_RIGHT_MAGNIFIER    230
+    #define _FACTORY_RIGHT_MAGNIFIER_18x24    120
+    #define _FACTORY_RIGHT_MAGNIFIER_24x30    65
+
     #define _FACTORY_RIGHT_BIOPSY       230
     #define _FACTORY_BACK_24x30         35
     #define _FACTORY_BACK_18x24         115
-    #define _FACTORY_BACK_MAGNIFIER     190
+    #define _FACTORY_BACK_MAGNIFIER_18x24     115
+    #define _FACTORY_BACK_MAGNIFIER_24x30     35
     #define _FACTORY_BACK_BIOPSY        190
 
 
-
-
-
     static unsigned char colliFormatFromPad(int pad);
+    static QString getFormatName(unsigned char code);
 
     // Azionamento Specchio
     void setMirror(_MirrorCmd_Enum cmd);                    // Imposta lo stato dello Specchio

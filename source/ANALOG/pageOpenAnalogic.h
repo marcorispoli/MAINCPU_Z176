@@ -10,6 +10,7 @@
 #include "pannelloOpzioni.h"
 #include "pannelloProiezioni.h"
 #include "pannelloColli.h"
+#include "pannelloMag.h"
 #include "pannelloBiopsia.h"
 #include <QWidget>
 #include <QGraphicsScene>
@@ -105,6 +106,7 @@ private:
     pannelloOpzioni* optionPanel;
     pannelloProiezioni* projPanel;
     pannelloColli* colliPanel;
+    pannelloMag* magPanel;
     pannelloBiopsia* biopsyPanel;
 
     // Vettore per agevolare la gestione delle proiezioni

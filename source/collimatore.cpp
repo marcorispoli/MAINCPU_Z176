@@ -1,6 +1,7 @@
 #include "application.h"
 #include "appinclude.h"
 #include "globvar.h"
+#include "ANALOG/analog.h"
 
 #define COLLICFG "/resource/config/collimazione.cnf"
 
@@ -242,6 +243,19 @@ NOTIFY:
  */
 
 
+QString Collimatore::getFormatName(unsigned char code){
+    switch(code){
+    case  _COLLI_FORMAT_UNDEFINED: return "";
+    case  _COLLI_FORMAT_24x30: return "24x30";
+    case  _COLLI_FORMAT_18x24: return "18x24";
+    case  _COLLI_FORMAT_BIOPSY: return "BIOPSY";
+    case  _COLLI_FORMAT_MAGNIFIER_18x24: return "MAG-18x24";
+    case  _COLLI_FORMAT_MAGNIFIER_24x30: return "MAG-24x30";
+    case  _COLLI_FORMAT_CUSTOM: return "CUSTOM";
+
+    }
+    return "";
+}
 
 unsigned char Collimatore::colliFormatFromPad(int pad){
      if(pad == PAD_24x30)       return    _COLLI_FORMAT_24x30;
@@ -253,9 +267,9 @@ unsigned char Collimatore::colliFormatFromPad(int pad){
      if(pad == PAD_BIOP_2D) return    _COLLI_FORMAT_18x24;
      if(pad == PAD_10x24)   return    _COLLI_FORMAT_18x24;
      if(pad == PAD_BIOP_3D) return    _COLLI_FORMAT_BIOPSY;
-     if(pad == PAD_9x21)    return    _COLLI_FORMAT_MAGNIFIER;
-     if(pad == PAD_D75_MAG) return    _COLLI_FORMAT_MAGNIFIER;
-     if(pad == PAD_9x9_MAG) return    _COLLI_FORMAT_MAGNIFIER;
+     if(pad == PAD_9x21)    return    _COLLI_FORMAT_MAGNIFIER_18x24;
+     if(pad == PAD_D75_MAG) return    _COLLI_FORMAT_MAGNIFIER_24x30;
+     if(pad == PAD_9x9_MAG) return    _COLLI_FORMAT_MAGNIFIER_18x24;
 
      return _COLLI_FORMAT_UNDEFINED;
 }
@@ -271,7 +285,7 @@ bool Collimatore::updateColli(void)
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
-        ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","NON DEFINITA", 0, QApplication::UnicodeUTF8)),0);
+        //ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","NON DEFINITA", 0, QApplication::UnicodeUTF8)),0);
         ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_UNDEFINED);
         return FALSE;
     }
@@ -279,8 +293,8 @@ bool Collimatore::updateColli(void)
     // Collimazione manuale attivata
     if(manualCollimation)
     {
-        ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","MANUALE", 0, QApplication::UnicodeUTF8)),0);
-        ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_MANUAL);
+        // ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","MANUALE", 0, QApplication::UnicodeUTF8)),0);
+        // ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_MANUAL);
         return TRUE;
     }
 
@@ -291,25 +305,43 @@ bool Collimatore::updateColli(void)
         // Se non c'è potter e non c'e la Biopsia non viene effettuata nessuna collimazione
         if((!pPotter->isValid())&&(pBiopsy->connected==FALSE)){
 
-            ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","NON DEFINITA", 0, QApplication::UnicodeUTF8)),0);
+            // ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","NON DEFINITA", 0, QApplication::UnicodeUTF8)),0);
             ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_UNDEFINED);
             return FALSE;
         }
 
-        pad = pCompressore->getPad();
+        // Con collimatore il formato è 18x24 o 24x30 in funzione dell'impostazione
+        if(pPotter->isMagnifier()){
+            if(ApplicationDatabase.getDataI(_DB_MAGNIFIER_COLLI_FORMAT) == _DB_MAGNIFIER_COLLI_FORMAT_24x30)  {
+                 ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_MAGNIFIER_24x30);
+                 colliIndex=pCollimatore->getColli2DIndex(PAD_D75_MAG);
 
-        // Con il compressore sbloccato non viene effettuata nessuna collimazione
-        if(pad>=PAD_ENUM_SIZE){
-            ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","NON DEFINITA", 0, QApplication::UnicodeUTF8)),0);
-            ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_UNDEFINED);
-            return FALSE;
+            } else if(ApplicationDatabase.getDataI(_DB_MAGNIFIER_COLLI_FORMAT) == _DB_MAGNIFIER_COLLI_FORMAT_18x24)  {
+                ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_MAGNIFIER_18x24);
+                colliIndex=pCollimatore->getColli2DIndex(PAD_9x9_MAG);
+
+            } else{
+                //ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","NON DEFINITA", 0, QApplication::UnicodeUTF8)),0);
+                ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_UNDEFINED);
+                return FALSE;
+            }
+        }else{
+            pad = pCompressore->getPad();
+
+            // Con il compressore sbloccato non viene effettuata nessuna collimazione
+            if(pad>=PAD_ENUM_SIZE){
+                //ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","NON DEFINITA", 0, QApplication::UnicodeUTF8)),0);
+                ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_UNDEFINED);
+                return FALSE;
+            }
+
+            // Deriva il codice di collimazione
+            colliIndex = getColli2DIndex(pad);
+
+            // Determinazione del formato associato ai pad
+            ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) colliFormatFromPad(pad));
+
         }
-
-        // Deriva il codice di collimazione
-        colliIndex = getColli2DIndex(pad);
-
-        // Determinazione del formato associato ai pad
-        ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) colliFormatFromPad(pad));
 
 
     }else
@@ -317,7 +349,7 @@ bool Collimatore::updateColli(void)
 
         // In modalitÃ  non operativa utilizza la collimazione OPEN
         colliIndex=-1; // Collimazione OPEN in calibrazione
-        ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","APERTA", 0, QApplication::UnicodeUTF8)),0);
+        // ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString(QApplication::translate("COLLIMATORE","APERTA", 0, QApplication::UnicodeUTF8)),0);
         ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_UNDEFINED);
     }
 
@@ -333,7 +365,7 @@ bool Collimatore::updateColli(void)
        data[COLLI_T] = colliConf.colliOpen.T;// back Trap
    }else
    {
-       ApplicationDatabase.setData(_DB_COLLIMAZIONE,pCompressore->getPadName((Pad_Enum)pad),0);
+       // ApplicationDatabase.setData(_DB_COLLIMAZIONE,pCompressore->getPadName((Pad_Enum)pad),0);
        _colliPadStr colli2D = colliConf.colli2D.at(colliIndex);
 
        // Carica le posizioni
@@ -547,7 +579,7 @@ bool Collimatore::manualColliUpdate(void)
     if(manualCollimation==FALSE) return FALSE;
 
     // Imposta a display la collimazione Manuale
-    ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString("MANUALE"),0);
+    //ApplicationDatabase.setData(_DB_COLLIMAZIONE,QString("MANUALE"),0);
 
     // Apre tutto il collimatore
     data[COLLI_F] = manualF;// front

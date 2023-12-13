@@ -58,6 +58,7 @@ AnalogPageOpen::AnalogPageOpen(int rotview, QWidget *parent) :
     optionPanel = new pannelloOpzioni(ui->options);
     projPanel = new pannelloProiezioni(ui->proiezioni);
     colliPanel = new pannelloColli(ui->manualColliPanel,parent);
+    magPanel = new pannelloMag(ui->magnifierPanel,parent);
     biopsyPanel = new pannelloBiopsia(ui->biopsia);
 
 
@@ -71,6 +72,9 @@ AnalogPageOpen::AnalogPageOpen(int rotview, QWidget *parent) :
 
     if(isMaster) ui->manColliFrame->setGeometry(615,335,96,76);
     else ui->manColliFrame->setGeometry(89,335,96,76);
+
+    if(isMaster) ui->formatLabel->setGeometry(605,405,121,21);
+    else ui->formatLabel->setGeometry(79,405,121,21);
 
     if(isMaster) ui->pad->setGeometry(10,200,141,81);
     else ui->pad->setGeometry(649,200,141,81);
@@ -263,6 +267,8 @@ void AnalogPageOpen::initPage(void){
 
 }
 void AnalogPageOpen::initializeBiopsyPage(void){
+    ui->formatLabel->setText(QString(""));
+    ui->formatLabel->hide();
     if(!isMaster) return;
 
     // Impostazione Tipologia di Rotazione
@@ -326,14 +332,15 @@ void AnalogPageOpen::initializeBiopsyPage(void){
 
 }
 void AnalogPageOpen::initializeStandardPage(void){
+    ui->formatLabel->setText(QString(""));
+    ui->formatLabel->show();
     if(!isMaster) return;
-
 
     // Impostazione Tipologia di Rotazione
     ApplicationDatabase.setData(_DB_ROT_MODE, (int) pConfig->sys.armMotor, DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
 
 
-    // Impostazione dati per collimazione manuale
+    // Impostazione dati per collimazione manuale    
     ApplicationDatabase.setData(_DB_ANALOG_MANUAL_COLLI_STAT, (int) _AN_COLLI_AUTO,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
     ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_LEFT, (int) pCollimatore->customL,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
     ApplicationDatabase.setData(_DB_ANALOG_CUSTOM_COLLI_RIGHT, (int) pCollimatore->customR,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
@@ -451,8 +458,12 @@ void AnalogPageOpen::initializeStandardPage(void){
     // Azzera la diagnostica sul ready/no ready
     ApplicationDatabase.setData(_DB_INFO_ALARM_MODE, (int) 0, DBase::_DB_FORCE_SGN);
 
-    // Apertura differita dei pannelli per consentire al database di aggiornarsi correttamente
-    ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_COMANDI, DBase::_DB_FORCE_SGN);
+    if(ApplicationDatabase.getDataI(_DB_MAGNIFIER_COLLI_FORMAT) == _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED){
+        ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_MAG, DBase::_DB_FORCE_SGN);
+    }else{
+        // Apertura differita dei pannelli per consentire al database di aggiornarsi correttamente
+        ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_COMANDI, DBase::_DB_FORCE_SGN);
+    }
 
     if(!timerReady) timerReady = startTimer(1000);
     return;
@@ -534,6 +545,7 @@ void AnalogPageOpen::exitPage(void){
     commandPanel->exit();
     optionPanel->exit();
     colliPanel->exit();
+    magPanel->exit();
     biopsyPanel->exit();
 
     if(!isMaster) return;
@@ -701,6 +713,19 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         if(projPanel->isOpen()) projPanel->setLat(ApplicationDatabase.getDataI(index));
         break;
 
+    case _DB_MAGNIFIER_COLLI_FORMAT:
+        if(!isMaster) return;
+        if(opt & DBase::_DB_NO_ACTION) return;
+
+        if(ApplicationDatabase.getDataI(index) == _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED){
+            changePanel(PANNELLO_MAG);
+        }
+
+        break;
+
+    case _DB_COLLI_FORMAT:
+        ui->formatLabel->setText(Collimatore::getFormatName(ApplicationDatabase.getDataU(index)));
+        break;
 
     case _DB_COMPRESSOR_PAD_CODE:
         setPad();
@@ -715,6 +740,7 @@ void AnalogPageOpen::valueChanged(int index,int opt)
     case _DB_COMPRESSOR_UNLOCK:
             setSbloccoCompressore();
         break;
+
     case _DB_ANALOG_MANUAL_COLLI_STAT:
         if(ApplicationDatabase.getDataI(index)==_AN_COLLI_AUTO) {
             ui->manColliFrame->setStyleSheet("border-image: url(:/Sym/Sym/AutoColliSym.png);background-image: url(:/transparent.png);");
@@ -852,13 +878,19 @@ void AnalogPageOpen::verifyStandardReady(void){
     int flags = ApplicationDatabase.getDataI(_DB_ANALOG_FLAGS);
     int not_ready_bits=0;
 
-    // Gruppo Invalid Potter
+    // Test the Potter group
     if(!pPotter->isValid()){
          not_ready_bits|=1;   // Invalid potter
     }else if(!pCompressore->isValidPad()) {
         not_ready_bits|=2;   // Invalid Pad
     }else if(!pCompressore->isCompressed()) {
         not_ready_bits|=4;   // Not compressed
+    }
+
+    // Test the Potter valid format
+    if(pPotter->isMagnifier()){
+        if(magPanel->isOpen()) not_ready_bits|=1;
+        else if(ApplicationDatabase.getDataI(_DB_MAGNIFIER_COLLI_FORMAT) == _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED ) not_ready_bits|=1;   // Invalid potter
     }
 
     // Gruppo cassetta
@@ -1058,6 +1090,7 @@ void AnalogPageOpen::changePanel(int panel){
     commandPanel->exit();
     optionPanel->exit();
     colliPanel->exit();
+    magPanel->exit();
     biopsyPanel->exit();
 
     switch(panel){
@@ -1079,6 +1112,9 @@ void AnalogPageOpen::changePanel(int panel){
         break;
     case PANNELLO_COLLI:
         colliPanel->open();
+        break;
+    case PANNELLO_MAG:
+        magPanel->open();
         break;
 
     }
@@ -1174,6 +1210,11 @@ void AnalogPageOpen::manageCallbacks(int opt){
     case CALLBACK_COMANDI_COLLI_SELECTION:
         changePanel(PANNELLO_COLLI);
         break;
+
+    case CALLBACK_COMANDI_MAG_SELECTION:
+        changePanel(PANNELLO_MAG);
+        break;
+
     case CALLBACK_COMANDI_OPTION_SELECTION:
 
         changePanel(PANNELLO_OPZIONI);
@@ -1211,6 +1252,18 @@ void AnalogPageOpen::manageCallbacks(int opt){
 
 
         break;
+
+        case CALLBACK_MAGEXIT_SELECTION:
+            changePanel(PANNELLO_COMANDI);
+
+            // Imposta la collimazione in uscita dal pannello
+            if(isMaster){
+                pCollimatore->updateColli();
+                pCollimatore->setLamp(Collimatore::LAMPMIRR_ON,20);
+            }
+
+        break;
+
 
         case CALLBACK_MASEXIT_SELECTION:
             if(isMaster){                
@@ -1376,6 +1429,7 @@ void  AnalogPageOpen::setCurrentCollimation(void){
          break;
 
      case _AN_COLLI_MAN_24x30:
+         ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_24x30);
          pCollimatore->manualCollimation = true;
          cindex=pCollimatore->getColli2DIndex(PAD_24x30);
          pCollimatore->manualR = pCollimatore->colliConf.colli2D[cindex].R;
@@ -1387,6 +1441,7 @@ void  AnalogPageOpen::setCurrentCollimation(void){
          break;
 
      case _AN_COLLI_MAN_18x24:
+         ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_18x24);
          pCollimatore->manualCollimation = true;
          cindex=pCollimatore->getColli2DIndex(PAD_18x24);
          pCollimatore->manualR = pCollimatore->colliConf.colli2D[cindex].R;
@@ -1397,6 +1452,7 @@ void  AnalogPageOpen::setCurrentCollimation(void){
 
          break;
      case _AN_COLLI_MAN_BIOPSY:
+         ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_BIOPSY);
          pCollimatore->manualCollimation = true;
          cindex=pCollimatore->getColli2DIndex(PAD_BIOP_3D);
          pCollimatore->manualR = pCollimatore->colliConf.colli2D[cindex].R;
@@ -1406,7 +1462,8 @@ void  AnalogPageOpen::setCurrentCollimation(void){
          pCollimatore->manualColliUpdate();
 
          break;
-     case _AN_COLLI_MAN_MAGNIFIER:
+     case _AN_COLLI_MAN_MAG_24x30:
+          ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_MAGNIFIER_24x30);
          pCollimatore->manualCollimation = true;
          cindex=pCollimatore->getColli2DIndex(PAD_D75_MAG);
          pCollimatore->manualR = pCollimatore->colliConf.colli2D[cindex].R;
@@ -1415,7 +1472,20 @@ void  AnalogPageOpen::setCurrentCollimation(void){
          pCollimatore->manualB = pCollimatore->colliConf.colli2D[cindex].B;
          pCollimatore->manualColliUpdate();
          break;
+
+     case _AN_COLLI_MAN_MAG_18x24:
+         ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_MAGNIFIER_18x24);
+         pCollimatore->manualCollimation = true;
+         cindex=pCollimatore->getColli2DIndex(PAD_9x9_MAG);
+         pCollimatore->manualR = pCollimatore->colliConf.colli2D[cindex].R;
+         pCollimatore->manualL = pCollimatore->colliConf.colli2D[cindex].L;
+         pCollimatore->manualF = pCollimatore->colliConf.colli2D[cindex].F;
+         pCollimatore->manualB = pCollimatore->colliConf.colli2D[cindex].B;
+         pCollimatore->manualColliUpdate();
+         break;
+
      case _AN_COLLI_MAN_CUSTOM:
+         ApplicationDatabase.setData(_DB_COLLI_FORMAT,(unsigned char) _COLLI_FORMAT_CUSTOM);
          pCollimatore->manualCollimation = true;
 
          if(pCollimatore->customL != ApplicationDatabase.getDataI(_DB_ANALOG_CUSTOM_COLLI_LEFT))         storeColli = true;

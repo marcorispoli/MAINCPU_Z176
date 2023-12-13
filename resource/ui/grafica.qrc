@@ -310,6 +310,7 @@
         <file>paginaOperativaAnalogica/lock_button.png</file>
         <file>paginaOperativaAnalogica/disable_film.png</file>
         <file>paginaOperativaAnalogica/pannelloOpzioni.png</file>
+        <file>paginaOperativaAnalogica/pannelloIngranditore.png</file>
     </qresource>
     <qresource prefix="/Sym">
         <file>Sym/pad.png</file>
