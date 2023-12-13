@@ -104,11 +104,20 @@ AnalogCalibPageOpen::AnalogCalibPageOpen(int rotview, QWidget *parent) :
     formatCurrentData.append(factory);
     formatInitData.append(factory);
 
-    formatList.append(QString("FORMAT MAGNIFIER"));
+    formatList.append(QString("FORMAT MAG 18x24"));
     factory.F=_FACTORY_FRONT_SMALL_FOCUS;
-    factory.B=_FACTORY_BACK_MAGNIFIER;
-    factory.L=_FACTORY_LEFT_MAGNIFIER;
-    factory.R=_FACTORY_RIGHT_MAGNIFIER;
+    factory.B=_FACTORY_BACK_MAGNIFIER_18x24;
+    factory.L=_FACTORY_LEFT_MAGNIFIER_18x24;
+    factory.R=_FACTORY_RIGHT_MAGNIFIER_18x24;
+    formatFactory.append(factory);
+    formatCurrentData.append(factory);
+    formatInitData.append(factory);
+
+    formatList.append(QString("FORMAT MAG 24x30"));
+    factory.F=_FACTORY_FRONT_SMALL_FOCUS;
+    factory.B=_FACTORY_BACK_MAGNIFIER_24x30;
+    factory.L=_FACTORY_LEFT_MAGNIFIER_24x30;
+    factory.R=_FACTORY_RIGHT_MAGNIFIER_24x30;
     formatFactory.append(factory);
     formatCurrentData.append(factory);
     formatInitData.append(factory);

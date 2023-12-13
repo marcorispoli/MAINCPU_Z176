@@ -1211,8 +1211,8 @@ background-image: url(:/transparent.png);</string>
    <widget class="QGraphicsView" name="manualColliPanel">
     <property name="geometry">
      <rect>
-      <x>505</x>
-      <y>200</y>
+      <x>485</x>
+      <y>165</y>
       <width>131</width>
       <height>126</height>
      </rect>
@@ -1378,6 +1378,106 @@ background-image: url(:/transparent.png);</string>
       </property>
      </widget>
     </widget>
+   </widget>
+   <widget class="QGraphicsView" name="magnifierPanel">
+    <property name="geometry">
+     <rect>
+      <x>475</x>
+      <y>285</y>
+      <width>131</width>
+      <height>126</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/paginaOperativaAnalogica/paginaOperativaAnalogica/forza.png);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>0</number>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+    <property name="foregroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="0">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+    <property name="sceneRect">
+     <rectf>
+      <x>0.000000000000000</x>
+      <y>0.000000000000000</y>
+      <width>473.000000000000000</width>
+      <height>473.000000000000000</height>
+     </rectf>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="formatLabel">
+    <property name="geometry">
+     <rect>
+      <x>605</x>
+      <y>405</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>DejaVu Sans</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string notr="true"/>
+    </property>
+    <property name="statusTip">
+     <string notr="true"/>
+    </property>
+    <property name="whatsThis">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleName">
+     <string notr="true"/>
+    </property>
+    <property name="accessibleDescription">
+     <string notr="true"/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:rgb(0, 0, 0);
+background-image: url(:/transparent.png);</string>
+    </property>
+    <property name="text">
+     <string notr="true">24x30</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
    </widget>
   </widget>
  </widget>

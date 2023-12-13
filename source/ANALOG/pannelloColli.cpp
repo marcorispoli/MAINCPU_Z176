@@ -33,7 +33,8 @@ pannelloColli::pannelloColli(QGraphicsView* view, QWidget* widget){
     formatList.append("FORMAT 24x30");
     formatList.append("FORMAT 18x24");
     formatList.append("FORMAT BIOPSY");
-    formatList.append("FORMAT MAGNIFIER");
+    formatList.append("FORMAT MAG 18x24");
+    formatList.append("FORMAT MAG 24x30");
     formatList.append("FORMAT CUSTOM");
 
 

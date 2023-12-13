@@ -366,7 +366,7 @@ void AnalogCalibPageOpen::selectCollimationPattern(int val, int opt){
 
     // Selezione del fuoco corrente
     if(val == _DEF_COLLI_CALIB_FORMAT_REFERENCE){
-        if(_DEF_COLLI_CALIB_FORMAT_REF_ITEM == _DEF_COLLI_CALIB_FORMAT_MAG){
+        if((_DEF_COLLI_CALIB_FORMAT_REF_ITEM == _DEF_COLLI_CALIB_FORMAT_MAG_18x24) || (_DEF_COLLI_CALIB_FORMAT_REF_ITEM == _DEF_COLLI_CALIB_FORMAT_MAG_24x30)){
             pGeneratore->setkV((float) KV_COLLIMATION_SMALL);
             pGeneratore->setmAs((float) mAs_COLLIMATION_SMALL);
             pGeneratore->setFuoco((Generatore::_FuocoSize_Enum) Generatore::FUOCO_SMALL);
@@ -379,7 +379,7 @@ void AnalogCalibPageOpen::selectCollimationPattern(int val, int opt){
         }
 
     }else{
-        if(val == _DEF_COLLI_CALIB_FORMAT_MAG){
+        if((val == _DEF_COLLI_CALIB_FORMAT_MAG_18x24) || (val == _DEF_COLLI_CALIB_FORMAT_MAG_24x30)){
             pGeneratore->setkV((float) KV_COLLIMATION_SMALL);
             pGeneratore->setmAs((float) mAs_COLLIMATION_SMALL);
             pGeneratore->setFuoco((Generatore::_FuocoSize_Enum) Generatore::FUOCO_SMALL);
@@ -448,7 +448,7 @@ _formatStr diffFormat;
                 formatCurrentData[i] = modFormat;
             }else {
 
-                if((i ==_COLLI_FORMAT_BIOPSY) || (i ==_COLLI_FORMAT_MAGNIFIER)){
+                if((i ==_COLLI_FORMAT_BIOPSY) || (i ==_COLLI_FORMAT_MAGNIFIER_18x24) || (i ==_COLLI_FORMAT_MAGNIFIER_24x30)){
                     formatCurrentData[i].F = formatInitData[i].F + diffFormat.F;
                     if(formatCurrentData[i].F<0) formatCurrentData[i].F=0;
                     if(formatCurrentData[i].F>255) formatCurrentData[i].F=255;
@@ -606,17 +606,6 @@ void AnalogCalibPageOpen::colliCalculatorSlot(bool stat){
 }
 
 
-/*
-
-
-
-
-
-
-
-
-
-  */
 void AnalogCalibPageOpen::storeColliFormat(){
 
     int cindex;
@@ -689,24 +678,27 @@ void AnalogCalibPageOpen::storeColliFormat(){
     pCollimatore->colliConf.colli2D[cindex].R = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_BIOP].R;
 
 
-    // Tutti i formati per ingrandimento
-    cindex=pCollimatore->getColli2DIndex(PAD_9x21);
-    pCollimatore->colliConf.colli2D[cindex].F = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].F;
-    pCollimatore->colliConf.colli2D[cindex].B = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].B;
-    pCollimatore->colliConf.colli2D[cindex].L = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].L;
-    pCollimatore->colliConf.colli2D[cindex].R = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].R;
+    // Formati di ingrandimento associati a 18x24 o 24x30 come trucco!!!
+    // Il D75 è riservato per la collimazione 24x30 Mag
 
-    cindex=pCollimatore->getColli2DIndex(PAD_D75_MAG);
-    pCollimatore->colliConf.colli2D[cindex].F = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].F;
-    pCollimatore->colliConf.colli2D[cindex].B = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].B;
-    pCollimatore->colliConf.colli2D[cindex].L = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].L;
-    pCollimatore->colliConf.colli2D[cindex].R = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].R;
+    cindex=pCollimatore->getColli2DIndex(PAD_9x21);
+    pCollimatore->colliConf.colli2D[cindex].F = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24].F;
+    pCollimatore->colliConf.colli2D[cindex].B = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24].B;
+    pCollimatore->colliConf.colli2D[cindex].L = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24].L;
+    pCollimatore->colliConf.colli2D[cindex].R = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24].R;
 
     cindex=pCollimatore->getColli2DIndex(PAD_9x9_MAG);
-    pCollimatore->colliConf.colli2D[cindex].F = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].F;
-    pCollimatore->colliConf.colli2D[cindex].B = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].B;
-    pCollimatore->colliConf.colli2D[cindex].L = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].L;
-    pCollimatore->colliConf.colli2D[cindex].R = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG].R;
+    pCollimatore->colliConf.colli2D[cindex].F = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24].F;
+    pCollimatore->colliConf.colli2D[cindex].B = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24].B;
+    pCollimatore->colliConf.colli2D[cindex].L = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24].L;
+    pCollimatore->colliConf.colli2D[cindex].R = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24].R;
+
+    cindex=pCollimatore->getColli2DIndex(PAD_D75_MAG);
+    pCollimatore->colliConf.colli2D[cindex].F = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_24x30].F;
+    pCollimatore->colliConf.colli2D[cindex].B = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_24x30].B;
+    pCollimatore->colliConf.colli2D[cindex].L = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_24x30].L;
+    pCollimatore->colliConf.colli2D[cindex].R = formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_24x30].R;
+
 
     if(pCollimatore->colli_model == _COLLI_TYPE_ASSY_01){
         pCollimatore->colliConf.mirrorSteps_ASSY_01 = ApplicationDatabase.getDataI(_DB_COLLI_CALIB_MIRROR);
@@ -747,13 +739,24 @@ void AnalogCalibPageOpen::initColliData(void){
     formatInitData[_DEF_COLLI_CALIB_FORMAT_BIOP]= formato;
     formatCurrentData[_DEF_COLLI_CALIB_FORMAT_BIOP]= formato;
 
+    // Format Mag 24x30
     cindex=pCollimatore->getColli2DIndex(PAD_D75_MAG);
     formato.L = pCollimatore->colliConf.colli2D[cindex].L;
     formato.R = pCollimatore->colliConf.colli2D[cindex].R;
     formato.B = pCollimatore->colliConf.colli2D[cindex].B;
     formato.F = pCollimatore->colliConf.colli2D[cindex].F;
-    formatInitData[_DEF_COLLI_CALIB_FORMAT_MAG]= formato;
-    formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG]= formato;
+    formatInitData[_DEF_COLLI_CALIB_FORMAT_MAG_24x30]= formato;
+    formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_24x30]= formato;
+
+    // Format Mag 18x24
+    cindex=pCollimatore->getColli2DIndex(PAD_9x21);
+    formato.L = pCollimatore->colliConf.colli2D[cindex].L;
+    formato.R = pCollimatore->colliConf.colli2D[cindex].R;
+    formato.B = pCollimatore->colliConf.colli2D[cindex].B;
+    formato.F = pCollimatore->colliConf.colli2D[cindex].F;
+    formatInitData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24]= formato;
+    formatCurrentData[_DEF_COLLI_CALIB_FORMAT_MAG_18x24]= formato;
+
 
     // Inizializzazione formato di riferimetno
     formatInitData[_DEF_COLLI_CALIB_FORMAT_REFERENCE] = formatInitData[_DEF_COLLI_CALIB_FORMAT_REF_ITEM];

@@ -78,6 +78,11 @@
 #define _DB_DRMODE                        _DB_SERVICE39_INT
 #define _DB_LOCK_MODE                     _DB_SERVICE40_INT
 
+#define _DB_MAGNIFIER_COLLI_FORMAT        _DB_SERVICE41_INT
+    #define _DB_MAGNIFIER_COLLI_FORMAT_24x30 0
+    #define _DB_MAGNIFIER_COLLI_FORMAT_18x24 1
+    #define _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED 2
+
 
 #define PANNELLO_PROIEZIONI             1
 #define PANNELLO_COMANDI                2
@@ -85,6 +90,7 @@
 #define PANNELLO_MAS                    4
 #define PANNELLO_OPZIONI                5
 #define PANNELLO_COLLI                  6
+#define PANNELLO_MAG                    7
 
 #define PROJ_LCC    0
 #define PROJ_LMLO   1
@@ -119,6 +125,7 @@
 #define CALLBACK_OPTIONEXIT_SELECTION       5
 #define CALLBACK_COLLIEXIT_SELECTION        6
 #define CALLBACK_BIOPSIAEXIT_SELECTION      7
+#define CALLBACK_MAGEXIT_SELECTION          8
 
 #define CALLBACK_COMANDI_KV_SELECTION        15
 #define CALLBACK_COMANDI_MAS_SELECTION       16
@@ -126,7 +133,7 @@
 #define CALLBACK_COMANDI_CAMPI_SELECTION      18
 #define CALLBACK_COMANDI_OPTION_SELECTION     19
 #define CALLBACK_COMANDI_COLLI_SELECTION      20
-
+#define CALLBACK_COMANDI_MAG_SELECTION      21
 
 // PARAMETRI GENERALI OPERATIVI
 #define KV_PRE_FG_NO_GRID   26  // NON USATO
@@ -145,7 +152,8 @@
 #define _AN_COLLI_MAN_24x30         1
 #define _AN_COLLI_MAN_18x24         2
 #define _AN_COLLI_MAN_BIOPSY        3
-#define _AN_COLLI_MAN_MAGNIFIER     4
-#define _AN_COLLI_MAN_CUSTOM        5
+#define _AN_COLLI_MAN_MAG_18x24     4
+#define _AN_COLLI_MAN_MAG_24x30     5
+#define _AN_COLLI_MAN_CUSTOM        6
 
 #endif
