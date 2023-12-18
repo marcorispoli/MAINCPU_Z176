@@ -23,6 +23,10 @@ bool AnalogCalibPageOpen::getProfileCalibrationReady(unsigned char opt){
     if(!pc_data_valid) return false;
 
     if((pc_selected_fuoco==Generatore::FUOCO_SMALL)&&(pPotter->getPotId()!=POTTER_MAGNIFIER)) ready_stat|=1;    // Wrong Potter
+
+    // Con Ingrandimento la calibrazione DEVE essere fatta a 1.5x mandatorio
+    if((pPotter->getPotId()==POTTER_MAGNIFIER) && (ApplicationDatabase.getDataI(_DB_MAG_FACTOR) != 15)) ready_stat|=1;    // Wrong Potter
+
     if((pc_selected_fuoco==Generatore::FUOCO_LARGE)&&(pPotter->getPotId()!=POTTER_2D)) ready_stat|=1;           // Wrong Potter
 
     if(!pPotter->getCassettePresence()) ready_stat|=2;                                              // Missing Cassetta

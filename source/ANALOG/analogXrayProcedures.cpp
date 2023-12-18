@@ -441,6 +441,14 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
             data[16] = (unsigned char) ((unsigned int) (pGeneratore->selectedIn * 10) & 0x00FF);
             data[17] = (unsigned char) ((unsigned int) (pGeneratore->selectedIn * 10) >> 8);
 
+            // Nel caso di fuoco piccolo, e di cassetta tipo CR, dove la calibrazione è a dose assegnata,
+            // la dose di calibrazione è calcolata sull'ingeandimento 1.5x.
+            // Tuttavia se l'ingrandimento è 2x la dose erogata sarebbe più grande, pertanto occorrerebbe diminuire gli impulsi
+            // di un fattore opportuno.
+            if((pPotter->isMagnifier()) && (ApplicationDatabase.getDataI(_DB_MAG_FACTOR) == 20) && (ApplicationDatabase.getDataI(_DB_PLATE_TYPE) != ANALOG_PLATE_FILM)) {
+                rxpulses = (int) ((float) rxpulses * pGeneratore->pDose->correzioneIngrandimento2x(XspessoreSeno,XselectedkV * 10, XselectedFiltro));
+            }
+
             data[18] = (unsigned char) (rxpulses);
             data[19] = (unsigned char) (rxpulses>>8);
             data[20] = 1; // 0=pre-pulse, 1 = Pulse

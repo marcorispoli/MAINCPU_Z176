@@ -63,6 +63,7 @@ public:
     bool storeKermaConfig(QString filtro);
     bool storeKermaConfig(QString filtro, int D0, int D1, int KVH, float AKH, int KVM, float AKM, int KVL, float AKL);
     float getDoseUg(int mm, int offset_mm, int dmAs, int dkv, int filtro);
+    float correzioneIngrandimento2x(int mm, int dkv, int filtro);
     float getConvertedUgKerma(int dkv, int dmas, int mm, int filtro);
 
 };

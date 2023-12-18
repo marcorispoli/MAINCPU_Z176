@@ -305,6 +305,12 @@ float DOSE::getDoseUg(int mm, int offset_mm, int dmAs, int dkv, int filtro){
     return dosecalc;
 }
 
+float DOSE::correzioneIngrandimento2x(int mm, int dkv, int filtro){
+    float dose20x = getDoseUg(mm, 300, 10, dkv, filtro);
+    float dose15x = getDoseUg(mm, 200, 10, dkv, filtro);
+    return dose15x/dose20x;
+}
+
 QString DOSE::getDoseUgDebug(int mm, int offset_mm, int dmAs, int dkv, int filtro){
     float airKerma;
     float entrance_kerma;
