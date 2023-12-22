@@ -308,6 +308,9 @@ float DOSE::getDoseUg(int mm, int offset_mm, int dmAs, int dkv, int filtro){
 float DOSE::correzioneIngrandimento2x(int mm, int dkv, int filtro){
     float dose20x = getDoseUg(mm, 300, 10, dkv, filtro);
     float dose15x = getDoseUg(mm, 200, 10, dkv, filtro);
+
+    // correzioni di sicurezza
+    if(dose20x < dose15x) return 1;
     return dose15x/dose20x;
 }
 
