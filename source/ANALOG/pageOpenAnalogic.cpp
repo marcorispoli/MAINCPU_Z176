@@ -1331,10 +1331,22 @@ int  AnalogPageOpen::getMaxKv(void) {
     return (ApplicationDatabase.getDataI(_DB_MIN_MAX_DKV)>>16);
 }
 
+/**
+ * @brief AnalogPageOpen::saveOptions
+ * Modifica ID07:
+ * - Per correggere bug sul salvataggio da pannello slave, il salvataggio
+ *   viene sempre efffettuato, indipendentemente se i dati siano stati modificati o meno.
+ *   Diventerebbe troppo complicato gestire la variazione degli stessi da terminale slave.
+ *
+ *
+ */
 void  AnalogPageOpen::saveOptions(void) {
     if(!isMaster) return;
-    if((optionPanel->analog_conf_changed)||(commandPanel->config_changed))  pConfig->saveAnalogConfig();
-    if(optionPanel->profile_conf_changed) pGeneratore->pAECprofiles->saveSelectedProfile();
+    pConfig->saveAnalogConfig();
+    pGeneratore->pAECprofiles->saveSelectedProfile();
+    //if((optionPanel->analog_conf_changed)||(commandPanel->config_changed))  pConfig->saveAnalogConfig();
+    //if(optionPanel->profile_conf_changed) pGeneratore->pAECprofiles->saveSelectedProfile();
+
     optionPanel->analog_conf_changed = false;
     optionPanel->profile_conf_changed = false;
     commandPanel->config_changed = false;
