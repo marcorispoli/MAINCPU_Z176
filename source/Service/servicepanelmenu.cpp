@@ -56,6 +56,11 @@ void ServicePanelMenu::initPage(void){
     // Disabilita il pulsante di uscita per un certo tempo
     EXIT_BUTTON->hide();
     changePageTimer = startTimer(DISABLE_EXIT_TMO);
+
+    if(pCalculator){
+        pCalculator->hide();
+        disconnect(pCalculator,SIGNAL(calcSgn(bool)),this,SLOT(passwordSlot(bool)));
+    }
     view->show();
 }
 void ServicePanelMenu::passwordSlot(bool result){
@@ -82,8 +87,8 @@ void ServicePanelMenu::changePage(int pg, int opt)
         if(GWindowRoot.curPageVisible== TRUE){
             connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
 
-            if(ApplicationDatabase.getDataS(_DB_SERVICE_PASSWORD)==ApplicationDatabase.getDataS(_DB_PASSWORD)){
-                initPage();
+            if(ApplicationDatabase.getDataS(_DB_SERVICE_PASSWORD)==ApplicationDatabase.getDataS(_DB_PASSWORD)){                                
+                initPage();                
             }else{
                 connect(pCalculator,SIGNAL(calcSgn(bool)),this,SLOT(passwordSlot(bool)),Qt::UniqueConnection);
                 calcData = "";
@@ -92,16 +97,28 @@ void ServicePanelMenu::changePage(int pg, int opt)
             }
 
         }
-        else view->hide();
+        else{
+            if(pCalculator){
+                pCalculator->hide();
+                disconnect(pCalculator,SIGNAL(calcSgn(bool)),this,SLOT(passwordSlot(bool)));
+            }
+            view->hide();
+        }
         return;
     }
     else if(GWindowRoot.curPage==UI_PAGINA)
     {
-        // Disattivazione pagina
+        // Disattivazione del calc prima di tutto
+        if(pCalculator){
+            pCalculator->hide();
+            disconnect(pCalculator,SIGNAL(calcSgn(bool)),this,SLOT(passwordSlot(bool)));
+        }
+
+        // Esce dalla pagina
         paginaAllarmi->alarm_enable = true;
-        view->hide();
+        view->hide();        
         disconnect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)));
-        disconnect(pCalculator,SIGNAL(calcSgn(bool)),this,SLOT(passwordSlot(bool)));
+
     }
 
 }
