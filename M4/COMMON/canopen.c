@@ -10,6 +10,7 @@ const flexcan_config_t flex_canopen_data = {
 /* RX message buffer needed?                   */ true
 };
 
+
 void canopenPrintSDOErrors(uint32_t errcode, unsigned short index, unsigned char subidx){
     printf("SDO IDX:0x%x SBX:0x%x ERROR: ",index,subidx);
     switch(errcode){

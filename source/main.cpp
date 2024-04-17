@@ -27,6 +27,8 @@
 #include "Service/Tools/audioTool.h"
 #include "Service/Tools/pottertool.h"
 
+#include "serial_interface.h"
+
 #define _BACKGROUND_Y_PG_MAIN       "://MainPage/MainPage/Pagina0Y.png"
 #define _BACKGROUND_C_PG_MAIN       "://MainPage/MainPage/Pagina0C.png"
 
@@ -55,6 +57,8 @@ audio* pAudio;
 audiotool* pAudioTool;
 pottertool* pPotterTool;
 calibParking* pCalibParking;
+
+SerialInterface* pSerial;
 
 /*
  *
@@ -341,8 +345,10 @@ int main(int argc, char *argv[])
         pToConsole =    new protoToConsole();
         pDebug =        new serverDebug();
         pAudio =        new audio();
+        pSerial =       new SerialInterface();
 
 
+        pSerial->sendMessage();
 
     }else
     {// SLAVE
