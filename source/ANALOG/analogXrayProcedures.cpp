@@ -4,6 +4,9 @@
 #include "../application.h"
 #include "../appinclude.h"
 #include "../globvar.h"
+#include "../serial_interface.h"
+
+extern SerialInterface* pSerial;
 
 void AnalogPageOpen::xrayReleasePushButton(void){
     // In ogni caso
@@ -233,11 +236,16 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
     int   rxpulses;
     int   errcode;
     int   campi;
+    unsigned short pulse_time;
+    unsigned char mag_factor;
+    unsigned char tech;
 
     QString logstring;
     QString fuoco_string;    
     QString field_string;
 
+    bool large_focus;
+    SerialInterface::FilterT flt;
 
     switch(mcccode)
     {
@@ -248,6 +256,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         stopAttesaDati();
 
         ldmas = ((float) (rxdata.at(1) + 256 * rxdata.at(2)));
+        pulse_time = ((float) (rxdata.at(17) + 256 * rxdata.at(18)));
 
         // Associazione offset sul piano di compressione per il calcolo dell'entrance dose
         if(!pPotter->isMagnifier()) offset = 0;
@@ -350,6 +359,31 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         // Reimposta se necessario il filtro selezionato (in caso di AEC con cambio filtro)
         emit queuedExecution(QUEUED_SELECTED_FILTER,0,""); // Impostazione Filtro di base
         emit queuedExecution(QUEUED_LOG_FLUSH,0,logstring); // Impostazione Filtro
+
+
+
+
+
+        // With the DR MODE activated the serial RS-232 outputs exposure data
+        if(ApplicationDatabase.getDataI(_DB_DRMODE)){
+
+            if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_MANUAL) tech = 0;
+            else if(ApplicationDatabase.getDataI(_DB_TECH_MODE) == ANALOG_TECH_MODE_SEMI) tech = 1;
+            else tech = 2;
+
+            large_focus = (pGeneratore->selectedFSize == Generatore::FUOCO_LARGE);
+
+            if(XselectedFiltro == Collimatore::FILTRO_Mo){
+                flt =  SerialInterface::SI_Mo;
+            }else{
+                flt =  SerialInterface::SI_Rh;
+            }
+
+            if(pPotter->isMagnifier()) mag_factor = ApplicationDatabase.getDataI(_DB_MAG_FACTOR);
+            else mag_factor = 10;
+
+            pSerial->sendExposureData((unsigned char) (XselectedkV), ldmas/10, large_focus, flt, XThick, XForce,  XselectedIa, pulse_time, mag_factor, getArm(),tech);
+        }
 
         break;
 

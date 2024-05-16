@@ -1,0 +1,28 @@
+int fd_serialport;
+struct termios options;
+ 
+fd_serialport = open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY);
+ 
+if(fd_serialport == -1){
+    perror("Unable to open /dev/ttyS0");
+}
+ 
+tcgetattr(fd_serialport, &options);
+cfsetispeed(&options, B38400);
+cfsetospeed(&options, B38400);
+options.c_cflag |= (CLOCAL | CREAD);    
+options.c_cflag |= PARENB;
+options.c_cflag |= PARODD;
+options.c_cflag &= ~CSTOPB;
+options.c_cflag &= ~CSIZE;
+options.c_cflag |= CS8;
+options.c_iflag |= (INPCK | ISTRIP);
+tcsetattr(fd_serialport, TCSANOW, &options);
+     
+fcntl(fd_serialport, F_SETFL, FNDELAY);
+ 
+while(read(fd_serialport, &data_in[0], sizeof(char))){
+         
+    printf("%s\n",&data_in[0]);
+    usleep(2000);
+}

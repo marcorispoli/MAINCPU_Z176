@@ -348,8 +348,6 @@ int main(int argc, char *argv[])
         pSerial =       new SerialInterface();
 
 
-        pSerial->sendMessage();
-
     }else
     {// SLAVE
 
