@@ -59,7 +59,7 @@
 #define BSPCFG_ENABLE_TTYC                        0 // UART 2  ->Seriale 485
 #define BSPCFG_ENABLE_ITTYC                       1
 
-#define BSPCFG_ENABLE_TTYD                        1 // UART 3 -> RS232 per printf()
+#define BSPCFG_ENABLE_TTYD                        0 // UART 3 -> RS232 per printf()
 #define BSPCFG_ENABLE_ITTYD                       0
 
 #define BSP_DEFAULT_IO_CHANNEL                    "ttyd:"

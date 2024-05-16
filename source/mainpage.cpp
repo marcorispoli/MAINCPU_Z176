@@ -4,7 +4,10 @@
 #include "globvar.h"
 
 #include "audio.h"
+#include "serial_interface.h"
+
 extern audio* pAudio;
+extern SerialInterface* pSerial;
 
 #include "ANALOG/pageOpenAnalogic.h"
 extern AnalogPageOpen* paginaOpenStudyAnalogic;
@@ -230,6 +233,8 @@ void MainPage::timerEvent(QTimerEvent* ev)
                 pConfig->sec = QDateTime::currentDateTime().toString("ss").toInt();
             }
             dateText->setPlainText(QDateTime::currentDateTime().toString("dd.MM.yy     hh.mm.ss ap"));
+
+
         }else{
             dateText->setPlainText(QString("--.--.--     --.--.--"));
         }

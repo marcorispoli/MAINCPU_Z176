@@ -2,7 +2,6 @@
 QT += network
 
 
-
 TRANSLATIONS += languages/traduzione_ita.ts \
                 languages/traduzione_spa.ts \
                 languages/traduzione_eng.ts \
@@ -92,7 +91,8 @@ HEADERS += \
     source/ANALOG/pannelloBiopsia.h \
     source/Service/Calib/calibconsole.h \
     source/Service/Calib/calibParking.h \
-    source/ANALOG/pannelloMag.h
+    source/ANALOG/pannelloMag.h \
+    source/serial_interface.h
 
 SOURCES += \
     source/main.cpp \
@@ -165,7 +165,8 @@ SOURCES += \
     source/ANALOG/pannelloBiopsia.cpp \
     source/Service/Calib/calibconsole.cpp \
     source/Service/Calib/calibParking.cpp \
-    source/ANALOG/pannelloMag.cpp
+    source/ANALOG/pannelloMag.cpp \
+    source/serial_interface.cpp
 
 
 FORMS += \

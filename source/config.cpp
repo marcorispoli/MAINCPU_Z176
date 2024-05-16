@@ -300,6 +300,8 @@ bool Config::openSysCfg(void)
         return false;
     }
 
+
+
     return TRUE;
 }
 
