@@ -1133,6 +1133,11 @@ int AnalogPageOpen::getCurrentProjection(int angolo){
     int projection=currentProjection;
     int ofs;
 
+    // Protezione da errata inizializzazione
+    if( (projection < 0) ||(projection >= PROJ_UNDEF)){
+        currentProjection = PROJ_UNDEF;
+        return currentProjection;
+    }
 
     distanza = abs(projectionsAngoli[projection]-angolo);
 
