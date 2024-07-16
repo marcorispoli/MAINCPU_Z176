@@ -16,7 +16,7 @@ public:
         SI_Rh,
         SI_Mo,
     }FilterT;
-    bool sendExposureData(unsigned char kV, float mAs, bool large_focus, FilterT filter, unsigned short thick, unsigned short force,  unsigned short mA, unsigned short time, unsigned char mag_factor, int angle, unsigned char tech);
+    bool sendExposureData(unsigned char kV, float mAs, bool large_focus, FilterT filter, unsigned short thick, unsigned short force,  unsigned short mA, unsigned short time, unsigned char mag_factor, int angle, unsigned char tech, float ed, float agd);
 
 
 private:

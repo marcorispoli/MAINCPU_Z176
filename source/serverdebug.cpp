@@ -2447,9 +2447,10 @@ void serverDebug::handleGeneratore(QByteArray data)
         QString dosestr = pGeneratore->pDose->getDoseUgDebug(mm,offset,dmas,dkv,filtro) + "\n\r";
         serviceTcp->txData(dosestr.toAscii());
 
-        float dose  = pGeneratore->pDose->getDoseUg(mm,offset,dmas,dkv,filtro);
+        float entrance_dose;
+        float dose  = pGeneratore->pDose->getDoseUg(mm,offset,dmas,dkv,filtro, &entrance_dose);
         if(dose==-1) serviceTcp->txData(QString("DOSE NOT AVAILABLE\r\n").toAscii());
-        else serviceTcp->txData(QString("DOSE (uG)= %1\r\n").arg(dose).toAscii());
+        else serviceTcp->txData(QString("DOSE(uG)=%1, ED(uG)=%2 \r\n").arg(dose).arg(entrance_dose).toAscii());
         return;
 
 

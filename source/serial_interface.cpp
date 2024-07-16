@@ -237,7 +237,9 @@ bool SerialInterface::sendExposureData(
         unsigned short time,
         unsigned char mag_factor,
         int angle,
-        unsigned char tech){
+        unsigned char tech,
+        float ed_mg,
+        float agd_mg){
 
     QByteArray data;
 
@@ -332,9 +334,18 @@ bool SerialInterface::sendExposureData(
     data.append('1');data.append('4');data.append(':');
     data.append('+');data.append(';');
 
-    // Peepok
+    // AGD (Patient Dose)
+    unsigned char cval = (unsigned char) agd_mg;
+    unsigned char cdig = (unsigned char) (100*(agd_mg - (float) cval));
     data.append('1');data.append('5');data.append(':');
-    data.append('0');data.append('0');data.append('.'); data.append('0');data.append('0');data.append(';');
+    data.append(format2(cval));data.append('.');data.append(format2(cdig));data.append(';');
+
+    // mGy Entrance Dose (Kerma)
+    cval = (unsigned char) ed_mg;
+    cdig = (unsigned char) (100*(ed_mg - (float) cval));
+    data.append('1');data.append('6');data.append(':');
+    data.append(format2(cval));data.append('.');data.append(format2(cdig));data.append(';');
+
 
     return sendMessage(data);
 }

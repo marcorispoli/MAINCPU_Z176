@@ -226,7 +226,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
     float ldose;
     float pre_ldose;
     float uG;
-
+    float ed_uG;
     int offset;
     unsigned char data[25];
     int   rxplog;
@@ -265,10 +265,10 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         // Calcolo dose pre impulso + impulso
         if(mcccode == MCC_XRAY_ANALOG_MANUAL){
             pre_ldose = 0;
-            ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, ldmas,XselectedkV*10,XselectedFiltro); // Contributo impulso se presente
+            ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, ldmas,XselectedkV*10,XselectedFiltro, &ed_uG); // Contributo impulso se presente
         }else{
-            pre_ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, Xpre_selectedDmAs,Xpre_selectedkV*10,pConfig->analogCnf.primo_filtro); // Contributo pre impulso se presente
-            ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, ldmas,XselectedkV*10,XselectedFiltro); // Contributo impulso se presente
+            pre_ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, Xpre_selectedDmAs,Xpre_selectedkV*10,pConfig->analogCnf.primo_filtro, 0); // Contributo pre impulso se presente
+            ldose = pGeneratore->pDose->getDoseUg(XspessoreSeno,offset, ldmas,XselectedkV*10,XselectedFiltro, &ed_uG); // Contributo impulso se presente
         }
 
         ApplicationDatabase.setData(_DB_XDMAS,(int) ldmas);
@@ -382,7 +382,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
             if(pPotter->isMagnifier()) mag_factor = ApplicationDatabase.getDataI(_DB_MAG_FACTOR);
             else mag_factor = 10;
 
-            pSerial->sendExposureData((unsigned char) (XselectedkV), ldmas/10, large_focus, flt, XThick, XForce,  XselectedIa, pulse_time, mag_factor, getArm(),tech);
+            pSerial->sendExposureData((unsigned char) (XselectedkV), ldmas/10, large_focus, flt, XThick, XForce,  XselectedIa, pulse_time, mag_factor, getArm(),tech, ed_uG/1000,  uG/1000 );
         }
 
         break;

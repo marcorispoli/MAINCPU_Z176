@@ -266,7 +266,7 @@ float DOSE::getConvertedUgKerma(int dkv, int dmas, int mm, int filtro){
 // - offset_mm: offset piano di compressione sopra il potter (ingranditore)
 // - dmAs: decimi di mAs
 // -
-float DOSE::getDoseUg(int mm, int offset_mm, int dmAs, int dkv, int filtro){
+float DOSE::getDoseUg(int mm, int offset_mm, int dmAs, int dkv, int filtro, float* ek){
     float airKerma;
     float entrance_kerma;
     kermaCnf_Str *pKerma;
@@ -294,6 +294,10 @@ float DOSE::getDoseUg(int mm, int offset_mm, int dmAs, int dkv, int filtro){
     airKerma = getKerma(pKerma,dkv);
     float dd = ((float) pKerma->D0) / ((float) pKerma->D1 - (float) offset_mm - (float) mm);
     entrance_kerma =  airKerma * ( dd * dd) ;
+    if(ek != 0){
+        *ek = entrance_kerma * (float) dmAs/10;
+    }
+
     //PRINT(QString("AIR-KERMA:%1 D0:%2 D1:%3 S:%4\n").arg(airKerma).arg(pKerma->D0).arg(pKerma->D1).arg(pKerma->S));
 
     // Calcolo della dose finale
@@ -306,8 +310,9 @@ float DOSE::getDoseUg(int mm, int offset_mm, int dmAs, int dkv, int filtro){
 }
 
 float DOSE::correzioneIngrandimento2x(int mm, int dkv, int filtro){
-    float dose20x = getDoseUg(mm, 300, 10, dkv, filtro);
-    float dose15x = getDoseUg(mm, 200, 10, dkv, filtro);
+
+    float dose20x = getDoseUg(mm, 300, 10, dkv, filtro, 0);
+    float dose15x = getDoseUg(mm, 200, 10, dkv, filtro, 0);
 
     // correzioni di sicurezza
     if(dose20x < dose15x) return 1;
