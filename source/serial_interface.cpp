@@ -334,9 +334,10 @@ bool SerialInterface::sendExposureData(
     data.append('1');data.append('4');data.append(':');
     data.append('+');data.append(';');
 
-    // AGD (Patient Dose)
-    unsigned char cval = (unsigned char) agd_mg;
-    unsigned char cdig = (unsigned char) (100*(agd_mg - (float) cval));
+    // AGD (Patient Dose) in deci-gray
+    float agd_dG = agd_mg/100;
+    unsigned char cval = (unsigned char) agd_dG;
+    unsigned char cdig = (unsigned char) (100*(agd_dG - (float) cval));
     data.append('1');data.append('5');data.append(':');
     data.append(format2(cval));data.append('.');data.append(format2(cdig));data.append(';');
 
