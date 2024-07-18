@@ -3,7 +3,7 @@
 
 
 #define APPREVMAJ   1
-#define APPREVMIN   5
+#define APPREVMIN   6
 #define BETAREV     0
 
 
