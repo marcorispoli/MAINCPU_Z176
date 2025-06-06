@@ -165,6 +165,8 @@ bool SerialInterface::sendMessage(QByteArray data){
     unsigned char chs = 0;
 
 
+
+
     // Calculates the LRC checksum
     int ichs = 0;
     for(int i=0; i< data.length(); i++){
@@ -335,7 +337,7 @@ bool SerialInterface::sendExposureData(
     data.append('+');data.append(';');
 
     // AGD (Patient Dose) in deci-gray
-    float agd_dG = agd_mg/100;
+    float agd_dG = agd_mg;// /100;
     unsigned char cval = (unsigned char) agd_dG;
     unsigned char cdig = (unsigned char) (100*(agd_dG - (float) cval));
     data.append('1');data.append('5');data.append(':');
@@ -347,6 +349,6 @@ bool SerialInterface::sendExposureData(
     data.append('1');data.append('6');data.append(':');
     data.append(format2(cval));data.append('.');data.append(format2(cdig));data.append(';');
 
-
+    PRINT(QString(data));
     return sendMessage(data);
 }

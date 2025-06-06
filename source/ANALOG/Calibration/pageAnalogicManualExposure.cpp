@@ -461,12 +461,39 @@ void AnalogCalibPageOpen::startManualExposureXraySequence(void){
 
 void AnalogCalibPageOpen::manualExposureGuiNotify(unsigned char id, unsigned char mcccode, QByteArray data)
 {
+    QString logstring;
+    int dvmean;
+    int dmas;
+    int tpulse;
+    float dimean;
+    float ugKermaNominale;
+
 
     switch(mcccode)
     {
 
     case MCC_XRAY_ANALOG_MANUAL:
         stopAttesaDati();
+
+
+        dvmean = ((int) data[13]+ 256 * (int) data[14]);
+        dmas = ((int) data[1]+ 256 * (int) data[2]);
+        tpulse = ((int) data[17]+ 256 * (int) data[18]);
+        if(tpulse) dimean = dmas * 1000 / tpulse;
+        else dimean = 0;
+
+
+        // Debug Info
+        logstring = "ReadkV:" + QString("%1").arg(dvmean) + ", ";
+        logstring += "mAs:" + QString("%1").arg(dmas/10) + ", ";
+        logstring += "Time:" + QString("%1").arg(tpulse) + ", ";
+        logstring += "IMean:" + QString("%1").arg(dimean) + ", ";
+
+
+        PRINT(logstring);
+
+
+
         if(data.at(0)){
 
             // Esito negativo
@@ -482,13 +509,14 @@ void AnalogCalibPageOpen::manualExposureGuiNotify(unsigned char id, unsigned cha
             ApplicationDatabase.setData(_DB_MANUAL_KERMA,(int) 0);
 
         }else{
+            /*
             int dvmean = ((int) data[13]+ 256 * (int) data[14]);
             int dmas = ((int) data[1]+ 256 * (int) data[2]);
             int tpulse = ((int) data[17]+ 256 * (int) data[18]);
             float dimean = dmas * 1000 / tpulse;
-
+*/
             // Calcolo del KERMA al livello di 58mm dal piano del potter
-            float ugKermaNominale = pGeneratore->pDose->getConvertedUgKerma(ApplicationDatabase.getDataI(_DB_MANUAL_KV)*10,ApplicationDatabase.getDataI(_DB_MANUAL_MAS)*10, 58, ApplicationDatabase.getDataI(_DB_MANUAL_FILTER));
+            ugKermaNominale = pGeneratore->pDose->getConvertedUgKerma(ApplicationDatabase.getDataI(_DB_MANUAL_KV)*10,ApplicationDatabase.getDataI(_DB_MANUAL_MAS)*10, 58, ApplicationDatabase.getDataI(_DB_MANUAL_FILTER));
 
             ApplicationDatabase.setData(_DB_MANUAL_KVREAD,(int) (dvmean),0);
             ApplicationDatabase.setData(_DB_MANUAL_PULSE_TIME,(int) (tpulse),0);

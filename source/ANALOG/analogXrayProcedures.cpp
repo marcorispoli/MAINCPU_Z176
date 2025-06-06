@@ -319,6 +319,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         logstring += "kV:" + QString("%1").arg(XselectedkV) + ", ";
         logstring += "mAs:" + QString("%1").arg(ldmas/10) + ", ";
         logstring += "Dose(uG):" + QString("%1").arg(ldose+pre_ldose) + ", ";
+        logstring += "Entrance-Dose(uG):" + QString("%1").arg(ed_uG) + ", ";
         logstring += "TotalDose(uG):" + QString("%1").arg(cumulativeXdose) + ", ";
 
 
@@ -361,8 +362,7 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         emit queuedExecution(QUEUED_LOG_FLUSH,0,logstring); // Impostazione Filtro
 
 
-
-
+        PRINT(logstring);
 
         // With the DR MODE activated the serial RS-232 outputs exposure data
         if(ApplicationDatabase.getDataI(_DB_DRMODE)){
