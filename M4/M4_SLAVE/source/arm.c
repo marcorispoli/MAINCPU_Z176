@@ -862,7 +862,12 @@ bool InitManualPositionSetting(_PD4_Status_t* pStat){
     positioningData.initEncoder = od.val; // Device Units
 
     // Set the Position target
-    long deltaP = dGRAD_TO_POS((long) (positioningData.targetPosition )); // Trasformato in device units
+    //long deltaP = dGRAD_TO_POS((long) (positioningData.targetPosition )); // Trasformato in device units
+    // Limita a +/-180° il movimento manuale!!
+    if(positioningData.targetPosition > 1800) positioningData.targetPosition = 1800;
+    else if(positioningData.targetPosition < -1800) positioningData.targetPosition = -1800;
+    long deltaP = dGRAD_TO_POS((long) (positioningData.targetPosition - positioningData.initPosition)); // Trasformato in device units
+
     driver_stat.position_target = positioningData.initEncoder  + deltaP;
     printf("ENCODER:%d, TARGET:%d\n", positioningData.initEncoder,driver_stat.position_target);
 
