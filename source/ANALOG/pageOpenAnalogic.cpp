@@ -828,6 +828,8 @@ void AnalogPageOpen::valueChanged(int index,int opt)
 
 
     case _DB_MANUAL_MAG: // Impostazione Ingrandimento Manuale
+        if(ApplicationDatabase.getDataU(index)) commandPanel->setManualMagPix(true);
+        else commandPanel->setManualMagPix(false);
 
         // Aggiorna le periferiche
         if(isMaster){
@@ -1241,6 +1243,13 @@ void AnalogPageOpen::manageCallbacks(int opt){
 
     case CALLBACK_COMANDI_MAG_SELECTION:
         changePanel(PANNELLO_MAG);
+        break;
+
+    case CALLBACK_COMANDI_MANMAG_SELECTION:
+        if(isMaster){
+            if(ApplicationDatabase.getDataU(_DB_MANUAL_MAG)) ApplicationDatabase.setData(_DB_MANUAL_MAG, (unsigned char) 0);
+            else ApplicationDatabase.setData(_DB_MANUAL_MAG, (unsigned char) 1);
+        }
         break;
 
     case CALLBACK_COMANDI_OPTION_SELECTION:

@@ -42,7 +42,7 @@ public slots:
     void setReady(bool ready);
     void xrayPixActivation(bool stat);    
     void setArm(int angolo);
-
+    void setManualMagPix(bool state);
 
 public:
     bool config_changed;
@@ -60,6 +60,7 @@ private:
     QGraphicsPixmapItem* wrongProjectionPix;
     QGraphicsPixmapItem* focusPix;
     QGraphicsPixmapItem* xrayPix;
+    QGraphicsPixmapItem* manualMagPix;
 
     GLabel* kvLabel;
     GLabel* masLabel;

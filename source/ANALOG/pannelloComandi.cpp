@@ -46,6 +46,9 @@ pannelloComandi::pannelloComandi(QGraphicsView* view){
     focusPix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/smallFocus.png"));
     focusPix->setOffset(33,304);
 
+    manualMagPix = this->addPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/pulsanteMagManual.png"));
+    manualMagPix->setOffset(56,334);
+
 
 
 
@@ -165,6 +168,7 @@ void pannelloComandi::timerEvent(QTimerEvent* ev)
 
 }
 
+
 void pannelloComandi::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
 
@@ -190,6 +194,7 @@ void pannelloComandi::mousePressEvent(QGraphicsSceneMouseEvent* event)
         ApplicationDatabase.setData(_DB_CALLBACKS,(int) CALLBACK_COMANDI_MAS_SELECTION ,DBase::_DB_FORCE_SGN);
     }else if(campiPix->boundingRect().contains(event->scenePos())) stepCampi();
     else if(optionsPix->boundingRect().contains(event->scenePos())) ApplicationDatabase.setData(_DB_CALLBACKS,(int) CALLBACK_COMANDI_OPTION_SELECTION ,DBase::_DB_FORCE_SGN);
+    else if(manualMagPix->boundingRect().contains(event->scenePos())) ApplicationDatabase.setData(_DB_CALLBACKS,(int) CALLBACK_COMANDI_MANMAG_SELECTION ,DBase::_DB_FORCE_SGN);
     else    QGraphicsScene::mousePressEvent(event);
 }
 
@@ -521,4 +526,7 @@ void pannelloComandi::xrayPixActivation(bool stat){
     return;
 }
 
-
+void pannelloComandi::setManualMagPix(bool state){
+    if(state) manualMagPix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/pulsanteMagManualSelected.png"));
+    else manualMagPix->setPixmap(QPixmap("://paginaOperativaAnalogica/paginaOperativaAnalogica/pulsanteMagManual.png"));
+}
