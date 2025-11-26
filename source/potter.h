@@ -23,6 +23,7 @@ public:
     bool getCassetteExposed(){return cassetteExposed;}
 
     void startTestGrid(int nTest); // Attivazione test griglia
+    bool setManualMagnifier(bool val);
 
     unsigned char selected_field;
 public slots:

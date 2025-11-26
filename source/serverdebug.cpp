@@ -563,7 +563,7 @@ void serverDebug::PCB244A_Notify(unsigned char id, unsigned char mcccode, QByteA
 
 
     //serviceTcp->txData(QByteArray("ARRIVATO\r\n"));
-    disconnect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)));
+    //disconnect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)));
     if(buffer[0]!=0){
         serviceTcp->txData(QByteArray("COMMAND FAILED!\r\n"));
         return;
@@ -652,6 +652,13 @@ void serverDebug::PCB244A_Notify(unsigned char id, unsigned char mcccode, QByteA
             break;
         }
 
+        break;
+
+     // Feedback comando di attivazione/Disattivazione modalità manuale
+     case MCC_PCB244_A_MANUAL_MAGNIFIER:
+        if(buffer.size() < 2) return;
+        if(buffer[1]) serviceTcp->txData(QString("MANUAL MAG ATTIVO\r\n").toAscii());
+        else serviceTcp->txData(QString("MANUAL MAG DISATTIVO\r\n").toAscii());
         break;
     }
 }
@@ -4105,6 +4112,8 @@ void serverDebug::handlePotter(QByteArray data)
         serviceTcp->txData(QByteArray("setGrid3D: <ON/OFF>          Attivazione griglia 3D\r\n"));
         serviceTcp->txData(QByteArray("setGridFreq:<freq>           Impostazione freequenza (0.1Hz/unit)\r\n"));
         serviceTcp->txData(QByteArray("setGridAmp:<ampiezza>        Impostazione ampiezza\r\n"));
+        serviceTcp->txData(QByteArray("setManualMag:                Attiva ingranditore manuale\r\n"));
+        serviceTcp->txData(QByteArray("setAutoMag:                  Attiva ingranditore automatico\r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     }else if(data.contains("clearErrors"))
     {
@@ -4115,6 +4124,14 @@ void serverDebug::handlePotter(QByteArray data)
     }else if(data.contains("setGrid2D"))
     {
         handleSetGrid2D(data);
+    }else if(data.contains("setManualMag"))
+    {
+        connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+        ApplicationDatabase.setData(_DB_MANUAL_MAG, (unsigned char) 1,DBase::_DB_FORCE_SGN);
+    }else if(data.contains("setAutoMag"))
+    {
+        connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+        ApplicationDatabase.setData(_DB_MANUAL_MAG, (unsigned char) 0,DBase::_DB_FORCE_SGN);
     }
 }
 
