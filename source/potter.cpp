@@ -114,6 +114,27 @@ bool Potter::setDetectorField(unsigned char val){
     }else return false;
 }
 
+/**
+ * @brief Potter::setManualMagnifier
+ *  Comando di attivazione modalità ingranditore manuale
+ * @param val
+ *  val = true: ingranditore manuale attivo
+ *  val = false: ingranditore manuale disattivo
+ * @return
+ *  true: comando accettato
+ *  false: comando fallito
+ */
+bool Potter::setManualMagnifier(bool val){
+    unsigned char buffer[2];
+
+    buffer[0] = MCC_PCB244_A_MANUAL_MAGNIFIER;
+    if(val) buffer[1] = 1;
+    else    buffer[1] = 0;
+
+    if(pConsole->pGuiMcc->sendFrame(MCC_244_A_FUNCTIONS,1,buffer,2)) return true;
+    else return false;
+}
+
 void Potter::startTestGrid(int nTest){
     unsigned char buffer[2];
     buffer[1]=nTest;

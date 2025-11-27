@@ -311,6 +311,8 @@
         <file>paginaOperativaAnalogica/disable_film.png</file>
         <file>paginaOperativaAnalogica/pannelloOpzioni.png</file>
         <file>paginaOperativaAnalogica/pannelloIngranditore.png</file>
+        <file>paginaOperativaAnalogica/pulsanteMagManualSelected.png</file>
+        <file>paginaOperativaAnalogica/pulsanteMagManual.png</file>
     </qresource>
     <qresource prefix="/Sym">
         <file>Sym/pad.png</file>

@@ -114,6 +114,7 @@ void main_task(uint32_t initial_data)
  generalConfiguration.enableAudio = false;
  generalConfiguration.volumeAudio = 0;
 
+ generalConfiguration.potterCfg.manualMagnifier = false;
 
  mcc_count = 0;
  

@@ -22,18 +22,25 @@ bool AnalogCalibPageOpen::getProfileCalibrationReady(unsigned char opt){
 
     if(!pc_data_valid) return false;
 
-    if((pc_selected_fuoco==Generatore::FUOCO_SMALL)&&(pPotter->getPotId()!=POTTER_MAGNIFIER)) ready_stat|=1;    // Wrong Potter
-
-    // Con Ingrandimento la calibrazione DEVE essere fatta a 1.5x mandatorio
-    if((pPotter->getPotId()==POTTER_MAGNIFIER) && (ApplicationDatabase.getDataI(_DB_MAG_FACTOR) != 15)) ready_stat|=1;    // Wrong Potter
-
-    if((pc_selected_fuoco==Generatore::FUOCO_LARGE)&&(pPotter->getPotId()!=POTTER_2D)) ready_stat|=1;           // Wrong Potter
-
+    // Condizioni generali
     if(!pPotter->getCassettePresence()) ready_stat|=2;                                              // Missing Cassetta
     if(!ApplicationDatabase.getDataU(_DB_READY_EXPOSURE)) ready_stat|=4;                            // PC not READY
     if(pc_selected_pmmi==0) ready_stat|=8;                                                          // PC non ha selezionato i pmmi
     if(!pCompressore->isValidPad()) ready_stat|=0x10;                                               // Compressore non riconosciuto
-    if(abs(pc_selected_pmmi-ApplicationDatabase.getDataI(_DB_SPESSORE))>15) ready_stat|=0x20;       // Spessore non compatibile con PMMI
+
+
+    if(pc_selected_fuoco==Generatore::FUOCO_SMALL){
+        // Condizioni relative al solo fuoco piccolo
+        if((pPotter->getPotId() != POTTER_MAGNIFIER)) ready_stat|=1;    // Wrong Potter
+
+        // Con Ingrandimento la calibrazione DEVE essere fatta a 1.5x mandatorio
+        //if((ApplicationDatabase.getDataI(_DB_MAG_FACTOR) != 15)) ready_stat|=1;    // Wrong Potter
+
+    }else{
+        // Condizioni relative al solo fuoco grande
+        if((pPotter->getPotId()!=POTTER_2D)) ready_stat|=1;           // Wrong Potter
+        if(abs(pc_selected_pmmi-ApplicationDatabase.getDataI(_DB_SPESSORE))>15) ready_stat|=0x20;       // Spessore non compatibile con PMMI
+    }
 
 
     ApplicationDatabase.setData(_DB_CALIB_PROFILE_READY_STAT,ready_stat,opt);
@@ -137,21 +144,33 @@ void AnalogCalibPageOpen::setProfileData(void){
     ApplicationDatabase.setData(_DB_CALIB_PROFILE_FILTRO, (int) pc_selected_filtro , DBase::_DB_FORCE_SGN);
 
 
-    // Impostazione fuoco sulla base del potter presente
     if((pc_selected_fuoco != pGeneratore->selectedFSize) ||(!focus_ok)){
+        focus_ok=true;
+
         if(pc_selected_fuoco==Generatore::FUOCO_SMALL){
             pGeneratore->setFuoco(Generatore::FUOCO_SMALL);
             ApplicationDatabase.setData(_DB_CALIB_PROFILE_PC_POTTER, (int)  1, DBase::_DB_FORCE_SGN);
+
+            // Impostazione ingranditore manuale su fuoco piccolo
+            if(pConfig->userCnf.manualMagnifierDevice){
+                if(!pPotter->setManualMagnifier(true)) focus_ok= false;
+            }
+
         }else{
             // Impostazione Fuoco grande
             pGeneratore->setFuoco(Generatore::FUOCO_LARGE);
             ApplicationDatabase.setData(_DB_CALIB_PROFILE_PC_POTTER, (int)  0, DBase::_DB_FORCE_SGN);
+
+            // Disattivazione ingranditore manuale su fuoco grande
+            if(pConfig->userCnf.manualMagnifierDevice){
+                if(!pPotter->setManualMagnifier(false)) focus_ok= false;
+            }
         }
 
         if(!pGeneratore->updateFuoco()){
             PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_GEN, GEN_SET_FUOCO,TRUE);
             focus_ok=false;
-        }else focus_ok=true;
+        }
     }
 
     // Impostazione campo esposimetro

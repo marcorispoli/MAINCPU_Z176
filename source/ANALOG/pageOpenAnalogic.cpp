@@ -262,6 +262,9 @@ void AnalogPageOpen::initPage(void){
     connect(ui->sblocco_compressore,SIGNAL(released()),this,SLOT(onSblocco_compressore()),Qt::UniqueConnection);
     connect(ui->manualColliButton,SIGNAL(released()),this,SLOT(onManualColliButt()),Qt::UniqueConnection);
 
+    // Reset Modalità di Ingrandimeno Manuale
+    ApplicationDatabase.setData(_DB_MANUAL_MAG_STATE, (unsigned char) 0,DBase::_DB_FORCE_SGN);
+
     if(!isMaster) return;
     emit queuedExecution(QUEUED_INIT_PAGE,0,"");
 
@@ -273,6 +276,7 @@ void AnalogPageOpen::initializeBiopsyPage(void){
 
     // Impostazione Tipologia di Rotazione
     ApplicationDatabase.setData(_DB_ROT_MODE, (int) pConfig->sys.armMotor, DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
+
 
     // Impostazione del Workflow
     ApplicationDatabase.setData(_DB_ANALOG_BIOPSY_WORKFLOW, (int) _BIOPSY_INIT,DBase::_DB_FORCE_SGN |DBase::_DB_NO_CHG_SGN);
@@ -331,6 +335,7 @@ void AnalogPageOpen::initializeBiopsyPage(void){
     if(!timerReady) timerReady = startTimer(1000);
 
 }
+
 void AnalogPageOpen::initializeStandardPage(void){
     ui->formatLabel->setText(QString(""));
     ui->formatLabel->show();
@@ -822,12 +827,24 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         break;
 
 
+    case _DB_MANUAL_MAG_STATE: // Impostazione Ingrandimento Manuale
+        if(ApplicationDatabase.getDataU(index)) commandPanel->setManualMagPix(true);
+        else commandPanel->setManualMagPix(false);
+
+        // Aggiorna le periferiche
+        if(isMaster){
+            if(ApplicationDatabase.getDataU(index)) pPotter->setManualMagnifier(true);
+            else pPotter->setManualMagnifier(false);
+        }
+        break;
+
     case _DB_STUDY_STAT:// Richiesta di chiusura studio da protocollo console
         if(ApplicationDatabase.getDataU(index)) return;
         // Chiude le info
         PageAlarms::activateNewAlarm(_DB_ALLARME_INFO_STAT,0);
         pConfig->selectMainPage();
         break;
+
 
 
 
@@ -1018,7 +1035,15 @@ void AnalogPageOpen::setPad(void){
 
 void AnalogPageOpen::setCurrentFuoco(void){
     if(!isMaster) return;
-    unsigned char accessorio = ApplicationDatabase.getDataU(_DB_ACCESSORIO);
+
+    unsigned char accessorio;
+
+    // Se c'è la modalità di ingranditore forzato allora forza l'accessorio a Ingranditore!
+    if(ApplicationDatabase.getDataU(_DB_MANUAL_MAG_STATE)) {
+         accessorio   = POTTER_MAGNIFIER;
+    }else{
+        accessorio = ApplicationDatabase.getDataU(_DB_ACCESSORIO);
+    }
 
     // Condizini in operativo: il fuoco è schiavo dell'accessorio
     if(accessorio == POTTER_MAGNIFIER) pGeneratore->setFuocoPiccolo();
@@ -1218,6 +1243,13 @@ void AnalogPageOpen::manageCallbacks(int opt){
 
     case CALLBACK_COMANDI_MAG_SELECTION:
         changePanel(PANNELLO_MAG);
+        break;
+
+    case CALLBACK_COMANDI_MANMAG_SELECTION:
+        if(isMaster){
+            if(ApplicationDatabase.getDataU(_DB_MANUAL_MAG_STATE)) ApplicationDatabase.setData(_DB_MANUAL_MAG_STATE, (unsigned char) 0);
+            else ApplicationDatabase.setData(_DB_MANUAL_MAG_STATE, (unsigned char) 1);
+        }
         break;
 
     case CALLBACK_COMANDI_OPTION_SELECTION:

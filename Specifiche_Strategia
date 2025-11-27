@@ -1,0 +1,50 @@
+SPECIFICHE PER FUNZIONE INGRANDITORE MANUALE CON POTTER 2D
+
+Scadenza Sviluppo: Q4 / 2025
+
+Descrizione Modifica
+
+Konica utilizza un ingranditore appoggiato sul potter bucky senza identificazione elettronica.
+Si deve sviluppare una procedura per abilitarne l'uso.
+
+Requisiti Generali
+
+1) Il dispositivo Ingranditore Manuale dovrà avere le stesse caratteristiche meccaniche
+dell'ingranditore Metaltronica per quanto riguarda la posizione del piano di compressione.
+
+2) Si dovrà selezionare manualmente la modalità di funzionamento tra Ingranditore/Contatto:
+    - Si dovrà aggiungere nella GUI della pagina operativa un bottone grafico di selezione della modalità Contatto/Ingrandimento;
+
+    - Se verrà selezionata la modalità Contatto, il Mammografo:
+        - Selezionerà il Fuoco grande per l'esposizione;
+        - Identificherà i Paddles di compressione tra quelli della famiglia dei paddles per Contatto;
+
+    - Se verrà selezionata la modalità ingranditore, il Mammografo:
+        - Selezionerà il Fuoco Piccolo per l'esposizione;
+        - Identificherà il fattore di ingrandimento (1.5x/1.8x/2x) durante la fase di compressione, sulla base dello spessore letto;
+        - Identificherà i Paddles di compressione tra quelli della famiglia dei paddles per ingrandimento;
+
+
+NOTA: durante il processo di calibrazione dell'AEC, la calibrazione dovrà essere eseguita con la modalità Ingranditore
+attiva dato che la griglia risulta sempre presente.
+
+3) La funzione di selezione manuale dell'ingranditore dovrà essere abilitata da file di configurazione:
+    - Se la funzione non dovesse essere abilitata, il pulsante grafico di selezione dovrà
+    essere nascosto e non selezionabile.
+
+
+
+STRATEGIA DI SVILUPPO
+
+- Agire alla base sul modulo M4_master/pcb244AGetAccessorio()
+    IMbrogliare il riconoscimento nel caso i selezione manuale dell'ingranditore.
+    Tutto dovrebbe poi andare di conseguenza.
+
+- Per la grafica: trovare un posticino all'interno della pagina opzioni.
+  Il pulsante dovrà apparire solo se abilitato da file di configurazione.
+
+- Aggiungere nel file di configurazione di sistema la selezione di questa modalità.
+
+
+
+

@@ -114,6 +114,7 @@ typedef struct
 
     bool    audioEnable;         // Abilitazione messaggi audio
     unsigned char volumeAudio;   // 0 = MAX; 10 = MIN
+    bool    manualMagnifierDevice; // TRUE = uso dell'ingranditore manuale
 
 }userCnf_Str;
 

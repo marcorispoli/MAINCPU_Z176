@@ -2021,9 +2021,23 @@ void mcc_244_A_functions(void){
     case MCC_PCB244_A_SET_CASSETTE:
         setCassetteStat(mcc_cmd.buffer[1]);
         break;
+    case MCC_PCB244_A_MANUAL_MAGNIFIER:
+        if(mcc_cmd.buffer[1]){
+            generalConfiguration.potterCfg.manualMagnifier = true;
+            printf("PCB244A: Ingranditore Manuale Attivo\n");
+        }else{
+            generalConfiguration.potterCfg.manualMagnifier = false;
+            printf("PCB244A: Ingranditore Manuale Disattivo\n");
+        }
+
+        // Risponde con lo stato ricevuto
+        buffer[0]=0; // Comando correttamente eseguito
+        buffer[1]=mcc_cmd.buffer[1];// Valore comando eseguito
+        size=2;
+        break;
     }
 
-
+    // Risposta se richiesta
     if(size) {
         mccPCB244ANotify(1, mcc_cmd.buffer[0],buffer,size);
     }

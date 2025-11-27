@@ -133,7 +133,7 @@ typedef struct
   unsigned char potDescriptor; // Dati aggiuntivi per Analogica
   bool cassette;        // Presenza cassetta
   bool cassetteExposed; // cassetta esposta
-
+  bool manualMagnifier; // Forza la modalità di ingrandimento manuale
 
 }potterCfg_Str;
 

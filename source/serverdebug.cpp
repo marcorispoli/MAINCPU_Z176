@@ -563,7 +563,7 @@ void serverDebug::PCB244A_Notify(unsigned char id, unsigned char mcccode, QByteA
 
 
     //serviceTcp->txData(QByteArray("ARRIVATO\r\n"));
-    disconnect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)));
+    //disconnect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)));
     if(buffer[0]!=0){
         serviceTcp->txData(QByteArray("COMMAND FAILED!\r\n"));
         return;
@@ -652,6 +652,13 @@ void serverDebug::PCB244A_Notify(unsigned char id, unsigned char mcccode, QByteA
             break;
         }
 
+        break;
+
+     // Feedback comando di attivazione/Disattivazione modalità manuale
+     case MCC_PCB244_A_MANUAL_MAGNIFIER:
+        if(buffer.size() < 2) return;
+        if(buffer[1]) serviceTcp->txData(QString("MANUAL MAG ATTIVO\r\n").toAscii());
+        else serviceTcp->txData(QString("MANUAL MAG DISATTIVO\r\n").toAscii());
         break;
     }
 }
@@ -4096,15 +4103,23 @@ void serverDebug::handleCanOpen_test(QByteArray data)
 
 void serverDebug::handlePotter(QByteArray data)
 {
+    QList<QByteArray> parametri;
+
+    connect(pConsole,SIGNAL(mccPcb244ANotifySgn(unsigned char,unsigned char,QByteArray)),this,SLOT(PCB244A_Notify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
+
     if(data.contains("?"))
     {
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
-        serviceTcp->txData(QByteArray("clearErrors:                 Reset Fault\r\n"));
-        serviceTcp->txData(QByteArray("resetBoard:                  Reset Board\r\n"));
-        serviceTcp->txData(QByteArray("setGrid2D: <ON/OFF>          Attivazione griglia 2D\r\n"));
-        serviceTcp->txData(QByteArray("setGrid3D: <ON/OFF>          Attivazione griglia 3D\r\n"));
-        serviceTcp->txData(QByteArray("setGridFreq:<freq>           Impostazione freequenza (0.1Hz/unit)\r\n"));
-        serviceTcp->txData(QByteArray("setGridAmp:<ampiezza>        Impostazione ampiezza\r\n"));
+        serviceTcp->txData(QByteArray("clearErrors                 Reset Fault\r\n"));
+        serviceTcp->txData(QByteArray("resetBoard                  Reset Board\r\n"));
+        serviceTcp->txData(QByteArray("-------------------- Grid Options -------------------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("setGrid2D <ON/OFF>          Attivazione griglia 2D\r\n"));
+        serviceTcp->txData(QByteArray("setGrid3D <ON/OFF>          Attivazione griglia 3D\r\n"));
+        serviceTcp->txData(QByteArray("setGridFreq<freq>           Impostazione freequenza (0.1Hz/unit)\r\n"));
+        serviceTcp->txData(QByteArray("setGridAmp<ampiezza>        Impostazione ampiezza\r\n"));
+        serviceTcp->txData(QByteArray("-------------------- Manual Magnifier Options ------------------------------------\r\n"));
+        serviceTcp->txData(QByteArray("setManualMagEna <ON/OFF> Abilita/Disabilita uso ingranditore manuale\r\n"));
+        serviceTcp->txData(QByteArray("setManualMagStat <ON/OFF>   Attiva/Disattiva presenza ingranditore manuale\r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     }else if(data.contains("clearErrors"))
     {
@@ -4115,6 +4130,49 @@ void serverDebug::handlePotter(QByteArray data)
     }else if(data.contains("setGrid2D"))
     {
         handleSetGrid2D(data);
+    }else if(data.contains("setManualMagEna"))
+    {
+
+        parametri = getNextFieldsAfterTag(data, QString("setManualMagEna"));
+        if(parametri.size()!=1){
+            serviceTcp->txData(QByteArray("WRONG PARAMETER! Expected ON/OFF\n\r"));
+            return;
+        }
+
+        if(parametri.at(0)=="ON"){
+            pConfig->userCnf.manualMagnifierDevice = true;
+            serviceTcp->txData(QByteArray("Manual MAgnifier Usage Enabled in the user.cnf config file!\n\r"));
+            ApplicationDatabase.setData(_DB_MANUAL_MAG_ENABLE,(unsigned char) 1,DBase::_DB_FORCE_SGN);
+
+        }else{
+            pConfig->userCnf.manualMagnifierDevice = true;
+            serviceTcp->txData(QByteArray("Manual MAgnifier Usage Disabled in the user.cnf config file!\n\r"));
+            ApplicationDatabase.setData(_DB_MANUAL_MAG_ENABLE,(unsigned char) 0,DBase::_DB_FORCE_SGN);
+        }
+        pConfig->saveUserCfg();
+
+
+    }else if(data.contains("setManualMagStat"))
+    {
+        if(pConfig->userCnf.manualMagnifierDevice == false){
+            serviceTcp->txData(QByteArray("The usage of the Manual Magnifier device is disabled\n\r"));
+            return;
+        }
+
+        parametri = getNextFieldsAfterTag(data, QString("setManualMagStat"));
+        if(parametri.size()!=1){
+            serviceTcp->txData(QByteArray("WRONG PARAMETER! Expected ON/OFF\n\r"));
+            return;
+        }
+
+        if(parametri.at(0)=="ON"){
+            ApplicationDatabase.setData(_DB_MANUAL_MAG_STATE, (unsigned char) 1,DBase::_DB_FORCE_SGN);
+
+        }else{
+            ApplicationDatabase.setData(_DB_MANUAL_MAG_STATE, (unsigned char) 0,DBase::_DB_FORCE_SGN);
+
+        }
+
     }
 }
 

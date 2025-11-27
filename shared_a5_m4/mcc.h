@@ -330,7 +330,8 @@ typedef enum
     MCC_PCB244_A_SET_FIELD,     // Imposta il campo corrente
     MCC_PCB244_A_RESET_BOARD,   // Effettua il reset della scheda
     MCC_PCB244_A_RX_ABORT,      // Forza l'uscita da una sequenza
-    MCC_PCB244_A_SET_CASSETTE   // Forza lo stato d'uso della cassetta
+    MCC_PCB244_A_SET_CASSETTE,   // Forza lo stato d'uso della cassetta
+    MCC_PCB244_A_MANUAL_MAGNIFIER// Forza la presenza dell'ingranditore manuale
 
 
 }_MccPCB244A_Code;

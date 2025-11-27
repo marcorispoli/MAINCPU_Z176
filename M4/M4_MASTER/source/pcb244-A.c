@@ -149,7 +149,11 @@ void pcb244_A_driver(uint32_t taskRegisters)
 bool pcb244AGetAccessorio(void){
     bool changed=false;
 
-    if(Ser422ReadRegister(_REGID(RG244_A_BUCKY),2,&CONTEST)==_SER422_NO_ERROR)
+    // Forza l'uso dell'ingranditore manuale
+    if(generalConfiguration.potterCfg.manualMagnifier){
+        if( (generalConfiguration.potterCfg.potId!= POTTER_MAGNIFIER)) changed = true;
+        generalConfiguration.potterCfg.potId = POTTER_MAGNIFIER ;// Magnifier
+    }else if(Ser422ReadRegister(_REGID(RG244_A_BUCKY),2,&CONTEST)==_SER422_NO_ERROR)
     {
 
        // Identificazione Potter

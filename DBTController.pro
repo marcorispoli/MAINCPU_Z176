@@ -208,5 +208,6 @@ RESOURCES += \
     resource/ui/grafica.qrc
 
 OTHER_FILES += \
-    source/release.txt
+    source/release.txt \
+    Specifiche_Strategia
 

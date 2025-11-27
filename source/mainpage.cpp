@@ -207,6 +207,9 @@ void MainPage::childStatusPage(bool stat,int opt)
             ApplicationDatabase.setData(_DB_PARKING_MODE,(unsigned char) 1);
         else
             ApplicationDatabase.setData(_DB_PARKING_MODE,(unsigned char) 0);
+
+        // Disattiva la modalità ingranditore manuale
+        pPotter->setManualMagnifier(false);
     }
 }
 
