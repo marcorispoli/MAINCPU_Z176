@@ -263,7 +263,7 @@ void AnalogPageOpen::initPage(void){
     connect(ui->manualColliButton,SIGNAL(released()),this,SLOT(onManualColliButt()),Qt::UniqueConnection);
 
     // Reset Modalità di Ingrandimeno Manuale
-    ApplicationDatabase.setData(_DB_MANUAL_MAG, (unsigned char) 0,DBase::_DB_FORCE_SGN);
+    ApplicationDatabase.setData(_DB_MANUAL_MAG_STATE, (unsigned char) 0,DBase::_DB_FORCE_SGN);
 
     if(!isMaster) return;
     emit queuedExecution(QUEUED_INIT_PAGE,0,"");
@@ -827,7 +827,7 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         break;
 
 
-    case _DB_MANUAL_MAG: // Impostazione Ingrandimento Manuale
+    case _DB_MANUAL_MAG_STATE: // Impostazione Ingrandimento Manuale
         if(ApplicationDatabase.getDataU(index)) commandPanel->setManualMagPix(true);
         else commandPanel->setManualMagPix(false);
 
@@ -1039,7 +1039,7 @@ void AnalogPageOpen::setCurrentFuoco(void){
     unsigned char accessorio;
 
     // Se c'è la modalità di ingranditore forzato allora forza l'accessorio a Ingranditore!
-    if(ApplicationDatabase.getDataU(_DB_MANUAL_MAG)) {
+    if(ApplicationDatabase.getDataU(_DB_MANUAL_MAG_STATE)) {
          accessorio   = POTTER_MAGNIFIER;
     }else{
         accessorio = ApplicationDatabase.getDataU(_DB_ACCESSORIO);
@@ -1247,8 +1247,8 @@ void AnalogPageOpen::manageCallbacks(int opt){
 
     case CALLBACK_COMANDI_MANMAG_SELECTION:
         if(isMaster){
-            if(ApplicationDatabase.getDataU(_DB_MANUAL_MAG)) ApplicationDatabase.setData(_DB_MANUAL_MAG, (unsigned char) 0);
-            else ApplicationDatabase.setData(_DB_MANUAL_MAG, (unsigned char) 1);
+            if(ApplicationDatabase.getDataU(_DB_MANUAL_MAG_STATE)) ApplicationDatabase.setData(_DB_MANUAL_MAG_STATE, (unsigned char) 0);
+            else ApplicationDatabase.setData(_DB_MANUAL_MAG_STATE, (unsigned char) 1);
         }
         break;
 

@@ -430,6 +430,8 @@ bool Config::openUserCfg(void)
     userCnf.ServicePassword = "271070";
     userCnf.audioEnable =false;
     userCnf.volumeAudio = 0; // Massimo volume
+    userCnf.manualMagnifierDevice = false; // Di default non c'è
+
 
     // Apre automaticamente il file user
     filename =  QString(USERCFG);
@@ -517,6 +519,14 @@ bool Config::openUserCfg(void)
              else userCnf.audioEnable=false;
         }else if(dati.at(0)=="VAUDIO"){
             userCnf.volumeAudio=dati.at(1).toInt();
+        }else if(dati.at(0)=="MANMAG"){
+            if(dati.at(1)=="1") {
+                userCnf.manualMagnifierDevice = TRUE;
+                ApplicationDatabase.setData(_DB_MANUAL_MAG_ENABLE,(unsigned char) 1,0);
+            } else{
+                userCnf.manualMagnifierDevice = FALSE;
+                ApplicationDatabase.setData(_DB_MANUAL_MAG_ENABLE,(unsigned char) 0,0);
+            }
         }
 
 
@@ -595,6 +605,9 @@ bool Config::saveUserCfg(void)
 
     if(userCnf.deadman) file.write("<DEAD_MAN,1>    //  Attivazione/Disattivazione dead-man\n");
     else file.write("<DEAD_MAN,0>    //  Attivazione/Disattivazione dead-man\n");
+
+    if(userCnf.manualMagnifierDevice) file.write("<MANMAG,1>    //  Presenza Ingranditore Manuale\n");
+    else file.write("<MANMAG,0>    //  Presenza Ingranditore Manuale\n");
 
     if(userCnf.audioEnable) frame = QString("<AUDIO,1>          //  Audio messages\n");
     else frame = QString("<AUDIO,0>          //  Audio messages\n");

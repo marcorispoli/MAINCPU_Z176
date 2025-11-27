@@ -238,6 +238,12 @@ void pannelloComandi::open(void){
     setReady(flags&_DB_ANFLG_EXP_READY);
     setProjectionPix();
 
+    // Attiva la pixmap della selezione manuale dell'ingranditore
+    if(ApplicationDatabase.getDataU(_DB_MANUAL_MAG_ENABLE)){
+        manualMagPix->show();
+    }else{
+        manualMagPix->hide();
+    }
 
     // Aggiorna i campi del pannello profilo
     if(ApplicationDatabase.getDataI(_DB_NUMERO_PROFILI)==0){

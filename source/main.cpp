@@ -141,8 +141,9 @@ int main(int argc, char *argv[])
     ApplicationDatabase.append((unsigned char) 0);  // _DB_COMPRESSOR_PAD_CODE
     ApplicationDatabase.append("");                 // _DB_ACCESSORY_NAME
     ApplicationDatabase.append((int)0);             // _DB_MAG_FACTOR
-    ApplicationDatabase.append((int)0);             // _DB_MAG_OFFSET,
-    ApplicationDatabase.append((unsigned char) 0);  // _DB_MANUAL_MAG,
+    ApplicationDatabase.append((int)0);             // _DB_MAG_OFFSET,    
+    ApplicationDatabase.append((unsigned char) 0);  // _DB_MANUAL_MAG_ENABLE,
+    ApplicationDatabase.append((unsigned char) 0);  // _DB_MANUAL_MAG_STATE,
     ApplicationDatabase.append((unsigned char) 0);  // _DB_ACCESSORIO
     ApplicationDatabase.append((unsigned char) 0);  // _DB_COLLI_FORMAT
     ApplicationDatabase.append((int)0);             // _DB_FORZA
