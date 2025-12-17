@@ -1000,6 +1000,7 @@ bool config_pcb190(bool setmem, unsigned char blocco, unsigned char* buffer, uns
   
   // Caricamento sulla PCb190
 
+  if(Ser422WriteRegister(_REGID(PR_AR_TMO),120, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
   if(Ser422WriteRegister(_REGID(PR16_MAX_IFIL),generalConfiguration.pcb190Cfg.IFIL_MAX_SET, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
   if(Ser422WriteRegister(_REGID(PR_IFIL_LIMIT),(unsigned char) generalConfiguration.pcb190Cfg.IFIL_LIMIT, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
   if(Ser422WriteRegister(_REGID(PR190_IWARM),generalConfiguration.pcb190Cfg.IFIL_DAC_WARM, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;

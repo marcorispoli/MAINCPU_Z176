@@ -158,9 +158,9 @@ Data di Creazione: 24/10/2014
   #define PR_ISHIFT_KEEP_MIN      63,24+_pPAR ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
 
   #define PR_RX_OPT               64,4+_pPAR ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
+  #define PR_AR_TMO               65,11+_pPAR ,_BNK01,_8BIT ,_RW, _NVL, (unsigned short)0
 
-
-  #define PCB190_NREGISTERS       65
+  #define PCB190_NREGISTERS       66
 
   //////////////////////////////////////////////////////////////////////////////
   // ATTIVAZIONE DEI REGISTRI
@@ -261,7 +261,8 @@ Data di Creazione: 24/10/2014
       _REGDEF(PR_ISHIFT_RUN_MIN),
       _REGDEF(PR_IMAIN_KEEP_MIN),
       _REGDEF(PR_ISHIFT_KEEP_MIN),
-      _REGDEF(PR_RX_OPT)
+      _REGDEF(PR_RX_OPT),
+      _REGDEF(PR_AR_TMO)
 
 
   }; 

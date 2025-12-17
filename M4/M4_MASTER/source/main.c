@@ -106,8 +106,9 @@ void main_task(uint32_t initial_data)
  generalConfiguration.armExecution.id = 0;
  generalConfiguration.armExecution.test = false;
  generalConfiguration.armExecution.completed = true;
+ generalConfiguration.armExecution.valid_target = false; // Target non valido
+ generalConfiguration.armExecution.valid_count = 1;
  generalConfiguration.armCfg.direction_memory = MEM_ARM_DIR_UNDEF;
-
 
  generalConfiguration.isInCompression = false;
 

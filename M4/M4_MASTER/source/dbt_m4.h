@@ -171,7 +171,9 @@ typedef struct{
     // Dati operativi
     short dAngolo;              // Angolo corrente in decimi di grado
     short dAngolo_inclinometro; // Angolo inclinometro in decimi di grado
-
+    short dAngolo_target;       // Ultimo target valido raggiunto
+    bool  valid_target;         // TRUE: il target è stato raggiunto
+    short valid_count;          // Numero di aggiornamenti dell'angolo in mauale prima di assestarne il valore
 
     // Test di rodaggio arm
     bool test;

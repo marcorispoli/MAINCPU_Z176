@@ -331,10 +331,9 @@ int actuatorsArmMove(int angolo){
     TO_LE16(&buffer[1],generalConfiguration.armExecution.dAngolo); // Imposta l'angolo di partenza
     TO_LE16(&buffer[3], angolo * 10);   // Imposta il target Angolo di arrivo
 
+    generalConfiguration.armExecution.valid_target = false;
+    generalConfiguration.armExecution.dAngolo_target =  angolo * 10; // Preparazione per la visualizzazione in caso di successo
     CanSendToActuatorsSlave(buffer);
-
-
-
     return 0;
 }
 
@@ -356,6 +355,7 @@ void actuatorsManualArmMove(unsigned char mode){
         generalConfiguration.armExecution.completed=true;
         generalConfiguration.armExecution.success=true;
         generalConfiguration.armExecution.id=0;
+        generalConfiguration.armExecution.valid_target = false;
         return;
     }
 
@@ -399,6 +399,10 @@ void actuatorsManualArmMove(unsigned char mode){
     buffer[5] = mode;
     DEBUG_PRINT1(__DBG_ACTUATOR_ARM_MANUAL_MODE_CMD,mode);
 
+    // Invalida il target e imposta un valore che sia riconoscibile come esito di un movimento manuale.
+    generalConfiguration.armExecution.dAngolo_target = -3000;
+    generalConfiguration.armExecution.valid_count = 1;
+    generalConfiguration.armExecution.valid_target = false;
     CanSendToActuatorsSlave(buffer);
     return ;
 }
@@ -668,7 +672,20 @@ void actuatorsUpdateAngles(void){
     // Verifica se deve avvisare il sistema del cambio stato
     short trxDAngolo = generalConfiguration.trxExecution.cAngolo/10;
     if((trx!=trxDAngolo)||(arm!=generalConfiguration.armExecution.dAngolo)||(arm_dir!=generalConfiguration.armCfg.direction_memory)){
-        TO_LE16(&buffer[0],generalConfiguration.armExecution.dAngolo);
+
+        // Se il target è stato validato allora si passa il target altrimenti si passa il valore relativo dell'inclinometro
+        if(!generalConfiguration.armExecution.valid_target) {
+            TO_LE16(&buffer[0],generalConfiguration.armExecution.dAngolo);
+        }else if(generalConfiguration.armExecution.dAngolo_target == -3000){
+            // Esito di un movimento manuale:
+            // Dopo  tot secondi l'aggiornamento viene bloccato
+            if(!generalConfiguration.armExecution.valid_count) generalConfiguration.armExecution.dAngolo_target = generalConfiguration.armExecution.dAngolo;
+            TO_LE16(&buffer[0],generalConfiguration.armExecution.dAngolo);
+        }else {
+            TO_LE16(&buffer[0],generalConfiguration.armExecution.dAngolo_target);
+        }
+        //TO_LE16(&buffer[0],generalConfiguration.armExecution.dAngolo);
+
         TO_LE16(&buffer[2],generalConfiguration.trxExecution.cAngolo);
         TO_LE16(&buffer[4],generalConfiguration.armExecution.dAngolo_inclinometro);
         buffer[6] = (unsigned char) generalConfiguration.armCfg.direction_memory;
@@ -814,6 +831,7 @@ void actuatorsRxFromArm(uint8_t* data){
         if(data[1]){
             generalConfiguration.armExecution.success = false;
             DEBUG_PRINT2(__DBG_ACTUATOR_ARM_ERROR,data[1],data[2]);
+            generalConfiguration.armExecution.valid_target = false; // Invalida  il target: verrà visualizzato l'angolo derivato dall'inclinometro
 
             // Se ID==0 GuiNotify non invia, dunque occorre inviare l'errore tramite altro comando ..
             if(generalConfiguration.armExecution.id==0){
@@ -832,7 +850,7 @@ void actuatorsRxFromArm(uint8_t* data){
             return;
         }
 
-
+        generalConfiguration.armExecution.valid_target = true; // Angolo Valido!
         generalConfiguration.armExecution.success = true;
         DEBUG_PRINT(__DBG_ACTUATOR_ARM_COMPLETED);
 
@@ -851,13 +869,17 @@ void actuatorsRxFromArm(uint8_t* data){
         generalConfiguration.armExecution.run=false;
         generalConfiguration.armExecution.completed=true;
 
+
         // Esito movimento
         if(data[1]){
             generalConfiguration.armExecution.success = false;
             DEBUG_PRINT2(__DBG_ACTUATOR_ARM_MANUAL_ERROR,data[1],data[2]);
+            generalConfiguration.armExecution.valid_target = false;
         }else{
             generalConfiguration.armExecution.success = true;
             DEBUG_PRINT(__DBG_ACTUATOR_ARM_MANUAL_COMPLETED);
+            generalConfiguration.armExecution.dAngolo_target = -3000;
+            generalConfiguration.armExecution.valid_target = true;
         }
         break;
 
@@ -914,8 +936,10 @@ void actuatorsRxFromArm(uint8_t* data){
 
     case ACTUATORS_ARM_POLLING_STATUS:
 
-        // Messaggio in polling per resettare eventuali situazioni rimaste appese
         if(data[1]==ACUATORS_ARM_POLLING_IDLE){
+            // Messaggio in polling per resettare eventuali situazioni rimaste appese
+            if(generalConfiguration.armExecution.valid_count) generalConfiguration.armExecution.valid_count--;
+
             if(generalConfiguration.armExecution.run){
                 DEBUG_PRINT(__DBG_ACTUATOR_ARM_RESET_POLLING);
                 generalConfiguration.armExecution.run=false;
