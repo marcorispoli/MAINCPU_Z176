@@ -463,12 +463,21 @@ void AnalogPageOpen::initializeStandardPage(void){
     // Azzera la diagnostica sul ready/no ready
     ApplicationDatabase.setData(_DB_INFO_ALARM_MODE, (int) 0, DBase::_DB_FORCE_SGN);
 
-    if(ApplicationDatabase.getDataI(_DB_MAGNIFIER_COLLI_FORMAT) == _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED){
-        ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_MAG, DBase::_DB_FORCE_SGN);
+    // Verifica se c'è l'ingranditore si verifica se il formato deve ancora essere selezionato
+    if(ApplicationDatabase.getDataU(_DB_ACCESSORIO) == POTTER_MAGNIFIER){
+        if(ApplicationDatabase.getDataI(_DB_MAGNIFIER_COLLI_FORMAT) == _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED){
+            ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_MAG, DBase::_DB_FORCE_SGN);
+        }else{
+            // Apertura differita dei pannelli per consentire al database di aggiornarsi correttamente
+            ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_COMANDI, DBase::_DB_FORCE_SGN);
+        }
+
     }else{
         // Apertura differita dei pannelli per consentire al database di aggiornarsi correttamente
         ApplicationDatabase.setData(_DB_CHANGE_PANNELLO,(int) PANNELLO_COMANDI, DBase::_DB_FORCE_SGN);
     }
+
+
 
     if(!timerReady) timerReady = startTimer(1000);
     return;
@@ -719,8 +728,13 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         break;
 
     case _DB_MAGNIFIER_COLLI_FORMAT:
+        return;
         if(!isMaster) return;
         if(opt & DBase::_DB_NO_ACTION) return;
+
+        // Se durante lo studio apero si rileva un cambio accessorio con l'ingranditore
+        // allora viene nuovamente richiesto quale formato di collimazione deve essere utilizzato
+        if(!ApplicationDatabase.getDataU(_DB_ACCESSORIO) == BIOPSY_DEVICE) return;
 
         if(ApplicationDatabase.getDataI(index) == _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED){
             changePanel(PANNELLO_MAG);
@@ -737,10 +751,8 @@ void AnalogPageOpen::valueChanged(int index,int opt)
         break;
 
     case _DB_ACCESSORIO:
-
         if(!isMaster) return;
         emit queuedExecution(QUEUED_INIT_PAGE,0,"");
-
         break;
     case _DB_COMPRESSOR_UNLOCK:
             setSbloccoCompressore();

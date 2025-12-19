@@ -44,6 +44,11 @@ return;
 
         potterValidFactor = FALSE;
 
+        // If the device is changed, the format of the magnifier is reset
+        if(change_device){
+            ApplicationDatabase.setData(_DB_MAGNIFIER_COLLI_FORMAT, (int) _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED);
+        }
+
         // Se la Biopsia è presente allora il codice accessorio è impostato dalla biopsia
         if(data.at(0)==POTTER_2D){
             ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
@@ -51,10 +56,7 @@ return;
             potter = POTTER_2D;
         } else if(data.at(0)==POTTER_MAGNIFIER)
         {
-            // If the Magnifier is just detected, the collimation of the Magnifier is invalidated
-            if(change_device){
-                ApplicationDatabase.setData(_DB_MAGNIFIER_COLLI_FORMAT, (int) _DB_MAGNIFIER_COLLI_FORMAT_UNDEFINED);
-            }
+
 
             ApplicationDatabase.setData(_DB_ACCESSORIO, (unsigned char) data.at(0),0);
             // Verifica se l'ingranditore Ã¨ definito
