@@ -12,8 +12,14 @@
 
 /*______________________________________________________________________________
 
-
    1.5.0
+_____________________________________________________________________________
+
+    19/12/2025    REV 1.6.0 (Package ID07)
+
+    - Aggiunta gestione modifiche per ingranditore Manuale
+    - Aggiunte modifiche per gestione stabilizzazione angolo C-ARM
+    - Aggiunte modifiche per impostazione timer Anodo rotante a 10 secondi
 
 _____________________________________________________________________________*/
 
