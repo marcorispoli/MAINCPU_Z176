@@ -3,9 +3,6 @@
 #include "globvar.h"
 #include "DOSE.h"
 
-#include "systemlog.h"
-extern systemLog* pSysLog;
-
 
 #include "ANALOG/Calibration/pageCalibAnalogic.h"
 extern AnalogCalibPageOpen* paginaCalibAnalogic;
@@ -16,7 +13,7 @@ void console::activateConnections(void){
     consoleSocketTcp = new TcpIpServer();
     if(consoleSocketTcp->Start(_CONSOLE_IN_PORT)<0)
     {
-        qDebug() << "IMPOSSIBILE APIRE LA PORTA DI COMUNICAZIONE CON LA CONSOLE!!";
+        DEBUG("activateConnections():IMPOSSIBILE APIRE LA PORTA DI COMUNICAZIONE CON LA CONSOLE!!");
         return;
     }
 
@@ -368,7 +365,7 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         unsigned char data=0;
         if(pConsole->pGuiMcc->sendFrame(MCC_GET_TROLLEY,protocollo.id,&data, 1)==FALSE)
         {
-            qDebug() << "CONSOLE <GetTrolley>: ERRORE COMANDO MCC";
+            DEBUG("CONSOLE <GetTrolley>: ERRORE COMANDO MCC");
             PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_SOFT,ERROR_MCC,TRUE); // Self resetting
         }
 
@@ -756,7 +753,7 @@ void console::consoleRxHandler(QByteArray rxbuffer)
         pConfig->analogCnf.calib_f3 = protocollo.parametri[2].toInt();
         pConfig->analogCnf.calib_margine=  protocollo.parametri[3].toInt();
         pConfig->saveAnalogConfig();
-        pSysLog->log("CONFIG: ANALOG CONFIGURATION FILE");
+        LOG("CONFIG: SET_CALIB_FIELD");
         emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
         return;
 
@@ -769,7 +766,7 @@ void console::consoleRxHandler(QByteArray rxbuffer)
 
         emit consoleTxHandler(answ.cmdToQByteArray("OK 0"));
         pConfig->saveAnalogConfig();
-        pSysLog->log("CONFIG: ANALOG CONFIGURATION FILE");
+        LOG("CONFIG: SET_STORE_ANALOG_CONFIG");
     }else if(comando==SET_CALIB_PROFILE_DATA){
 
         if(protocollo.parametri.size()!=6) {
@@ -869,10 +866,10 @@ void console::consoleRxHandler(QByteArray rxbuffer)
     }else if(comando==STORE_ANALOG_PARAM){
         handleStoreAnalogParam(&protocollo, &answ);
     }else if(comando==SET_ANALOG_START_LOG){
-        pSysLog->activate(true);
+        pInfo->pSysLog->activate(true);
         emit consoleTxHandler( answ.cmdToQByteArray(QString("OK 0")));
     }else if(comando==SET_ANALOG_STOP_LOG){
-        pSysLog->activate(false);
+        pInfo->pSysLog->activate(false);
         emit consoleTxHandler( answ.cmdToQByteArray(QString("OK 0")));
     }else{
         emit consoleTxHandler( answ.cmdToQByteArray(QString("NA")));
@@ -1067,7 +1064,7 @@ bool console::handleSetAf(QString param)
     // Impostazione del Filtro
     if(pCollimatore->setFiltro()==FALSE)
     {
-        qDebug() << "CONSOLE: <handleSetAf> FALLITA!";
+        DEBUG("CONSOLE: <handleSetAf> FALLITA!");
         return FALSE;
     }
 
@@ -1079,7 +1076,8 @@ bool console::handleSetFocus(QString materiale, QString dimensione)
 
     if(!pGeneratore->setFuoco(materiale))
     {
-        qDebug() << "CONSOLE: <handleSetFocus> FUOCO NON VALIDO" <<pGeneratore->confF1 << pGeneratore->confF2;
+        QString stringa = "CONSOLE: <handleSetFocus> FUOCO NON VALIDO " + pGeneratore->confF1 + " " + pGeneratore->confF2;
+        DEBUG(stringa);
         return FALSE;
     }
 
@@ -1236,7 +1234,8 @@ bool console::handleSetTube(QString param,unsigned char id)
     {
         int angolo = param.toInt();
         if((angolo>26)||(angolo<-26)){
-            qDebug() << "CONSOLE <SetTube>: ERRORE ANGOLO(<=26):" << angolo;
+            QString stringa = "CONSOLE <SetTube>: ERRORE ANGOLO(<=26):" + angolo;
+            DEBUG(stringa);
             PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_TRX,TRX_INVALID_ANGOLO,TRUE); // Self resetting
             return FALSE;
         }
@@ -1250,7 +1249,8 @@ bool console::handleSetTube(QString param,unsigned char id)
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_CMD_TRX,id,data, 4)==FALSE)
     {
-        qDebug() << "CONSOLE <SetTube>: ERRORE COMANDO MCC";
+        QString stringa = "CONSOLE <SetTube>: ERRORE COMANDO MCC";
+        DEBUG(stringa);
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_SOFT,ERROR_MCC,TRUE); // Self resetting
         return FALSE;
     }
@@ -1363,7 +1363,7 @@ void console::handleSetArm(int target,int minimo, int massimo,int id)
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_CMD_ARM,id,data, 2)==FALSE)
     {
-        qDebug() << "CONSOLE <SetArm>: ERRORE COMANDO MCC";
+        DEBUG("CONSOLE <SetArm>: ERRORE COMANDO MCC");
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_SOFT,ERROR_MCC,TRUE); // Self resetting
     }
 
@@ -1532,7 +1532,7 @@ void console::rxDataLog(QByteArray buffer)
         stringa.append(QString("NO PULSE TIME SAMPLES AVAILABLE  \n\r"));
     }
 
-    qDebug() << stringa;
+    DEBUG(stringa);
 
 }
 
@@ -4199,7 +4199,7 @@ void console::handleGetAnalogParam(protoConsole* frame, protoConsole* answer){
 void console::handleStoreAnalogParam(protoConsole* frame, protoConsole* answer){
     pConfig->saveUserCfg();
     pConfig->saveAnalogConfig();
-    pSysLog->log("CONFIG: ANALOG CONFIGURATION FILE");
+    LOG("CONFIG: handleStoreAnalogParam()");
     emit consoleTxHandler(answer->answToQByteArray("OK 0"));
 }
 

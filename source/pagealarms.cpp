@@ -3,8 +3,6 @@
 #include "globvar.h"
 #include "shared_a5_m4/shared.h"
 
-#include "systemlog.h"
-extern systemLog* pSysLog;
 
 #define _PG_ALARM_SCROLL_PIX       "://AlarmPage/AlarmPage/ScrollPix.png"
 #define _PG_ALARM_SCROLL_PATH      8,378,50,478,50,478,150,378,150
@@ -321,7 +319,7 @@ void PageAlarms::valueChanged(int index,int opt)
             curClass = index;
             if(isMaster){
                 _alarmStruct* pAlarm = this->getErrorInfo(curClass,allarme);
-                if(pAlarm)  pSysLog->log(QString("ERROR - M%1").arg(pAlarm->codestr));
+                if(pAlarm) LOG(QString("ERROR - M%1").arg(pAlarm->codestr));
             }
 
             if((alarm_enable)&&(!(opt & DBase::_DB_NO_ACTION))) {

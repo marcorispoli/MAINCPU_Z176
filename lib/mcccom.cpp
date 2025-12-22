@@ -69,6 +69,63 @@ mccCom::mccCom(unsigned char core, unsigned char node, unsigned char port,bool m
 }
 
 
+
+mccCom::mccCom(unsigned char core, unsigned char node, unsigned char port) : // Versione con ricezione raw
+    QObject(0)
+{
+    mccComRxRaw *mccThObj;
+    MCC_INFO_STRUCT mccDriverInfo; // Info Driver MCC
+
+    qRegisterMetaType<_MccFrame_Str>("_MccFrame_Str");
+
+    // Inizializzazione del nodo di comunicazione con Core M4
+    if(mccID==0)
+    {
+        // Apertura del driver
+        mcc_initialize(0);
+
+        // Acquisizione della revisione
+        if(mcc_get_info(0,&mccDriverInfo)!=MCC_SUCCESS)
+        {
+            // ERRORE DI SISTEMA
+            return;
+        }
+        int maj = QString(mccDriverInfo.version_string).toInt() / 10;
+        int min = QString(mccDriverInfo.version_string).toInt() % 10;
+        mccRev = QString("%1.%2").arg(maj).arg(min);
+
+    }
+    mccID++;
+
+
+    mccThObj = new mccComRxRaw;      // Crea oggetto contenente il codice per la thread
+
+    // Assegna end point di trasmissione
+    mccThObj->rx_ep.core =core;
+    mccThObj->rx_ep.node =node;
+    mccThObj->rx_ep.port =port;
+
+    // Crea la thread e cambia l'affinitÃ  dell'oggetto mccThObj nella nuova thread
+    QThread *Thread = new QThread(this);    // Crea la thread
+    connect(Thread, SIGNAL(started()), mccThObj, SLOT(mccThreadRx()),Qt::QueuedConnection);
+    connect(Thread, SIGNAL(finished()), mccThObj, SLOT(deleteLater()),Qt::QueuedConnection);
+    mccThObj->moveToThread(Thread);
+
+    // Effettua la connect tra threads differenti per poter comunicare l'evento di ricezione
+    connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::BlockingQueuedConnection);
+    connect(this,SIGNAL(restartMcc(void)),mccThObj,SLOT(restartMcc(void)),Qt::QueuedConnection);
+
+    //connect(mccThObj,SIGNAL(mccRxSgn(_MccFrame_Str)),this,SLOT(mccRxHandler(_MccFrame_Str)),Qt::QueuedConnection);
+
+    mccThObj->pThread = Thread;
+
+    // Starts an event loop, and emits workerThread->started()
+    Thread->start();
+
+    max_len = 0;
+    return;
+}
+
 ////////////////////////////////////////////////////////////////////
 /*
  *  Aggiunge il checksum al buffer del messaggio
@@ -330,6 +387,33 @@ void mccComRx::mccThreadRx(void)
             if(isFrameCorrect(&mcc_cmd)) emit mccRxSgn(mcc_cmd);
         }
 
+    }
+
+}
+
+void mccComRxRaw::mccThreadRx(void)
+{
+    int mcc_len;
+
+    // Creazione end-point di ricezione
+    if(mcc_create_endpoint(&rx_ep,rx_ep.port)!=MCC_SUCCESS) exit(-1);
+
+    // Ciclo di attesa
+    restart = false;
+
+    while(1)
+    {
+        mcc_len = 0;
+        if((mcc_recv_copy(&rx_ep,&mcc_buffer.buffer,sizeof(mcc_buffer.buffer),(MCC_MEM_SIZE*) &mcc_len,100000)==MCC_SUCCESS) && (mcc_len)){
+            mcc_buffer.len = mcc_len;
+            emit mccRxSgn(mcc_buffer);
+        }
+
+        if(restart){
+            mcc_destroy_endpoint(&rx_ep);
+            mcc_create_endpoint(&rx_ep,rx_ep.port);
+            restart = false;
+        }
     }
 
 }

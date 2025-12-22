@@ -162,7 +162,7 @@ bool DOSE::storeKermaConfig(QString filtro){
     file.close();
     file.flush();
 
-    pSysLog->log("CONFIG: KERMA CONFIGURATION FILE");
+    LOG("CONFIG: KERMA CONFIGURATION FILE");
 
     // Effettua un sync
     QString command = QString("sync");

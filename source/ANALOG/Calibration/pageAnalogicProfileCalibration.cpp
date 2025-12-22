@@ -85,7 +85,7 @@ void AnalogCalibPageOpen::initProfileCalibration(void){
         setProfileData();
     }
 
-    if(isMaster)  pSysLog->log("SERVICE PANEL: ANALOGIC PROFILE CALIBRATION");
+    LOG("SERVICE PANEL: ANALOGIC PROFILE CALIBRATION");
 }
 
 void AnalogCalibPageOpen::setProfileData(void){

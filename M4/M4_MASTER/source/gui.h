@@ -57,7 +57,7 @@ void mccBiopsySimulator();
 
 void mccSetCalibFiltro(void);
 void mcc_calib_zero(void);
-
+void mccPrint(void);
 
 
 void mcc_xray_analog_manual(void);

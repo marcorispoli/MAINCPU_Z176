@@ -368,4 +368,23 @@ ext int nearest(float v);
 ext float absF(float f);
 ext int absI(int i);
 
+ext void debugPrint(const char* buffer);
+ext void debugPrintEna(bool stat);
+ext void printEna(bool stat);
+
+void debugPrintIBuffer(char* destination, int* index, char* tag, int val);
+void debugPrintXBuffer(char* destination, int* index, char* tag, unsigned int val);
+
+ext void debugPrintI(const char* buffer, int var);
+ext void debugPrintI2(const char* buffer1, int var1,const char* buffer2, int var2);
+ext void debugPrintI3(const char* buffer1, int var1,const char* buffer2, int var2,const char* buffer3, int var3);
+ext void debugPrintI4(const char* buffer1, int var1,const char* buffer2, int var2,const char* buffer3, int var3,const char* buffer4, int var4);
+
+ext void debugPrintX(const char* buffer, unsigned int var);
+ext void debugPrintX2(const char* buffer1, unsigned int var1,const char* buffer2, unsigned int var2);
+ext void debugPrintX3(const char* buffer1, unsigned int var1,const char* buffer2, unsigned int var2,const char* buffer3, unsigned int var3);
+ext void debugPrintX4(const char* buffer1, unsigned int var1,const char* buffer2, unsigned int var2,const char* buffer3, unsigned int var3,const char* buffer4, unsigned int var4);
+
+ext void debugPrintF(const char* buffer, float var);
+
 #endif

@@ -119,12 +119,9 @@ int main(int argc, char *argv[])
     else isMaster=false;
 
 #endif
-#ifdef __PRINT
-    if (isIp(MASTER_N_IP)) isMaster=true;
-    else isMaster=false;
-    pPrint = new printDebug();
-#endif
 
+    // Classe sopra tutte per gestire messaggi di log (print.h)
+    pInfo = new infoClass();
 
     // Init variabili globali non definite in  classi
     systemTimeUpdated = FALSE;
@@ -323,12 +320,6 @@ int main(int argc, char *argv[])
     int rotView = 0;
 #endif
 
-    // Inizializzazione file di Log generale
-    pSysLog = new systemLog("/home/user/syslog.txt", 0);
-    pSysLog->log("--------- PROGRAM START ------------",false);
-    pSysLog->flush();
-
-
     if (isIp(MASTER_N_IP))
     {// MASTER
         isMaster=true;
@@ -427,7 +418,7 @@ int main(int argc, char *argv[])
         pConsole->activateConnections();
         pToConsole->activateConnections();
         pDebug->activateConnections();
-
+        pInfo->activateConnections();
 
     }else{
         qInstallMsgHandler(logSlaveOutput);
@@ -436,7 +427,7 @@ int main(int argc, char *argv[])
         QObject::connect(&echoDisplay,SIGNAL(txData(QByteArray)),slaveTcp,SLOT(txData(QByteArray)),Qt::UniqueConnection);
         QObject::connect(slaveTcp,SIGNAL(clientConnection(bool)),&echoDisplay,SLOT(connection(bool)),Qt::UniqueConnection);
         slaveTcp->Start(QHostAddress(_MASTER_IP),_ECHO_PORT);
-
+        pInfo->activateConnections();
     }
 
 

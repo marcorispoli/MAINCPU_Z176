@@ -2,8 +2,6 @@
 #include "application.h"
 #include "appinclude.h"
 #include "globvar.h"
-#include "systemlog.h"
-extern systemLog* pSysLog;
 
 #include "ANALOG/Calibration/pageCalibAnalogic.h"
 extern AnalogCalibPageOpen* paginaCalibAnalogic;
@@ -332,7 +330,7 @@ bool Config::saveSysCfg(void)
     if(sys.highSpeedStarter) file.write("<HS_STARTER,1>    // opzione utilizzo hs starter\n");
     else file.write("<HS_STARTER,0>    // opzione utilizzo hs starter\n");
 
-    pSysLog->log("CONFIG: SYSTEM CONFIGURATION FILE");
+    LOG("CONFIG: SYSTEM CONFIGURATION FILE");
 
     file.close();
     file.flush();
@@ -343,38 +341,6 @@ bool Config::saveSysCfg(void)
 
     return TRUE;
 }
-
-/*
- *  Modifica file di configurazione delle rotazioni.
- *  Se console_id!=0 allora il comando richiede una risposta asincrona
- *
- */
-bool Config::setTomoSpeedMode(QString tomoModeStr, int console_id)
-{
-    unsigned char tomoMode = trxConfig.tomo_mode;
-
-    // Verifica la modalitÃ  corrente 1F/2F e salva eventualmente la nuova modalitÃ 
-    if(tomoModeStr == "4F"){
-        trxConfig.tomo_mode = _TOMO_MODE_4F;
-    }else if(tomoModeStr == "3F"){
-        trxConfig.tomo_mode = _TOMO_MODE_3F;
-    }else if(tomoModeStr == "2F"){
-        trxConfig.tomo_mode = _TOMO_MODE_2F;
-    }else if(tomoModeStr == "1F"){
-        trxConfig.tomo_mode = _TOMO_MODE_1F;
-    }else return false;
-
-    // Se la configurazione cambia, occorre ricaricare i nuovi dati e aggiornare i drivers
-    if(tomoMode!=trxConfig.tomo_mode){
-        if(!saveTrxConfig()) return false; // Fallito il salvataggio
-        if(!readTomoConfig(getTomoFilename())) return false; // Fallita la rilettura dei dati Tomo
-        updateTrxDriver();
-    }
-
-    return true;
-}
-
-
 
 void Config::setRotazioniCfgSlot(void){
     if(console_id){
@@ -631,7 +597,7 @@ bool Config::saveUserCfg(void)
     file.close();
     file.flush();
 
-    pSysLog->log("CONFIG: USER CONFIGURATION FILE");
+    LOG("CONFIG: USER CONFIGURATION FILE");
 
     // Effettua un sync
     QString command = QString("sync");
@@ -745,7 +711,7 @@ bool Config::savePackageCfg(QString filename, firmwareCfg_Str sw)
     file.close();
     file.flush();
 
-    pSysLog->log("CONFIG: PACKAGE CONFIGURATION FILE");
+    LOG("CONFIG: PACKAGE CONFIGURATION FILE");
 
     // Effettua un sync
     QString command = QString("sync");
@@ -943,7 +909,7 @@ QFile   file("/resource/config/analog.cnf");
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << QString("/resource/config/analog.cnf");
+        DEBUG("saveAnalogConfig():IMPOSSIBILE SALVARE IL FILE:"+QString("/resource/config/analog.cnf"));
         return FALSE;
     }
 
@@ -1475,7 +1441,7 @@ bool Config::readTrxConfig(void)
 
         // Crea il file di default
         saveTrxConfig();
-        return readTomoConfig(getTomoFilename());
+        return true;
     }
 
     QList<QString> dati;
@@ -1501,24 +1467,9 @@ bool Config::readTrxConfig(void)
 
 
     file.close();
-
-    // Lettura file di configurazione Tomo relativo alla modalità selezionata
-    return readTomoConfig(getTomoFilename());
+    return true;
 }
 
-// Restituisce il nome del File di configurazione della Tomo relativo
-// alla modalità impostata
-QString Config::getTomoFilename(void){
-    // Lettura file di configurazione Tomo relativo alla modalità selezionata
-    if(trxConfig.tomo_mode==_TOMO_MODE_4F)
-        return QString(TOMO_FILE_CFG).arg("4F");
-    else if(trxConfig.tomo_mode==_TOMO_MODE_3F)
-        return QString(TOMO_FILE_CFG).arg("3F");
-    else if(trxConfig.tomo_mode==_TOMO_MODE_2F)
-        return QString(TOMO_FILE_CFG).arg("2F");
-    else
-        return QString(TOMO_FILE_CFG).arg("1F");
-}
 
 bool Config::saveTrxConfig(void)
 {
@@ -1526,7 +1477,7 @@ bool Config::saveTrxConfig(void)
     QFile   file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
+        DEBUG("saveTrxConfig():IMPOSSIBILE SALVARE IL FILE:" + filename);
         return FALSE;
     }
 
@@ -1563,7 +1514,7 @@ bool Config::saveTrxConfig(void)
     file.flush();
 
 
-    pSysLog->log("CONFIG: TRX CONFIGURATION FILE");
+    LOG("CONFIG: TRX CONFIGURATION FILE");
 
     // Effettua un sync
     QString command = QString("sync");
@@ -1572,172 +1523,8 @@ bool Config::saveTrxConfig(void)
     return TRUE;
 }
 
-//_________________________________________________________________________________________
-//  READ TOMO CONFIG
-bool Config::readTomoConfig(QString filename)
-{
-
-    //________________________________________________________________
-    // Ts = 500ms;
-    trxConfig.tomo.w.speed = 400; // Velocità = 2°/ 0.5
-    trxConfig.tomo.w.accell= 400; // Anticipo = 4 * 4 / (2 * 4) = 2
-    trxConfig.tomo.w.home_position = 1800 + 200;
-    trxConfig.tomo.w.decell= trxConfig.tomo.w.accell;
-    trxConfig.tomo.w.end_position = - trxConfig.tomo.w.home_position;
-    trxConfig.tomo.w.samples = 19;
-    trxConfig.tomo.w.pre_samples = 1;
-    trxConfig.tomo.w.skip_samples = 0;
-
-    trxConfig.tomo.i.speed = 400; // Velocità = 2°/ 0.5
-    trxConfig.tomo.i.accell= 400; // Anticipo = 4 * 4 / (2 * 4) = 2
-    trxConfig.tomo.i.home_position = 1200 + 200;
-    trxConfig.tomo.i.decell= trxConfig.tomo.i.accell;
-    trxConfig.tomo.i.end_position = -trxConfig.tomo.i.home_position;
-    trxConfig.tomo.i.samples = 13;
-    trxConfig.tomo.i.pre_samples = 1;
-    trxConfig.tomo.i.skip_samples = 0;
-
-    trxConfig.tomo.n.speed = 300; // Velocità = 1.5°/ 0.5
-    trxConfig.tomo.n.accell= 300; // Anticipo = 3 * 3 / (2*3) = 1.5
-    trxConfig.tomo.n.home_position = 750 + 150;
-    trxConfig.tomo.n.decell= trxConfig.tomo.n.accell;
-    trxConfig.tomo.n.end_position = -trxConfig.tomo.n.home_position;
-    trxConfig.tomo.n.samples = 11;
-    trxConfig.tomo.n.pre_samples = 1;
-    trxConfig.tomo.n.skip_samples = 0;
-
-    // Apre il file se esiste
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        // Crea il file di default
-        return saveTomoConfig(filename);
-    }
-
-    QList<QString> dati;
-    while(1)
-    {
-        dati = getNextArrayFields(&file);
-        if(dati.isEmpty()) break;
-        if(dati.size()!=2) continue;
-
-        if(dati.at(0)=="HOME_W")            trxConfig.tomo.w.home_position=dati.at(1).toInt();
-        else if(dati.at(0)=="END_W")        trxConfig.tomo.w.end_position=dati.at(1).toInt();
-        else if(dati.at(0)=="SPEED_W")      trxConfig.tomo.w.speed=dati.at(1).toInt();
-        else if(dati.at(0)=="ACC_W")        trxConfig.tomo.w.accell=dati.at(1).toInt();
-        else if(dati.at(0)=="DEC_W")        trxConfig.tomo.w.decell=dati.at(1).toInt();
-        else if(dati.at(0)=="SMP_W")        trxConfig.tomo.w.samples=dati.at(1).toInt();
-        else if(dati.at(0)=="PRESMP_W")     trxConfig.tomo.w.pre_samples=dati.at(1).toInt();
-        else if(dati.at(0)=="SKSMP_W")      trxConfig.tomo.w.skip_samples=dati.at(1).toInt();
-
-        if(dati.at(0)=="HOME_I")            trxConfig.tomo.i.home_position=dati.at(1).toInt();
-        else if(dati.at(0)=="END_I")        trxConfig.tomo.i.end_position=dati.at(1).toInt();
-        else if(dati.at(0)=="SPEED_I")      trxConfig.tomo.i.speed=dati.at(1).toInt();
-        else if(dati.at(0)=="ACC_I")        trxConfig.tomo.i.accell=dati.at(1).toInt();
-        else if(dati.at(0)=="DEC_I")        trxConfig.tomo.i.decell=dati.at(1).toInt();
-        else if(dati.at(0)=="SMP_I")       trxConfig.tomo.i.samples=dati.at(1).toInt();
-        else if(dati.at(0)=="PRESMP_I")    trxConfig.tomo.i.pre_samples=dati.at(1).toInt();
-        else if(dati.at(0)=="SKSMP_I")      trxConfig.tomo.i.skip_samples=dati.at(1).toInt();
-
-        if(dati.at(0)=="HOME_N")            trxConfig.tomo.n.home_position=dati.at(1).toInt();
-        else if(dati.at(0)=="END_N")        trxConfig.tomo.n.end_position=dati.at(1).toInt();
-        else if(dati.at(0)=="SPEED_N")      trxConfig.tomo.n.speed=dati.at(1).toInt();
-        else if(dati.at(0)=="ACC_N")        trxConfig.tomo.n.accell=dati.at(1).toInt();
-        else if(dati.at(0)=="DEC_N")        trxConfig.tomo.n.decell=dati.at(1).toInt();
-        else if(dati.at(0)=="SMP_N")        trxConfig.tomo.n.samples=dati.at(1).toInt();
-        else if(dati.at(0)=="PRESMP_N")     trxConfig.tomo.n.pre_samples=dati.at(1).toInt();
-        else if(dati.at(0)=="SKSMP_N")      trxConfig.tomo.n.skip_samples=dati.at(1).toInt();
-
-
-    }
-
-
-    file.close();
-    return TRUE;
-
-}
-
-bool Config::saveTomoConfig(QString filename)
-{
-
-    QFile   file(filename);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
-        return FALSE;
-    }
-
-    QString frame;
-
-    frame = QString("<HOME_W,%1>  \n").arg(trxConfig.tomo.w.home_position);
-    file.write(frame.toAscii().data());
-    frame = QString("<END_W,%1>   \n").arg(trxConfig.tomo.w.end_position);
-    file.write(frame.toAscii().data());
-    frame = QString("<SPEED_W,%1>   \n").arg(trxConfig.tomo.w.speed);
-    file.write(frame.toAscii().data());
-    frame = QString("<ACC_W,%1>   \n").arg(trxConfig.tomo.w.accell);
-    file.write(frame.toAscii().data());
-    frame = QString("<DEC_W,%1>   \n").arg(trxConfig.tomo.w.decell);
-    file.write(frame.toAscii().data());
-    frame = QString("<SMP_W,%1>   \n").arg(trxConfig.tomo.w.samples);
-    file.write(frame.toAscii().data());
-    frame = QString("<PRESMP_W,%1>   \n").arg(trxConfig.tomo.w.pre_samples);
-    file.write(frame.toAscii().data());
-    frame = QString("<SKSMP_W,%1>   \n").arg(trxConfig.tomo.w.skip_samples);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<HOME_I,%1>  \n").arg(trxConfig.tomo.i.home_position);
-    file.write(frame.toAscii().data());
-    frame = QString("<END_I,%1>   \n").arg(trxConfig.tomo.i.end_position);
-    file.write(frame.toAscii().data());
-    frame = QString("<SPEED_I,%1>   \n").arg(trxConfig.tomo.i.speed);
-    file.write(frame.toAscii().data());
-    frame = QString("<ACC_I,%1>   \n").arg(trxConfig.tomo.i.accell);
-    file.write(frame.toAscii().data());
-    frame = QString("<DEC_I,%1>   \n").arg(trxConfig.tomo.i.decell);
-    file.write(frame.toAscii().data());
-    frame = QString("<SMP_I,%1>   \n").arg(trxConfig.tomo.i.samples);
-    file.write(frame.toAscii().data());
-    frame = QString("<PRESMP_I,%1>   \n").arg(trxConfig.tomo.i.pre_samples);
-    file.write(frame.toAscii().data());
-    frame = QString("<SKSMP_I,%1>   \n").arg(trxConfig.tomo.i.skip_samples);
-    file.write(frame.toAscii().data());
-
-    frame = QString("<HOME_N,%1>  \n").arg(trxConfig.tomo.n.home_position);
-    file.write(frame.toAscii().data());
-    frame = QString("<END_N,%1>   \n").arg(trxConfig.tomo.n.end_position);
-    file.write(frame.toAscii().data());
-    frame = QString("<SPEED_N,%1>   \n").arg(trxConfig.tomo.n.speed);
-    file.write(frame.toAscii().data());
-    frame = QString("<ACC_N,%1>   \n").arg(trxConfig.tomo.n.accell);
-    file.write(frame.toAscii().data());
-    frame = QString("<DEC_N,%1>   \n").arg(trxConfig.tomo.n.decell);
-    file.write(frame.toAscii().data());
-    frame = QString("<SMP_N,%1>   \n").arg(trxConfig.tomo.n.samples);
-    file.write(frame.toAscii().data());
-    frame = QString("<PRESMP_N,%1>   \n").arg(trxConfig.tomo.n.pre_samples);
-    file.write(frame.toAscii().data());
-    frame = QString("<SKSMP_N,%1>   \n").arg(trxConfig.tomo.n.skip_samples);
-    file.write(frame.toAscii().data());
-
-
-    file.close();
-    file.flush();
-
-    pSysLog->log("CONFIG: TOMO CONFIGURATION FILE");
-
-    // Effettua un sync
-    QString command = QString("sync");
-    system(command.toStdString().c_str());
-
-    return TRUE;
-}
 
 //_________________________________________________________________________________________
-
-
-
-
 
 
 
@@ -1791,7 +1578,7 @@ bool Config::saveArmConfig(void)
     QFile   file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE SALVARE IL FILE:" << filename;
+        DEBUG("saveArmConfig():IMPOSSIBILE SALVARE IL FILE:" + filename);
         return FALSE;
     }
 
@@ -1822,7 +1609,8 @@ bool Config::saveArmConfig(void)
     file.close();
     file.flush();
 
-    pSysLog->log("CONFIG: ARM CONFIGURATION FILE");
+    LOG("CONFIG: ARM CONFIGURATION FILE");
+
     // Effettua un sync
     QString command = QString("sync");
     system(command.toStdString().c_str());
@@ -2590,9 +2378,9 @@ void Config::ftpPrintMsg(int val){
 
     switch(val){
     //case 0: qDebug() << "FTP: TRASFERIMENTO COMPLETATO\n"; break;
-    case 1: qDebug() << "FTP ERROR: IMPOSSIBILE CREARE FILE DESTINAZIONE\n"; break;
-    case 2: qDebug() << "FTP ERROR: PROTOCOLLO NON ABILITATO\n"; break;
-    case 3: qDebug() << "FTP ERROR: CRC NON CORRETTO\n"; break;
+    case 1: DEBUG("ftpPrintMsg():FTP ERROR: IMPOSSIBILE CREARE FILE DESTINAZIONE\n"); break;
+    case 2: DEBUG("ftpPrintMsg():FTP ERROR: PROTOCOLLO NON ABILITATO\n"); break;
+    case 3: DEBUG("ftpPrintMsg():FTP ERROR: CRC NON CORRETTO\n"); break;
     }
 
 }
@@ -2789,6 +2577,11 @@ void Config::configSlaveRxHandler(QByteArray frame)
     }else if(comando==SYNC_TO_SLAVE){
         slaveInitialization();
         if(slaveDataInitialized)  emit configSlaveTx(answ.cmdToQByteArray(SYNC_TO_SLAVE));
+    }else if(comando==SLAVE_ENABLE_PRINT){
+        data[0] = MCC_DRIVER_PRINT_ENABLE_CMD;
+        data[1] = 1;
+        pConfig->pSlaveMcc->sendFrame(MCC_PRINT,1,data,2);
+
     }
 }
 
@@ -3963,7 +3756,7 @@ QString Config::getI550DiagnosticErrorStr(unsigned char code){
 }
 
 void Config::powerOffSlot(void){
-    if(isMaster) pSysLog->flush();
+    if(isMaster) pInfo->pSysLog->flush();
 
     QString command = QString("sync");
     system(command.toStdString().c_str());
@@ -3974,7 +3767,7 @@ void Config::powerOffSlot(void){
 }
 
 void Config::rebootSlot(void){
-    if(isMaster) pSysLog->flush();
+    if(isMaster) pInfo->pSysLog->flush();
 
     QString command = QString("sync");
     system(command.toStdString().c_str());
@@ -4040,5 +3833,13 @@ void Config::updateRTC(void){
     buffer[7] = min; // Minuti
     buffer[8] = sec; // Secondi
     pConsole->pGuiMcc->sendFrame(MCC_RTC_COMMANDS,1,buffer,9);
+
+}
+
+// Abilita le print a basso livello sullo slave
+void Config::enableSlavePrint(void){
+
+    protoConsole frame(1,false);
+    emit configMasterTx( frame.cmdToQByteArray(SLAVE_ENABLE_PRINT));
 
 }

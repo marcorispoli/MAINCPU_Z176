@@ -138,7 +138,7 @@ void Generatore::storeHVcalibFile(void){
     file.close();
     file.flush();
 
-    pSysLog->log("CONFIG: MAIN VOLTAGE CALIBRATION FILE");
+    LOG("CONFIG: MAIN VOLTAGE CALIBRATION FILE");
 
     // Effettua un sync
     QString command = QString("sync");
@@ -877,7 +877,7 @@ void Generatore::saveStarterFile(void){
     file.close();
     file.flush();
 
-    pSysLog->log("CONFIG: STARTER CONFIGURATION FILE");
+    LOG("CONFIG: STARTER CONFIGURATION FILE");
 
     // Effettua un sync
     QString command = QString("sync");
@@ -943,7 +943,7 @@ void Generatore::readStarterFile(void){
     QFile file(filename.toAscii());
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE USER:" << filename;
+        DEBUG("readStarterFile(): IMPOSSIBILE APRIRE IL FILE USER:"+ filename);
         return ;
     }
 
@@ -1067,7 +1067,8 @@ void Generatore::saveTubeKvReadCalibrationFile(){
     file.close();
     file.flush();
 
-    pSysLog->log("CONFIG: KV READ CALIBRATION FILE ");
+    LOG("CONFIG: KV READ CALIBRATION FILE ");
+
     // Effettua un sync
     QString command = QString("sync");
     system(command.toStdString().c_str());
@@ -1112,7 +1113,7 @@ void Generatore::saveTubeFilamentFile(QString tubeDir){
     genCnf.pcb190.IFIL_LIMIT = genCnf.filData.IFILlimit * 20.838; // 0.4086 * I * 255/5
     genCnf.pcb190.IFIL_MAX_SET = (unsigned short) (genCnf.filData.IFILmax * (float) genCnf.filData.IFILdac / genCnf.filData.IFILwarm);
 
-    pSysLog->log("CONFIG: TUBE FILAMENT FILE - "+ tubeDir);
+    LOG("CONFIG: TUBE FILAMENT FILE - "+ tubeDir);
     return ;
 }
 
@@ -1233,7 +1234,8 @@ void Generatore::saveTubeKvOffsetFile(QString tubeDir)
     file.write(riga);
     file.close();
 
-    pSysLog->log("CONFIG: TUBE KV OFFSET FILE - " + tubeDir);
+    LOG("CONFIG: TUBE KV OFFSET FILE - " + tubeDir);
+
     // SYNC
     QString command = QString("sync");
     system(command.toStdString().c_str());
@@ -1295,7 +1297,7 @@ bool Generatore::saveTube(QString tubename)
     QFile file(filename.toAscii());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" << "tube.cnf";
+        DEBUG("saveTube(): IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" + filename);
         return FALSE;
     }
 
@@ -1343,7 +1345,7 @@ bool Generatore::saveTube(QString tubename)
             file.setFileName(QString("%1/%2/KV%3.cnf").arg(_TUBEPATH).arg(tubename).arg(i+_MIN_KV).toAscii());
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             {
-                qDebug() <<"IMPOSSIBILE APRIRE IL FILE KVXX" ;
+                DEBUG("saveTube(): IMPOSSIBILE APRIRE IL FILE KVXX") ;
                 return FALSE;
             }
 
@@ -1416,7 +1418,7 @@ bool Generatore::saveTube(QString tubename)
     file.setFileName(filename.toAscii());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        qDebug() <<"IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" << _TUBE_CALIB_NAME;
+        DEBUG("saveTube():IMPOSSIBILE APRIRE IL FILE IN SCRITTURA:" + QString(_TUBE_CALIB_NAME));
         return FALSE;
     }
 
@@ -1463,7 +1465,7 @@ bool Generatore::saveTube(QString tubename)
     // Scrive la revisione del tubo
     setTubeRevision(tube);
 
-    pSysLog->log("CONFIG: TUBE CONFIGURATION FILE - " + tubename);
+    LOG("CONFIG: TUBE CONFIGURATION FILE - " + tubename);
 
     // SYNC
     command = QString("sync");
@@ -1556,7 +1558,7 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Impostazione dati relativi ai KV
             if(getVLine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA V";
+                DEBUG("readKvFile():ERRORE LETTURA V");
                 return FALSE;
             }
         }else if(tag=="I")
@@ -1564,7 +1566,7 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Dati relativi alle correnti di riferimento
             if(getILine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA I";
+                DEBUG("readKvFile():ERRORE LETTURA I");
                 return FALSE;
             }
         }else if(tag=="M")
@@ -1572,7 +1574,7 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Dati relativi ai carichi
             if(getMLine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA M";
+                DEBUG("readKvFile():ERRORE LETTURA M");
                 return FALSE;
             }
         }else if(tag=="S")
@@ -1580,7 +1582,7 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Dati relativi all'uso dello Starter
             if(getSLine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA S";
+                DEBUG("readKvFile():ERRORE LETTURA S");
                 return FALSE;
             }
         }else if(tag=="T")
@@ -1588,12 +1590,12 @@ bool Generatore::readKvFile(unsigned char kV, QString path)
             // Dati relativi alla corrente Tomo
             if(getTLine(&risultato, &j, kV)==FALSE)
             {
-                qDebug() << "ERRORE LETTURA T";
+                DEBUG("readKvFile():ERRORE LETTURA T");
                 return FALSE;
             }
         }else
         {
-            qDebug() << "ERRORE INVALID TAG";
+            DEBUG("readKvFile():ERRORE INVALID TAG");
             return FALSE;
         }
 

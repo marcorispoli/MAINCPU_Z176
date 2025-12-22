@@ -1,6 +1,6 @@
 #define _MCCCLASS_CPP
 #include "dbt_m4.h"
-#include "../../shared_a5_m4/debug_print.h"
+
 
 #ifdef M4_MASTER
 MCC_ENDPOINT	src_ep={_DEF_MCC_GUI_TO_M4_MASTER};
@@ -69,8 +69,7 @@ bool mccSendBuffer(MCC_ENDPOINT* ep, unsigned char cmd, unsigned char id, unsign
     
     // Verifica se busy
     mcc_msgs_available(ep,&mcc_len);
-    if(mcc_len>MAX_MCC_QUEUE){      
-        DEBUG_PRINT3(__DBG_MCC_FULL,id,cmd,buffer[0]);
+    if(mcc_len>MAX_MCC_QUEUE){              
         return FALSE;
     }
 
@@ -100,8 +99,7 @@ bool mccSendBufferFlags(MCC_ENDPOINT* ep, unsigned char cmd, unsigned char id, u
     
     // Verifica se busy
     mcc_msgs_available(ep,&mcc_len);
-    if(mcc_len>MAX_MCC_QUEUE){
-        DEBUG_PRINT3(__DBG_MCC_FULL,id,cmd,buffer[0]);
+    if(mcc_len>MAX_MCC_QUEUE){        
         return FALSE; // C'è già un messaggio in coda
     }
 
@@ -137,8 +135,7 @@ bool mccSendFrame(MCC_ENDPOINT* ep, _MccFrame_Str* mcc_cmd)
     
     // Verifica se busy
     mcc_msgs_available(ep,&mcc_len);
-    if(mcc_len>MAX_MCC_QUEUE){
-        DEBUG_PRINT3(__DBG_MCC_FULL,mcc_cmd->id,mcc_cmd->cmd,mcc_cmd->buffer[0]);
+    if(mcc_len>MAX_MCC_QUEUE){        
         return FALSE; // C'è già un messaggio in coda
     }
  
@@ -180,6 +177,28 @@ PARAMETRI:
   ATTENZIONE: Se id==0 non verrà inviata nessuna notifica all'applicazione
 */
 
+bool mccDebugPrint(char* buffer, int buflen)
+{
+    MCC_MEM_SIZE mcc_len;
+    if(buflen>_MCC_DIM-2) buflen = _MCC_DIM-2;
+
+#ifdef M4_MASTER
+    MCC_ENDPOINT ep = {_DEF_M4_MASTER_DEBUG_MESSAGES_MCC};
+#else
+    MCC_ENDPOINT ep = {_DEF_M4_SLAVE_DEBUG_MESSAGES_MCC};
+#endif
+
+    // Verifica se busy
+    mcc_msgs_available(&ep,&mcc_len);
+    if(mcc_len>MAX_MCC_QUEUE)  return FALSE; // C'è già un messaggio in coda
+
+    // Invia a M4
+    if(mcc_send(&ep,(void*)buffer,buflen,0)!=MCC_SUCCESS) return FALSE;
+    return TRUE;
+
+}
+
+
 bool mccLibNotify(unsigned char ncode, unsigned char id,unsigned char mcccode,unsigned char* buffer, int buflen)
 {      
     unsigned char data[_MCC_DIM];
@@ -197,8 +216,7 @@ bool mccLibNotify(unsigned char ncode, unsigned char id,unsigned char mcccode,un
     }
     if(buflen>_MCC_DIM-2)
     {
-      // Errore ispezionato durante lo sviluppo
-      printf("(MCC NOTIFY LIB: %d): BUFLEN SUPERIORE AL MASSIMO CONSENTITO",mcccode);      
+      // Errore ispezionato durante lo sviluppo      
       return FALSE;
     }
        

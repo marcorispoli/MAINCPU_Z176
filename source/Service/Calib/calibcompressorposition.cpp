@@ -119,7 +119,7 @@ void calibCompressorPosition::initPage(void){
         unsigned char data = 1;
         pConsole->pGuiMcc->sendFrame(MCC_CMD_PCB215_CALIB,1,&data,1);
         ApplicationDatabase.setData(_DB_SERVICE1_INT,(int) 0,DBase::_DB_FORCE_SGN); // Init
-        pSysLog->log("SERVICE PANEL: CALIB COMPRESSOR POSITION");
+        LOG("SERVICE PANEL: CALIB COMPRESSOR POSITION");
     }
 
     calibrated = false;

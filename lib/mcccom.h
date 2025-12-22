@@ -69,6 +69,7 @@ public:
 
     // mode==FALSE -> Tx; mode==TRUE-> Rx
     explicit mccCom(unsigned char core, unsigned char node, unsigned char port,bool mode) ;
+    explicit mccCom(unsigned char core, unsigned char node, unsigned char port) ;
     //void openRx(unsigned char core, unsigned char node, unsigned char port);
 
     bool sendCmd(unsigned char cmd,unsigned char id);
@@ -142,4 +143,21 @@ public:
      MCC_ENDPOINT tx_ep;
  };
 
+// Oggetto di gestione di una thread di ricezione Raw
+class mccComRxRaw : public QObject
+ {
+    Q_OBJECT
+
+signals:
+    void mccRxSgn(_MccFrame_Str  mccframe);  // Segnale di ricezione del pacchetto
+
+public slots:
+     void mccThreadRx(void); // Funzione di inizio thread
+
+public:
+     MCC_ENDPOINT rx_ep;  // End point di ricezione
+     _MccFrame_Str mcc_buffer;
+     QThread *pThread;
+     bool restart;
+};
 #endif // MCCCOM_H

@@ -10,6 +10,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 #define _LOCAL_SERVICE_PORT  10006
+#define _PRINT_SERVICE_PORT  10010
 
 //                              INDIRIZZI DI RETE DEL SISTEMA
 #define _CONSOLE_IN_PORT        10002 // Ricezione comandi da Console

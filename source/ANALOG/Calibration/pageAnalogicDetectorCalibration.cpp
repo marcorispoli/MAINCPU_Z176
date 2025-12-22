@@ -74,8 +74,7 @@ void AnalogCalibPageOpen::initDetectorCalibration(void){
     }
 
     if(!isMaster) return;
-
-    pSysLog->log("SERVICE PANEL: ANALOGIC DETECTOR CALIBRATION");
+    LOG("SERVICE PANEL: ANALOGIC DETECTOR CALIBRATION");
 
     // Imposta le condizioni di ready
     getDetectorCalibrationReady(DBase::_DB_FORCE_SGN);

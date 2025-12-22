@@ -23,7 +23,7 @@ void analog_rx_task(uint32_t taskRegisters)
 {
   int result=0;
 
-  printf("PARTENZA SEQUENZA PER GESTIONE RAGGI MACCHINE ANALOGICHE\n");
+  debugPrint("PARTENZA SEQUENZA PER GESTIONE RAGGI MACCHINE ANALOGICHE");
   _EVCLR(_SEQEV_RX_ANALOG_START);
 
   while(1)
@@ -36,8 +36,8 @@ void analog_rx_task(uint32_t taskRegisters)
     ISRUNNING=TRUE;
 
     // Condizioni comuni a tutte le esposizioni
-    if(generalConfiguration.demoMode) printf("DEMO MODE\n");
-    else  printf("ESPOSIZIONE REALE\n");
+    if(generalConfiguration.demoMode) debugPrint("DEMO MODE");
+    else  debugPrint("ESPOSIZIONE REALE");
 
     // Prima di andare in freeze bisogna accertarsi che la collimazione 2D sia andata a buon fine
     if(wait2DBackFrontCompletion(50)==false){
@@ -84,7 +84,7 @@ void analog_rx_task(uint32_t taskRegisters)
     }
 
     if(result!=0) RxAnalogSeqError(result);
-    else printf("SEQUENZA COMPLETATA CON SUCCESSO\n");
+    else debugPrint("SEQUENZA COMPLETATA CON SUCCESSO");
 
     fineSequenza();
 
@@ -140,22 +140,18 @@ int AnalogTubeCalibration(void){
 
     int error=0;
 
-    printf("ESECUZIONE PROCEDURA DI CALIBRAZIONE TUBO\n");
+    debugPrint("ESECUZIONE PROCEDURA DI CALIBRAZIONE TUBO");
 
     // Reset Eventuale Fault della PCB190
     pcb190ResetFault();
 
-    if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
-    else printf("STARTER ATTIVATO AD ALTA VELOCITA'\n");
+    if(pcb190StarterH()==FALSE) debugPrint("WARNING: COMANDO STARTER HIGH FALLITO");
+    else debugPrint("STARTER ATTIVATO AD ALTA VELOCITA");
 
     // Caricamento parametri di esposizione
     if(pcb190UploadAnalogCalibTubeExpose(Param)==FALSE) return _SEQ_UPLOAD190_PARAM;
 
-    printf("DATI IMPULSO --------------------------\n");
-    printf("IDAC:%d\n",Param->esposizione.I & 0x0FFF);
-    printf("VDAC:%d\n",Param->esposizione.HV & 0x0FFF);
-    printf("MASDAC:%d\n",Param->esposizione.MAS);
-    printf("--------------------------------------\n");
+    debugPrintI3("DATI IMPULSO. IDAC:",Param->esposizione.I & 0x0FFF,"VDAC:",Param->esposizione.HV & 0x0FFF,"MASDAC:%d\n",Param->esposizione.MAS);
 
 
     // Verifica su XRAY_REQ(Pulsante raggi premuto)
@@ -180,7 +176,7 @@ int AnalogTubeCalibration(void){
     // Un minimo di attesa per consentire ai vari segnali di sincronizzarsi
     _time_delay(1000);
 
-    printf("Attesa Completamento \n");
+    debugPrint("Attesa Completamento");
 
     // Attesa XRAY COMPLETED da Bus Hardware
     if(SystemInputs.CPU_XRAY_COMPLETED==0)
@@ -188,14 +184,14 @@ int AnalogTubeCalibration(void){
       _EVCLR(_EV2_XRAY_COMPLETED);
       if(_EVWAIT_TALL(_EV2_XRAY_COMPLETED,_WAIT_XRAY_COMPLETED)==FALSE) return _SEQ_PCB190_TMO;
     }
-    printf("Completato\n");
+    debugPrint("Completato");
 
     // Per sicurezza attiva il bit di stop sull'esposimetro
     PCB244_A_SetRxStop();
 
     // Lettura esito raggi
     if(pcb190GetPostRxRegisters()==FALSE){
-        printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI!!!!!!! \n");
+        debugPrint("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI!");
         return _SEQ_READ_REGISTER;
     }
     Param->dmAs_released = _DEVREG(RG190_MAS_EXIT,PCB190_CONTEST)*10/50;
@@ -213,11 +209,6 @@ int AnalogTubeCalibration(void){
     unsigned char KVRAW;
     getRxSamplesData(&KV,&KVRAW,0,&TIME);
 
-    // Stampa dati
-    printf("mAs=%f\n", ((float)Param->dmAs_released)/10);
-    printf("kV=%f KVRAW=%d \n", KV, KVRAW);
-    printf("TIME(ms)=%d\n", TIME);
-    printf("IMED(mA)=%d\n", Param->dmAs_released * 100 / TIME);
 
     // Invio risultato al Master
     unsigned char  data[8];
@@ -235,8 +226,8 @@ int AnalogTubeCalibration(void){
     data[7]=(unsigned char) (((int)(TIME)>>8)&0xFF);
 
     mccGuiNotify(1,Param->mcc_code,data,sizeof(data));
+    debugPrint("FINE SEQUENZA OK");
 
-    printf("FINE SEQUENZA OK\n");
     return 0; // RISULTATO POSITIVO
 
 } // AnalogPreCalibration
@@ -251,7 +242,7 @@ int AnalogPreCalibration(void){
 
     int error=0;
 
-    printf("ESECUZIONE PROCEDURA DI CALIBRAZIONE DETECTOR\n");
+    debugPrint("ESECUZIONE PROCEDURA DI CALIBRAZIONE DETECTOR");
 
     // Procede con l'azzeramento dell'offset
     PCB244_A_zeroOffset();
@@ -264,12 +255,12 @@ int AnalogPreCalibration(void){
     // Attiva Starter precocemente
     if(Param->esposizione.HV & 0x4000)
     {
-        if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
-        else printf("STARTER ATTIVATO AD ALTA VELOCITA'\n");
+        if(pcb190StarterH()==FALSE) debugPrint("WARNING: COMANDO STARTER HIGH FALLITO");
+        else debugPrint("STARTER ATTIVATO AD ALTA VELOCITA'");
     }else
     {
-        if(pcb190StarterL()==FALSE) printf("WARNING: COMANDO STARTER LOW FALLITO\n");
-        else printf("STARTER ATTIVATO A BASSA VELOCITA'\n");
+        if(pcb190StarterL()==FALSE) debugPrint("WARNING: COMANDO STARTER LOW FALLITO");
+        else debugPrint("STARTER ATTIVATO A BASSA VELOCITA'");
     }
 
     // Caricamento parametri di esposizione
@@ -278,12 +269,7 @@ int AnalogPreCalibration(void){
     // Caricamento impulsi esposimetro
     if(pcb244_A_uploadManualPulses(0xFFFF)==FALSE) return  _SEQ_UPLOAD_PCB244_A_PARAM ;
 
-
-    printf("DATI IMPULSO CALIBRAZIONE RAD --------\n");
-    printf("IDAC:%d\n",Param->esposizione.I & 0x0FFF);
-    printf("VDAC:%d\n",Param->esposizione.HV & 0x0FFF);
-    printf("MASDAC:%d\n",Param->esposizione.MAS);
-    printf("--------------------------------------\n");
+    debugPrintI3("DATI IMPULSO CALIBRAZIONE RAD. IDAC=",Param->esposizione.I & 0x0FFF,"VDAC=",Param->esposizione.HV & 0x0FFF,"MASDAC=",Param->esposizione.MAS);
 
     // Verifica su XRAY_REQ(Pulsante raggi premuto)
     if(SystemInputs.CPU_XRAY_REQ==0)  return ERROR_PUSHRX_NO_PREP;
@@ -307,7 +293,7 @@ int AnalogPreCalibration(void){
     // Un minimo di attesa per consentire ai vari segnali di sincronizzarsi
     _time_delay(1000);
 
-    printf("Attesa Completamento \n");
+    debugPrint("Attesa Completamento");
 
     // Attesa XRAY COMPLETED da Bus Hardware
     if(SystemInputs.CPU_XRAY_COMPLETED==0)
@@ -315,7 +301,7 @@ int AnalogPreCalibration(void){
       _EVCLR(_EV2_XRAY_COMPLETED);
       if(_EVWAIT_TALL(_EV2_XRAY_COMPLETED,_WAIT_XRAY_COMPLETED)==FALSE) return _SEQ_PCB190_TMO;
     }
-    printf("Completato\n");
+    debugPrint("Completato");
 
 
     // Attesa ripresa comunicazione seriale post esecuzione raggi
@@ -334,14 +320,14 @@ int AnalogPreCalibration(void){
 
     // Lettura esito raggi
     if(pcb190GetPostRxRegisters()==FALSE){
-        printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI PCB190!!!!!!! \n");
+        debugPrint("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI PCB190!");
         return _SEQ_READ_REGISTER;
     }
 
     Param->dmAs_released = _DEVREG(RG190_MAS_EXIT,PCB190_CONTEST)*10/50;
 
     if(pcb244_A_GetPostRxRegisters()==FALSE){
-        printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI ESPOSIMETRO!!!!!!! \n");
+        debugPrint("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI ESPOSIMETRO!");
         return _SEQ_READ_REGISTER;
     }
     Param->pulses_released = _DEVREG(RG244_A_PULSES_EXIT,PCB244_A_CONTEST);
@@ -349,13 +335,11 @@ int AnalogPreCalibration(void){
     // Analisi della condizione di FAULT
     if(_TEST_BIT(PCB190_FAULT)) return(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));
 
-    // Tempo medio impulso in mS
-    //float time_pulse = (unsigned short)((float) _DEVREG(REG190_RX_TIME_PLS,PCB190_CONTEST) * 1.115);
+    // Tempo medio impulso in mS    
     float time_pulse = Param->mAs_nom*1000 / Param->In;
     float meanRad = ((float) Param->pulses_released * 1024)/(10*time_pulse);
     unsigned int  rad = (unsigned int) meanRad;
     if((meanRad-(float) rad) >0.5) rad++;
-    printf("mAs = %f, Pulse = %d, Time=%d, PLOG=%d, RAD=%d, RADRAW=%d, PRERAD=%d\n", ((float)Param->dmAs_released)/10, Param->pulses_released, (unsigned int) time_pulse, plog, rad,radraw,prerad);
 
 
     unsigned char  data[11];
@@ -374,7 +358,8 @@ int AnalogPreCalibration(void){
     data[10]=(unsigned char) ((prerad>>8)&0xFF);
 
     mccGuiNotify(1,Param->mcc_code,data,sizeof(data));
-    printf("FINE SEQUENZA OK\n");
+    debugPrint("FINE SEQUENZA OK\n");
+
     return 0; // RISULTATO POSITIVO
 
 } // AnalogPreCalibration
@@ -397,12 +382,12 @@ int AnalogAECModeExposure(void){
     if(!generalConfiguration.demoMode){
       if(Param->esposizione.HV & 0x4000)
       {
-        if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
-        else printf("STARTER ATTIVATO AD ALTA VELOCITA'\n");
+        if(pcb190StarterH()==FALSE) debugPrint("WARNING: COMANDO STARTER HIGH FALLITO");
+        else debugPrint("STARTER ATTIVATO AD ALTA VELOCITA");
       }else
       {
-        if(pcb190StarterL()==FALSE) printf("WARNING: COMANDO STARTER LOW FALLITO\n");
-        else printf("STARTER ATTIVATO A BASSA VELOCITA'\n");
+        if(pcb190StarterL()==FALSE) debugPrint("WARNING: COMANDO STARTER LOW FALLITO");
+        else debugPrint("STARTER ATTIVATO A BASSA VELOCITA");
       }
     }
 
@@ -430,7 +415,7 @@ int AnalogAECModeExposure(void){
     // Un minimo di attesa per consentire ai vari segnali di sincronizzarsi
     _time_delay(1000);
 
-    printf("ATTESA DATI ESPOSIMETRO..\n");
+    debugPrint("ATTESA DATI ESPOSIMETRO.");
     int attempt=20; // Attesa di circa 8 secondi
     while(--attempt){
         if(PCB244_A_GetPreRad(10)==true) break; // 40ms * 10 = 400ms ogni blocco di tentativi
@@ -445,8 +430,6 @@ int AnalogAECModeExposure(void){
     int rad5 = _DEVREG(RG244_A_RAD5,PCB244_A_CONTEST) / 4;
     //int rad25 = _DEVREG(RG244_A_RAD25,PCB244_A_CONTEST) ;
     int prerad =  _DEVREG(RG244_A_PRE_OFFSET,PCB244_A_CONTEST);
-    printf("OFFSET PRE RX: %d - %f\n", prerad, (float) prerad/4.0);
-
 
 
     int rad = rad1;
@@ -454,10 +437,9 @@ int AnalogAECModeExposure(void){
 
     // Legge i mAs del pre impulso dalla PCB190
     Param->dmAs_pre_released =  ((10 * (float) pcb190GetPremAsData()) / 50);
-    printf("mAs PRE IMPULSO = %f\n",(float)Param->dmAs_pre_released / 10.0);
 
-        //__________________________________________________________   >>>>>>>>     FINE SEQEUNZA AEC
-    printf("DATI ESPOSIMETRO: PLOG=%d, RAD=%d\n",plog,rad);
+    debugPrintF("mAs PRE IMPULSO =",(float)Param->dmAs_pre_released / 10.0);
+    debugPrintI2("DATI ESPOSIMETRO: PLOG=",plog,"RAD=",rad);
 
     // Se il RAD è maggiore di 1022 la sequenza raggi viene interrotta
     // per AEC sovra esposto
@@ -476,7 +458,7 @@ int AnalogAECModeExposure(void){
     mccGuiNotify(1,MCC_XRAY_ANALOG_REQ_AEC_PULSE,data,8);
 
     // Attesa dati da interfaccia
-    printf("ATTESA DATI AEC..\n");
+    debugPrint("ATTESA DATI AEC.");
     attempt=40;
     while(--attempt){
 
@@ -486,7 +468,7 @@ int AnalogAECModeExposure(void){
         // PCB190 in errore!
         if(SystemInputs.CPU_XRAY_COMPLETED){
             pcb190GetPostRxRegisters();
-            printf("ERRORE SEQUENZA RAGGI DURANTE ATTESA AEC\n");
+            debugPrint("ERRORE SEQUENZA RAGGI DURANTE ATTESA AEC");
             return _DEVREGL(RG190_FAULTS,PCB190_CONTEST);
         }
 
@@ -512,7 +494,7 @@ int AnalogAECModeExposure(void){
     // Caricamento impulsi esposimetro
     if(!pcb244_A_uploadAECPulses(Param->pulses)) return _SEQ_UPLOAD190_PARAM;
 
-    printf("ATTESA COMPLETAMENTO..\n");
+    debugPrint("ATTESA COMPLETAMENTO.");
     bool EsitoConteggioEsposimetro = false;
 
     // Attende che l'esposimetro termini l'esecuzione dei raggi
@@ -527,11 +509,11 @@ int AnalogAECModeExposure(void){
         if(SystemInputs.CPU_XRAY_REQ==0) return ERROR_PUSHRX_AFTER_PREP;
          _time_delay(100);
     }
-    if(i==0) printf("ERRORE ATTESA ESPOSIMETRO!!!");
+    if(i==0) debugPrint("ERRORE ATTESA ESPOSIMETRO!!!");
 
 
     // Comanda fine sequenza a PCB190
-    if(!pcb190AnalogRxStop()) printf("ERRORE PCB190 STOP !!!");
+    if(!pcb190AnalogRxStop()) debugPrint("ERRORE PCB190 STOP !!!");
 
     // Attesa XRAY COMPLETED da Bus Hardware
     if(SystemInputs.CPU_XRAY_COMPLETED==0)
@@ -542,14 +524,14 @@ int AnalogAECModeExposure(void){
 
     // Lettura esito raggi
     if(pcb190GetPostRxRegisters()==FALSE){
-        printf("ERRORE LETTURA PCB190 FINE RAGGI\n");
+        debugPrint("ERRORE LETTURA PCB190 FINE RAGGI");
         return _SEQ_READ_REGISTER;
     }
 
     // La lettura dei dati dell'esposimetro può essere fatta solo dopo l'azzeramento
     // del bit di BUSY. L'attesa viene consumata all'interno della funzione
     if(pcb244_A_GetPostRxRegisters()==FALSE){
-        printf("ERRORE LETTURA PCB244A FINE RAGGI\n");
+        debugPrint("ERRORE LETTURA PCB244A FINE RAGGI");
         return _SEQ_READ_REGISTER;
     }
 
@@ -564,7 +546,12 @@ int AnalogAECModeExposure(void){
     if(_TEST_BIT(PCB190_FAULT)) return(_DEVREGL(RG190_FAULTS,PCB190_CONTEST));
 
 
-    printf("SEQUENZA TEMINATA CON SUCCESSO\n");
+    debugPrint("SEQUENZA TEMINATA CON SUCCESSO");
+    float KV,IMED;
+    int TIME;
+    getRxSamplesData(&KV,0,&IMED,&TIME);
+
+
     data[0]=RXOK;
     data[1]=(unsigned char) ((Param->dmAs_released)&0xFF);
     data[2]=(unsigned char) ((Param->dmAs_released>>8)&0xFF);    
@@ -573,10 +560,8 @@ int AnalogAECModeExposure(void){
     data[5]=(unsigned char) ((rxStdParam.dmAs_pre_released)&0xFF);
 
     mccGuiNotify(1,Param->mcc_code,data,6);
+    debugPrintI3("FINE SEQUENZA. PLOG=", plog,"RAD=",rad,"PULSES=", Param->pulses_released);
 
-    printf("PLOG=%d, RAD=%d, mAs=%f Pulses:%d\n", plog,rad,(float) Param->dmAs_released/10, Param->pulses_released);
-
-    printf("FINE SEQUENZA OK\n");
     return 0; // RISULTATO POSITIVO
 
 } // AnalogProfileCalibration
@@ -598,12 +583,12 @@ int AnalogManualModeExposure(void){
     // Attiva Starter precocemente
     if(Param->esposizione.HV & 0x4000)
     {
-      if(pcb190StarterH()==FALSE) printf("WARNING: COMANDO STARTER HIGH FALLITO\n");
-      else printf("STARTER ATTIVATO AD ALTA VELOCITA'\n");
+      if(pcb190StarterH()==FALSE) debugPrint("WARNING: COMANDO STARTER HIGH FALLITO");
+      else debugPrint("STARTER ATTIVATO AD ALTA VELOCITA'\n");
     }else
     {
-      if(pcb190StarterL()==FALSE) printf("WARNING: COMANDO STARTER LOW FALLITO\n");
-      else printf("STARTER ATTIVATO A BASSA VELOCITA'\n");
+      if(pcb190StarterL()==FALSE) debugPrint("WARNING: COMANDO STARTER LOW FALLITO");
+      else debugPrint("STARTER ATTIVATO A BASSA VELOCITA");
     }
 
     // Caricamento parametri di esposizione
@@ -634,7 +619,7 @@ int AnalogManualModeExposure(void){
     // Un minimo di attesa per consentire ai vari segnali di sincronizzarsi
     _time_delay(1000);
 
-    printf("Attesa Completamento \n");
+    debugPrint("Attesa Completamento");
 
     // Attesa XRAY COMPLETED da Bus Hardware
     if(SystemInputs.CPU_XRAY_COMPLETED==0)
@@ -642,9 +627,8 @@ int AnalogManualModeExposure(void){
       _EVCLR(_EV2_XRAY_COMPLETED);
       if(_EVWAIT_TALL(_EV2_XRAY_COMPLETED,_WAIT_XRAY_COMPLETED)==FALSE) return _SEQ_PCB190_TMO;
     }
-    printf("Completato\n");
+    debugPrint("Completato\n");
 
-    printf("Lettura campionamenti \n");
 
     // Attesa ripresa comunicazione seriale post esecuzione raggi
     while(!PCB244_A_GetRad1(1)) _time_delay(100);
@@ -658,13 +642,13 @@ int AnalogManualModeExposure(void){
 
     // Lettura esito raggi
     if(pcb190GetPostRxRegisters()==FALSE){
-        printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI PCB190!!!!!!! \n");
+        debugPrint("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI PCB190");
         return _SEQ_READ_REGISTER;
     }
     Param->dmAs_released = _DEVREG(RG190_MAS_EXIT,PCB190_CONTEST)*10/50;
 
     if(pcb244_A_GetPostRxRegisters()==FALSE){
-        printf("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI ESPOSIMETRO!!!!!!! \n");
+        debugPrint("ERRORE DURANTE LETTURA REGISTRI FINE RAGGI ESPOSIMETRO!");
         return _SEQ_READ_REGISTER;
     }
     Param->pulses_released = _DEVREG(RG244_A_PULSES_EXIT,PCB244_A_CONTEST);
@@ -686,7 +670,13 @@ int AnalogManualModeExposure(void){
     if((meanRad-(float) rad) >0.5) rad++;
 
     if(radraw > 1000) rad = radraw; // Correzione dovuto al troppo alto valore di rad che rende l'integrazione degli impulsi non affidabile.
-    printf("mAs = %f, Pulse = %d, Time=%d, PLOG=%d, RAD=%d, RADRAW=%d, PRERAD=%d\n", ((float)Param->dmAs_released)/10, Param->pulses_released, (unsigned int) time_pulse, plog, rad,radraw,prerad);
+    debugPrintI2("FINE SEQUENZA. PULSE:",Param->pulses_released,"TIME:",(int) time_pulse);
+    debugPrintI4("PLOG:",plog,
+                 "RAD:",rad,
+                 "RADRW",radraw,
+                 "PRERAD",prerad
+                 );
+
 
     float KV,IMED;
     int TIME;
@@ -719,7 +709,7 @@ int AnalogManualModeExposure(void){
     data[18]=(unsigned char) (((int)(TIME)>>8)&0xFF);
 
     mccGuiNotify(1,Param->mcc_code,data,sizeof(data));
-    printf("FINE SEQUENZA OK\n");
+
     return 0; // RISULTATO POSITIVO
 
 }
@@ -730,13 +720,12 @@ int AnalogManualModeExposure(void){
 void RxAnalogSeqError(int codice){
     unsigned char data[10];
 
-    if(clrXrayEna()<0) printf("ERRORE CLEAR XRAY-ENA");
+    if(clrXrayEna()<0) debugPrint("ERRORE CLEAR XRAY-ENA");
 
     // Per sicurezza attiva il bit di stop sull'esposimetro
     PCB244_A_SetRxStop();
 
     // Stringa di debug
-    printf("ERRORE SEQUENZA [%d] MCC[%d]: ERRORE=%d, mAs:%f, PULSES:%d\n",Param->analog_sequence, Param->mcc_code, codice,  (float)Param->dmAs_released / 10,Param->pulses_released);
     data[0]=codice;
     data[1]=(unsigned char) ((Param->dmAs_released)&0xFF);
     data[2]=(unsigned char) (((Param->dmAs_released)>>8)&0xFF);
@@ -754,7 +743,7 @@ void fineSequenza(void){
 
     // Sequenza terminata con successo
     if(Ser422DriverSetReadyAll(5000) == FALSE) RxAnalogSeqError(_SEQ_DRIVER_READY);
-    else  printf("SBLOCCO DRIVER OK\n");
+    else  debugPrint("SBLOCCO DRIVER OK");
 
     // Reset degli IO
     _mutex_lock(&output_mutex);
@@ -823,7 +812,12 @@ void getRxSamplesData(float* kv, unsigned char* kvraw, float* imed, int* time)
     float kvmean=0;
     if((samples-naec)>0){
         for(i=naec;i<samples;i++){
-            printf("(PLS-%d): I[%f(mA), %d(RAW)]  V[%f(kV), %d(RAW)] \n",(int) (i-naec),((((float) is[i])*200.0)/255.0), is[i],pcb190ConvertKvRead(vs[i]),vs[i]);
+            debugPrintI4("I( 10x mA):",(int) ((((float) is[i])*200.0*10)/255.0),
+                         "I(RAW):",(int) is[i],
+                         "V(10x kV):",(int) (10*pcb190ConvertKvRead(vs[i])),
+                         "V(RAW)]",(int) vs[i]
+                        );
+
             imean+=(float) is[i];
             vmean+=(float) vs[i];
         }
@@ -850,13 +844,14 @@ void getRxSamplesData(float* kv, unsigned char* kvraw, float* imed, int* time)
     ifil_rxend = _DEVREGL(RG_SAMPLED_IFIL,PCB190_CONTEST);
 
     // Stampa dei valori
-    printf("HV-BUS(V):%f\n",(float) _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST) * ((float) generalConfiguration.pcb190Cfg.HV_CONVERTION / 1000.0));
-    printf("I_FIL (mA):%f\n",ifil_rxend * 47.98);
+    debugPrintF("HV-BUS(V):",(float) _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST) * ((float) generalConfiguration.pcb190Cfg.HV_CONVERTION / 1000.0));
+    debugPrintF("I_FIL(mA):",ifil_rxend * 47.98);
 
     if(samples-naec){
-      printf("PLS-I(mA)=%f\n",(imean*200.)/255.);
-      printf("PLS-V(kV)=%f, dKv:%f\n",kvmean,scarto_v/10.);
-      printf("Tmed_Pulse(ms)=%d\n",tmed_pls );
+      debugPrintI4("PLS-I(10x mA):",(int) (10*(imean*200.)/255.),
+                   "PLS-V(10x kV):",(int) (10*kvmean),
+                   "SCARTO (10x):", (int)  scarto_v,
+                   "Tmed_Pulse(10x ms):",(int) (10*tmed_pls) );
    }
 
     // Risultati se richiesti

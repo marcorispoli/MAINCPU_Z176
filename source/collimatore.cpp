@@ -380,7 +380,7 @@ bool Collimatore::updateColli(void)
    // Invio comando
    if(pConsole->pGuiMcc->sendFrame(MCC_SET_COLLI,_COLLI_ID,data, COLLI_LEN)==FALSE)
    {
-       qDebug() << "MCC FALLITO";
+       DEBUG("updateColli(): MCC FALLITO");
        return FALSE;
    }
 
@@ -425,14 +425,14 @@ bool Collimatore::setFiltro(_FilterCmd_Enum cmd, bool update)
     // Collimazione manuale attivata
     if(manualFiltroCollimation)
     {
-        qDebug() << "setFiltro: collimatore in modalitÃ  manuale";
+        DEBUG("setFiltro(): collimatore in modalita manuale");
         return TRUE;
     }
 
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
-        qDebug() << "setFiltro: collimatore non configurato";
+        DEBUG("setFiltro(): collimatore non configurato");
         return FALSE;
     }
 
@@ -453,7 +453,7 @@ bool Collimatore::setFiltro(_FilterCmd_Enum cmd, bool update)
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_SET_FILTRO,_COLLI_ID,data, sizeof(data))==FALSE)
     {
-        qDebug() << "MCC FALLITO";
+        DEBUG("setFiltro(): MCC FALLITO");
         return FALSE;
     }
 
@@ -470,14 +470,14 @@ bool Collimatore::setFiltro(void)
     // Collimazione manuale attivata
     if(manualFiltroCollimation)
     {
-        qDebug() << "setFiltro: collimatore in modalitÃ  manuale";
+        DEBUG("setFiltro(): collimatore in modalitÃ  manuale");
         return TRUE;
     }
 
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
-        qDebug() << "setFiltro: collimatore non configurato";
+        DEBUG("setFiltro(): collimatore non configurato");
         return FALSE;
     }
 
@@ -492,7 +492,7 @@ bool Collimatore::setFiltro(void)
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_SET_FILTRO,_COLLI_ID,data, sizeof(data))==FALSE)
     {
-        qDebug() << "MCC FALLITO";
+        DEBUG("setFiltro():MCC FALLITO");
         return FALSE;
     }
 
@@ -520,14 +520,14 @@ bool Collimatore::manualSetFiltro(void)
     // Controlli preliminari sui comandi
     if(pConfig->collimator_configured==FALSE)
     {
-        qDebug() << "setFiltro: collimatore non configurato";
+        DEBUG("manualSetFiltro(): collimatore non configurato");
         return FALSE;
     }
 
     // Collimazione manuale attivata
     if(!manualFiltroCollimation)
     {
-        qDebug() << "manualSetFiltro: collimatore in AUTOMATICO";
+        DEBUG("manualSetFiltro(): collimatore in AUTOMATICO");
         return FALSE;
     }
 
@@ -894,8 +894,7 @@ bool Collimatore::storeConfigFile(void)
     filecpy.flush();
     filecpy.close();
 
-    PRINT("COLLIMATION FILE CHANGED!");
-    pSysLog->log("CONFIG: ANALOG COLLIMATION FILE");
+    LOG("CONFIG: ANALOG COLLIMATION FILE");
 
     command = QString("sync");
     system(command.toStdString().c_str());

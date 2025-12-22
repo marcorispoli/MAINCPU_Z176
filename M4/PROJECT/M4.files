@@ -85,7 +85,6 @@
 ../../shared_a5_m4/defines.h
 ../M4_MASTER/source/vmusic3.h
 ../M4_MASTER/source/vmusic3.c
-../../shared_a5_m4/debug_print.h
 ../M4_MASTER/make/Makefile
 ../M4_MASTER/source/rtc.h
 ../M4_MASTER/source/rtc.c

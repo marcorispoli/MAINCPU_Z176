@@ -13,6 +13,10 @@
 #define _DEF_APP_SLAVE_TO_M4_SLAVE             1,0,7 // Porta M4 SLAVE
 #define _DEF_M4_SLAVE_TO_APP_SLAVE             0,0,8 // Porta GUI SLAVE
 
+#define _DEF_M4_MASTER_DEBUG_MESSAGES_MCC      0,0,9 // M4-Master Invia messaggi di debug a DBTController Master
+#define _DEF_M4_SLAVE_DEBUG_MESSAGES_MCC       0,0,10 // M4-Slave Invia messaggi di debug a DBTController Slave
+
+
 //__________________________________________________________________________________
 // ESPOSIMETRO
 #define _ANALOG_DETECTOR_FRONT_FIELD    0
@@ -426,6 +430,7 @@ typedef enum
 
     // Sezione dedicata ai test
     MCC_TEST,
+    MCC_PRINT,            // GEstione delle debugPrint
 
     MCC_CANOPEN,
     MCC_POWER_OFF,
@@ -455,5 +460,8 @@ typedef enum
     MCC_PARKING_MODE_COMMANDS // Comandi per il parcheggio
 }_MccGuiToDevice_Cmd;
 
+// Codici mcc per le print
+#define MCC_DEBUG_PRINT_ENABLE_CMD 1
+#define MCC_DRIVER_PRINT_ENABLE_CMD 2
 
 #endif

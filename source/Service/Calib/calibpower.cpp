@@ -128,7 +128,7 @@ void calibpower::initPage(void){
 
         if(timer_update) killTimer(timer_update);
         timer_update = startTimer(1000);
-        pSysLog->log("SERVICE PANEL: CALIB POWER");
+        LOG("SERVICE PANEL: CALIB POWER");
     }
 
 

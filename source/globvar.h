@@ -45,8 +45,6 @@ ext Compressor* pCompressore;
 ext Potter* pPotter;
 
 
-
-
 ext bool systemTimeUpdated;
 ext Loader* pLoader;
 ext biopsy* pBiopsy;
@@ -55,7 +53,8 @@ ext QString _CONSOLE_IP;
 ext QString _MASTER_IP;
 ext QString _SLAVE_IP;
 ext QString _LOCAL_SERVICE_IP;
-ext systemLog* pSysLog;
 
+ext infoClass*      pInfo;
+ext mccPrintCom*    pPrintMcc;
 
 #endif // GLOBVAR_H

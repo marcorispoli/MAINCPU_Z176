@@ -27,12 +27,12 @@ Data: 30/09/2014
 void gui_interface_task(uint32_t initial_data)
 {
   
-  printf("GUI INTERFACE STARTED\n");
+
   
   // Creazione Endpoint per ricezione comandi da GUI
   if(mccOpenPort(&ep)==FALSE)
   {
-    printf ("GUI INTERFACE: MEMORIA NON DISPONIBILE PER END POINT\n");
+
     _mqx_exit(-1);
   }
 
@@ -45,6 +45,7 @@ void gui_interface_task(uint32_t initial_data)
     if(mccRxFrame(&ep, &mcc_cmd)){
 
       if(mcc_cmd.cmd == MCC_TEST) mcc_test();
+      if(mcc_cmd.cmd == MCC_PRINT) mccPrint();
 
       if((mcc_cmd.cmd == MCC_LOADER) || (generalConfiguration.loaderOn)) manageMccLoader();
       else if(mcc_cmd.cmd == MCC_CONFIG) manageMccConfig();
@@ -155,7 +156,7 @@ void loader_write_block(int id,unsigned char* data, int len)
   // Controllo sulla dimensione e coerenza del buffer dati
   if((3+ 2*blocco.len)!= len) 
   {
-    printf("GUI: ERRORE LEN=%d BLOCCO LEN=%d\n",len,blocco.len );
+    debugPrintI2("GUI: ERRORE LEN=",len,"BLOCCO_LEN=",blocco.len );
     buffer[0] = 0;
     mccLoaderNotify(id,LOADER_WRITE_BLK,buffer,1);
     return;
@@ -168,7 +169,7 @@ void loader_write_block(int id,unsigned char* data, int len)
   
   if(loaderLoadSegment(&blocco)==FALSE)
   {
-    printf("GUI: SCRITTURA BLOCCO FALLITA\n");
+    debugPrint("GUI: SCRITTURA BLOCCO FALLITA\n");
     loaderExit(TRUE);
     buffer[0] = 0;
   }
@@ -304,10 +305,10 @@ void manageMccConfig(){
      case CONFIG_GENERAL:      
       if(mcc_cmd.buffer[2]==1) {
         generalConfiguration.demoMode = 1;        
-        printf(" ----------------  DRIVERS IN DEMO MODE --------------------- \n");
+        debugPrint(" ----------------  DRIVERS IN DEMO MODE --------------------- \n");
       }else{
         generalConfiguration.demoMode = 0;
-        printf(" ----------------  DRIVERS IN OPERATING MODE --------------------- \n");
+        debugPrint(" ----------------  DRIVERS IN OPERATING MODE --------------------- \n");
       }
 
       if(mcc_cmd.buffer[3]==1) {
@@ -315,10 +316,10 @@ void manageMccConfig(){
         generalConfiguration.volumeAudio = mcc_cmd.buffer[4];
         // vmInit();
 
-        printf(" ----------------  AUDIO MODE --------------------- \n");
+        debugPrint(" ----------------  AUDIO MODE --------------------- \n");
       }else{
           generalConfiguration.enableAudio = 0;
-          printf(" ----------------  NO AUDIO MODE --------------------- \n");
+          debugPrint(" ----------------  NO AUDIO MODE --------------------- \n");
       }
 
 
@@ -412,7 +413,7 @@ void manageMccConfig(){
 
     case  CONFIG_COMPLETED:                    
         // Questo sblocca la fase di startup attivando tutti i polling
-        printf("CONFIGURAZIONE DEVICES COMPLETATA\n");
+        debugPrint("CONFIGURAZIONE DEVICES COMPLETATA\n");
         generalConfiguration.deviceConfigOk = TRUE; // La configurazione è arrivata
         _EVSET(_EV1_DEV_CONFIG_OK);
 
@@ -518,11 +519,11 @@ void manageMccConfig(){
               {
                 if(_TEST_BIT(PCB215_FAULT))
                 {
-                  printf("COMANDO SBLOCCO: ERRORE %d\n", PCB215_CONTEST.Stat.error);
-                }else  printf("GUI: IMPOSSIBILE ESEGUIRE LO SBLOCCO\n");
+                  debugPrintI("COMANDO SBLOCCO: ERRORE ", PCB215_CONTEST.Stat.error);
+                }else  debugPrint("GUI: IMPOSSIBILE ESEGUIRE LO SBLOCCO\n");
               }else
               {
-                printf("GUI: EXEC SBLOCCO\n");
+                debugPrint("GUI: EXEC SBLOCCO\n");
               }
               break;
            case MCC_CMD_PAD_UP:       // Richiede una sequenza di attivazione carrello compressore
@@ -530,11 +531,11 @@ void manageMccConfig(){
               {
                 if(_TEST_BIT(PCB215_FAULT))
                 {// Caso di errore del driver
-                  printf("COMANDO COMPRESSIONE: ERRORE %d\n", PCB215_CONTEST.Stat.error);
-                }else  printf("GUI: IMPOSSIBILE ESEGUIRE IL COMANDO\n");
+                  debugPrintI("COMANDO COMPRESSIONE: ERRORE ", PCB215_CONTEST.Stat.error);
+                }else  debugPrint("GUI: IMPOSSIBILE ESEGUIRE IL COMANDO\n");
               }else
               {
-                printf("GUI: EXEC UP %d\n",mcc_cmd.buffer[0]);
+                debugPrintI("GUI: EXEC UP ",mcc_cmd.buffer[0]);
               }
               break;
 
@@ -543,11 +544,11 @@ void manageMccConfig(){
               {
                 if(_TEST_BIT(PCB215_FAULT))
                 {// Caso di errore del driver
-                  printf("COMANDO STOP COMPRESSORE: ERRORE %d\n", PCB215_CONTEST.Stat.error);
-                }else  printf("GUI: IMPOSSIBILE ESEGUIRE IL COMANDO\n");
+                  debugPrintI("COMANDO STOP COMPRESSORE: ERRORE ", PCB215_CONTEST.Stat.error);
+                }else  debugPrint("GUI: IMPOSSIBILE ESEGUIRE IL COMANDO\n");
               }else
               {
-                printf("GUI: EXEC STOP\n");
+                debugPrint("GUI: EXEC STOP\n");
               }
               break;
 
@@ -609,7 +610,7 @@ void manageMccConfig(){
             break;
 
             default:
-              // printf("Ricevuto buffer di %d\n",mcc_len);
+
               break;
         }
 
@@ -622,10 +623,10 @@ void manageMccConfig(){
 _____________________________________________________________________________________*/
 void mcc_cmd_trx(void)
 {
-    printf("COMANDO MCC TRX\n");
+    debugPrint("COMANDO MCC TRX\n");
 
     if(mcc_cmd.buffer[0]==TRX_MOVE_STOP){
-        printf("MCC COMANDO STOP\n");
+        debugPrint("MCC COMANDO STOP\n");
         actuatorsTrxStop(0);
         return;
 
@@ -633,7 +634,7 @@ void mcc_cmd_trx(void)
    // Se il comando è già in esecuzione deve rispondere un errore
     if((generalConfiguration.trxExecution.run == true)||(generalConfiguration.trxExecution.completed == false)){
         unsigned char buffer[2];
-        printf("RICHIESTA MCC MOVIMENTO TRX: BUSY!\n");
+        debugPrint("RICHIESTA MCC MOVIMENTO TRX: BUSY!\n");
         buffer[0] = TRX_BUSY;
         buffer[1] = 0; // sub codice in caso di errore da fault
         mccGuiNotify(mcc_cmd.id,MCC_CMD_TRX,buffer,2);
@@ -685,7 +686,7 @@ void mcc_cmd_arm(void)
 
     // Se il comando è già in esecuzione deve rispondere un errore
     if((generalConfiguration.armExecution.run == true)||(generalConfiguration.armExecution.completed == false)){
-        printf("RICHIESTA MCC MOVIMENTO ARM: BUSY!\n");
+        debugPrint("RICHIESTA MCC MOVIMENTO ARM: BUSY!\n");
         buffer[0] = ARM_BUSY;
         buffer[1] = 0; // sub codice in caso di errore da fault
         mccGuiNotify(mcc_cmd.id,MCC_CMD_ARM,buffer,2);
@@ -698,16 +699,16 @@ void mcc_cmd_arm(void)
     if(!SystemOutputs.CPU_ROT_ENA)
     {
       // Rotation enable Bus Hardware test
-      printf("MOVIMENTO (ARM) FALLITO: SEGNALE ROT_ENA NON ATTIVO!\n");
+      debugPrint("MOVIMENTO (ARM) FALLITO: SEGNALE ROT_ENA NON ATTIVO!\n");
       error = ARM_DISABLED_ERROR;
     }else if((angolo!=200)&&((angolo>180) ||(angolo<-180)))
     {
       // Errore angolo fuori range
-      printf("MOVIMENTO (ARM) FALLITO: ANGOLO OUT OF RANGE: %d!\n",angolo);
+      debugPrintI("MOVIMENTO (ARM) FALLITO: ANGOLO OUT OF RANGE:",angolo);
       error =  ARM_RANGE_ERROR;
     }else if(generalConfiguration.armCfg.direction_memory==MEM_ARM_DIR_UNDEF){
         // Errore per mancanza di informazioni relative alla posizione del braccio
-        printf("MOVIMENTO (ARM) FALLITO: ANGOLO OUT OF RANGE: %d!\n",angolo);
+        debugPrintI("MOVIMENTO (ARM) FALLITO: ANGOLO OUT OF RANGE: ",angolo);
         error =  ARM_RANGE_ERROR;
     }
 
@@ -740,7 +741,7 @@ void mccSetRotationToolConfig()
    _DeviceAppRegister_Str        ConfList;
 
     
-    printf("GUI: CONFIGURAZIONE PER TOOL ROTAZIONI\n");
+    debugPrint("GUI: CONFIGURAZIONE PER TOOL ROTAZIONI\n");
 }
 
 /*_____________________________________________________________________________
@@ -763,7 +764,7 @@ void mccGetGonio(unsigned char id, unsigned char mcccode)
 {
     unsigned char buffer[6];
 
-    printf("RICEVUTO RICHIESTA GONIO: TRX=(c)%d, ARM=(d)%d, GONIO=(d)%d\n", generalConfiguration.trxExecution.cAngolo,generalConfiguration.armExecution.dAngolo,generalConfiguration.armExecution.dAngolo_inclinometro);
+
     TO_LE16(&buffer[0],generalConfiguration.armExecution.dAngolo);
     TO_LE16(&buffer[2],generalConfiguration.trxExecution.cAngolo);
     TO_LE16(&buffer[4],generalConfiguration.armExecution.dAngolo_inclinometro);
@@ -832,11 +833,11 @@ void mcc_set_lamp(unsigned char id, unsigned char mcccode)
   {
 
     // Repeats more times
-    printf("MCC LAMP: lamp try to activate..\n");
+    debugPrint("MCC LAMP: lamp try to activate..\n");
     for(int i=0; i<10; i++){
         if(pcb249U2Lamp(mcc_cmd.buffer[0],mcc_cmd.buffer[1],TRUE)==TRUE){
             data[0]=1;
-            printf("MCC LAMP: lamp activate ok\n");
+            debugPrint("MCC LAMP: lamp activate ok\n");
             break;
         }
         _time_delay(1000);
@@ -855,8 +856,8 @@ void mcc_set_lamp(unsigned char id, unsigned char mcccode)
 
   mccGuiNotify(id,mcccode,data,3);
   
-  if(data[0]==0) printf("MCC LAMP FALLITO!\n");
-  else printf("MCC LAMP: CMD=%d,  TMO=%d, STEPS=%d\n", mcc_cmd.buffer[0], mcc_cmd.buffer[1], steps);
+  if(data[0]==0) debugPrint("MCC LAMP FALLITO!\n");
+  else debugPrintI3("MCC LAMP. CMD", mcc_cmd.buffer[0],  "TMO",mcc_cmd.buffer[1],"STEPS",steps);
   return; 
 
 }
@@ -876,7 +877,7 @@ void  mccSetFuoco(unsigned char id, unsigned char mcccode)
   bool ris;
   unsigned char data[1];
   
-  printf("ESEGUE FUOCO %d\n",mcc_cmd.buffer[0]);
+  debugPrintI("ESEGUE FUOCO:",mcc_cmd.buffer[0]);
   switch(mcc_cmd.buffer[0])
   {
   case 0: ris = pcb190SetFuoco(PCB190_F1G);break;
@@ -898,7 +899,7 @@ void  mccSetFuoco(unsigned char id, unsigned char mcccode)
 */  
 void mccSetFiltro(void)
 {
-    printf("GUI RICHIEDE POSIZIONAMENTO FILTRO: INDEX=%d, POS=%d\n", mcc_cmd.buffer[0],mcc_cmd.buffer[1]);
+    debugPrintI2("GUI RICHIEDE POSIZIONAMENTO FILTRO: INDEX=", mcc_cmd.buffer[0],"POS=", mcc_cmd.buffer[1]);
   pcb249U2SetFiltro(mcc_cmd.buffer[0],mcc_cmd.buffer[1], mcc_cmd.id);
 
 }
@@ -943,12 +944,13 @@ void  mccSetColli(unsigned char id, unsigned char mcccode)
   generalConfiguration.colliCfg.lame2D.right = mcc_cmd.buffer[COLLI_R];
   
   
-  printf("SCRITTURA LAME PER COLLIMAZIONE 2D\n");
-  printf("FRONT:%d\n",generalConfiguration.colliCfg.lame2D.front);
-  printf("BACK:%d\n",generalConfiguration.colliCfg.lame2D.back );
-  printf("LEFT:%d\n",generalConfiguration.colliCfg.lame2D.left);
-  printf("RIGHT:%d\n",generalConfiguration.colliCfg.lame2D.right);
-  printf("TRAP:%d\n",generalConfiguration.colliCfg.lame2D.trap);
+  debugPrint("SCRITTURA LAME PER COLLIMAZIONE 2D\n");
+
+  debugPrintI4("FRONT:",generalConfiguration.colliCfg.lame2D.front,
+               "BACK:",generalConfiguration.colliCfg.lame2D.back,
+               "LEFT:",generalConfiguration.colliCfg.lame2D.left,
+               "RIGHT",generalConfiguration.colliCfg.lame2D.right);
+
   
   // Richiede l'esecuzione del posizionamento delle lame frontali e posteriori
   // Il comando non può fallire poichè semplicemente sovrascrive uno stato in corso d'opera..
@@ -963,25 +965,25 @@ void mcc_test(void)
 {
       switch(mcc_cmd.buffer[0]){
       case 1:
-          printf("TEST ENA ARM ON\n");
+          debugPrint("TEST ENA ARM ON\n");
           actuatorEnaTest = true;
           actuatorArmEna = true;
           actuatorsManageEnables();
           break;
       case 2:
-          printf("TEST ENA ARM OFF\n");
+          debugPrint("TEST ENA ARM OFF\n");
           actuatorEnaTest = true;
           actuatorArmEna = false;
           actuatorsManageEnables();
           break;
       case 3:
-          printf("TEST ENA TRX ON\n");
+          debugPrint("TEST ENA TRX ON\n");
           actuatorEnaTest = true;
           actuatorTrxEna = true;
           actuatorsManageEnables();
           break;
       case 4:
-          printf("TEST ENA TRX OFF\n");
+          debugPrint("TEST ENA TRX OFF\n");
           actuatorEnaTest = true;
           actuatorTrxEna = false;
           actuatorsManageEnables();
@@ -989,7 +991,7 @@ void mcc_test(void)
 
 
       default:
-          printf("TEST ENA OFF\n");
+          debugPrint("TEST ENA OFF\n");
           actuatorEnaTest = false;
           actuatorsManageEnables();
       }
@@ -1008,7 +1010,7 @@ void mcc_test(void)
 void mcc_set_starter(void)
 {
   bool ris;
-  printf("ATTIVAZIONE/DISATTIVAZIONE STARTER:%d\n",mcc_cmd.buffer[0]);
+  debugPrintI("ATTIVAZIONE/DISATTIVAZIONE STARTER:",mcc_cmd.buffer[0]);
   
   // Reset fault sulla pcb190
   pcb190ResetFault();
@@ -1066,7 +1068,7 @@ void mcc_service_commands(int id,int subcmd,unsigned char* data,int len)
 
     case  SRV_STOP_POTTER_2D_GRID:
       if( generalConfiguration.potterCfg.potId != POTTER_2D){
-          printf("COMMAND FAILURE: No Potter 2D available!\n");
+          debugPrint("COMMAND FAILURE: No Potter 2D available!\n");
           return;
       }
       pcb244A_Stop2dGrid();
@@ -1141,15 +1143,15 @@ void mcc_pcb215_calibration(void)
   switch(mcc_cmd.buffer[0])
   {
   case 0: // Disattivazione modo calibrazione        
-          printf("PCB215 EXIT CALIB MODE\n");
+          debugPrint("PCB215 EXIT CALIB MODE\n");
           pcb215ActivateCalibMode(FALSE);
     break;
   case 1: // Attivazione modo calibrazione e impostazione particolare dei registri di calibrazione    
-          printf("PCB215 ENTERING CALIB MODE\n");
+          debugPrint("PCB215 ENTERING CALIB MODE\n");
           pcb215ActivateCalibMode(TRUE);
     break;
   case 2: // Configurazione Nacchera
-          printf("CONFIGURAZIONE NACCHERA\n");
+          debugPrint("CONFIGURAZIONE NACCHERA\n");
           generalConfiguration.comprCfg.calibration.calibPosOfs = mcc_cmd.buffer[1] + 256 * mcc_cmd.buffer[2];
           generalConfiguration.comprCfg.calibration.calibPosK = mcc_cmd.buffer[3];
           pcb215ConfigNacchera(FALSE);
@@ -1161,20 +1163,16 @@ void mcc_pcb215_calibration(void)
           generalConfiguration.comprCfg.calibration.KF0 = mcc_cmd.buffer[2] + mcc_cmd.buffer[3] * 256;
           generalConfiguration.comprCfg.calibration.F1 = mcc_cmd.buffer[4];
           generalConfiguration.comprCfg.calibration.KF1 = mcc_cmd.buffer[5];
-          printf("CONFIGURAZIONE FORZA: F0=%d, KF0=%d, F1=%d, KF1=%d\n", generalConfiguration.comprCfg.calibration.F0,generalConfiguration.comprCfg.calibration.KF0,generalConfiguration.comprCfg.calibration.F1,generalConfiguration.comprCfg.calibration.KF1);
+          debugPrint("CONFIGURAZIONE FORZA");
           pcb215ConfigForza(FALSE);
           pcb215ForceUpdateData(); // Forza il rinnovo dei parametri di gestione del pad
     break;
     case 4: // Configurazione pads
-          printf("CONFIGURAZIONE PAD: %d\n",mcc_cmd.buffer[1]);
+          debugPrintI("CONFIGURAZIONE PAD ",mcc_cmd.buffer[1]);
           generalConfiguration.comprCfg.calibration.pads[mcc_cmd.buffer[1]].offset = (int) (mcc_cmd.buffer[2] + mcc_cmd.buffer[3] * 256);
           generalConfiguration.comprCfg.calibration.pads[mcc_cmd.buffer[1]].kF = mcc_cmd.buffer[4];
           generalConfiguration.comprCfg.calibration.pads[mcc_cmd.buffer[1]].peso = mcc_cmd.buffer[5];
-          printf("CONFIGURAZIONE PAD: %d offset=%d, kF=%d, Peso=%d\n",
-                  mcc_cmd.buffer[1],
-                  generalConfiguration.comprCfg.calibration.pads[mcc_cmd.buffer[1]].offset,
-                  generalConfiguration.comprCfg.calibration.pads[mcc_cmd.buffer[1]].kF,
-                  generalConfiguration.comprCfg.calibration.pads[mcc_cmd.buffer[1]].peso);
+
           
           pcb215ForceUpdateData(); // Forza il rinnovo dei parametri di gestione del pad
     
@@ -1291,35 +1289,35 @@ void mcc_calib_zero(void){
 
     if(mcc_cmd.buffer[0] == CALIB_ZERO_MANUAL_ACTIVATION_TRX_CALIB){
         generalConfiguration.manual_mode_activation = _MANUAL_ACTIVATION_TRX_CALIB;
-        printf("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:%d\n",generalConfiguration.manual_mode_activation);
+        debugPrintI("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:",generalConfiguration.manual_mode_activation);
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_MANUAL_ACTIVATION_ARM_CALIB){
         generalConfiguration.manual_mode_activation = _MANUAL_ACTIVATION_ARM_CALIB;
-        printf("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:%d\n",generalConfiguration.manual_mode_activation);
+        debugPrintI("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:",generalConfiguration.manual_mode_activation);
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_MANUAL_ACTIVATION_TRX_STANDARD){
         generalConfiguration.manual_mode_activation = _MANUAL_ACTIVATION_TRX_STANDARD;
-        printf("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:%d\n",generalConfiguration.manual_mode_activation);
+        debugPrintI("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:",generalConfiguration.manual_mode_activation);
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_MANUAL_ACTIVATION_ARM_STANDARD){
         generalConfiguration.manual_mode_activation = _MANUAL_ACTIVATION_ARM_STANDARD;
-        printf("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:%d\n",generalConfiguration.manual_mode_activation);
+        debugPrintI("SELEZIONATA MODALITA DI MOVIMENTO MANUALE:",generalConfiguration.manual_mode_activation);
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_ACTIVATE_TRX_ZERO_SETTING){
-        printf("TRX ZERO SETTING ..\n");
+        debugPrint("TRX ZERO SETTING ..\n");
         generalConfiguration.trxExecution.id = mcc_cmd.id;
         actuatorsTrxActivateZeroSetting();
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_ACTIVATE_ARM_ZERO_SETTING){
-        printf("ARM ZERO SETTING ..\n");
+        debugPrint("ARM ZERO SETTING ..\n");
     }else if(mcc_cmd.buffer[0] == CALIB_ZERO_ACTIVATE_GONIO_ZERO_SETTING){
 
        // Ferma tutti i driver per non sollecitare il gonio
        Ser422DriverFreezeAll(5000);
-       printf("COMANDO RESET INCLINOMETRO....  ");
+       debugPrint("COMANDO RESET INCLINOMETRO....  ");
 
        // Carica i registri per impostare l'angolo
        if(pcb249U1ResetGonio(0)==FALSE) data[1]=0;
        else data[1]=1;
        _time_delay(500);
        Ser422DriverSetReadyAll(5000);
-       if(data[1]) printf("INCLINOMETRO OK\n");
-       else   printf("INCLINOMETRO  FALLITO\n");
+       if(data[1]) debugPrint("INCLINOMETRO OK\n");
+       else   debugPrint("INCLINOMETRO  FALLITO\n");
     }
 
     // Feedback di ricezione
@@ -1335,7 +1333,7 @@ void mccResetGonio(unsigned char id, unsigned char mcccode)
   // Ferma tutti i driver per non sollecitare il gonio
   Ser422DriverFreezeAll(5000);
 
-  printf("COMANDO RESET INCLINOMETRO....  ");
+  debugPrint("COMANDO RESET INCLINOMETRO....  ");
 
   // Carica i registri per impostare l'angolo
   if(pcb249U1ResetGonio(0)==FALSE) risultato=0;
@@ -1343,8 +1341,8 @@ void mccResetGonio(unsigned char id, unsigned char mcccode)
   _time_delay(500);
   Ser422DriverSetReadyAll(5000);
 
-  if(risultato) printf("INCLINOMETRO OK\n");
-  else   printf("INCLINOMETRO  FALLITO\n");
+  if(risultato) debugPrint("INCLINOMETRO OK\n");
+  else   debugPrint("INCLINOMETRO  FALLITO\n");
 
   mccGuiNotify(id,mcccode,&risultato,1);
   return ;
@@ -1388,10 +1386,10 @@ void mcc_xray_analog_manual(void){
     float In = (float) (mcc_cmd.buffer[16]+ 256 * mcc_cmd.buffer[17]) / 10;
     float mAs =(float) (mcc_cmd.buffer[4]+256*mcc_cmd.buffer[5]) / 50;
 
-    printf("COMANDO ESPOSIZIONE ANALOGICA MANUALE:\n");
-    printf("KV:%f\n",kV);
-    printf("mAs:%f\n",mAs);
-    printf("In:%f\n\n\n\n",In);
+    debugPrint("COMANDO ESPOSIZIONE ANALOGICA MANUALE:\n");
+    debugPrintF("KV:",kV);
+    debugPrintF("mAs:",mAs);
+    debugPrintF("In",In);
     rxStdParam.mAs_nom=mAs;
     rxStdParam.In=In;
 
@@ -1407,7 +1405,7 @@ void mcc_xray_analog_auto(void){
         // Errore comunicato dalla GUI dopo il pre impulso
         if((mcc_cmd.buffer[21] !=0 ) && (mcc_cmd.buffer[20])){
             rxStdParam.guiError = mcc_cmd.buffer[21];
-            printf("AEC Error code: %d\n", mcc_cmd.buffer[21] );
+            debugPrintI("AEC Error code: ", mcc_cmd.buffer[21] );
             _EVSET(_EV2_WAIT_AEC);
             return;
         }
@@ -1450,11 +1448,11 @@ void mcc_xray_analog_auto(void){
             rxStdParam.dmAs_released = 0;
             rxStdParam.pulses_released = 0;
 
-            printf("________________________________________________________________________________\n");
-            printf("                INIZIO PROCEDURA ESPOSIZIONE AUTOMATICA:\n");
-            printf("\n>>PRE-KV:%f\n",kV);
-            printf(">>PRE-mAs:%f\n",mAs);
-            printf(">>PRE-In:%f\n\n",In);
+            debugPrint("________________________________________________________________________________\n");
+            debugPrint("                INIZIO PROCEDURA ESPOSIZIONE AUTOMATICA:\n");
+            debugPrintF("\n>>PRE-KV:",kV);
+            debugPrintF(">>PRE-mAs:",mAs);
+            debugPrintF(">>PRE-In:",In);
 
            // Partenza sequenza
             _EVCLR(_EV2_WAIT_AEC);
@@ -1464,10 +1462,10 @@ void mcc_xray_analog_auto(void){
 
          }else{
             // ____________ DATI PER IMPULSO
-            printf("\n>>PULSE-KV:%f\n",kV);
-            printf(">>PULSE-mAs:%f\n",mAs);
-            printf(">>PULSE-In:%f\n",In);
-            printf(">>PULSE-PULSES:%d\n\n",pulses);
+            debugPrintF("\n>>PULSE-KV:",kV);
+            debugPrintF(">>PULSE-mAs:",mAs);
+            debugPrintF(">>PULSE-In:",In);
+            debugPrintI(">>PULSE-PULSES:",pulses);
             _EVSET(_EV2_WAIT_AEC);
          }
 }
@@ -1505,10 +1503,10 @@ void mcc_xray_analog_pre_calib(void){
     float In = (float) (mcc_cmd.buffer[16]+ 256 * mcc_cmd.buffer[17]) / 10;
     float mAs =(float) (mcc_cmd.buffer[4]+256*mcc_cmd.buffer[5]) / 50;
 
-    printf("COMANDO VERIFICA/CALIBRAZIONE IMPULSO ESPOSIMETRO:\n");
-    printf("KV:%f\n",kV);
-    printf("mAs:%f\n",mAs);
-    printf("In:%f\n\n\n\n",In);
+    debugPrint("COMANDO VERIFICA/CALIBRAZIONE IMPULSO ESPOSIMETRO:\n");
+    debugPrintF("KV:",kV);
+    debugPrintF("mAs:",mAs);
+    debugPrintF("In:",In);
     rxStdParam.mAs_nom=mAs;
     rxStdParam.In=In;
 
@@ -1524,7 +1522,7 @@ void mcc_xray_analog_calib_profile(void){
         // Errore comunicato dalla GUI dopo il pre impulso
         if((mcc_cmd.buffer[21] !=0 ) && (mcc_cmd.buffer[20])){
             rxStdParam.guiError = mcc_cmd.buffer[21];
-            printf("AEC Error code: %d\n", mcc_cmd.buffer[21] );
+            debugPrintI("AEC Error code:", mcc_cmd.buffer[21] );
             _EVSET(_EV2_WAIT_AEC);
             return;
         }
@@ -1566,11 +1564,11 @@ void mcc_xray_analog_calib_profile(void){
             rxStdParam.dmAs_released = 0;
             rxStdParam.pulses_released = 0;
 
-            printf("________________________________________________________________________________\n");
-            printf("                INIZIO PROCEDURA CALIBRAZIONE PROFILO:\n");
-            printf("\n>>PRE-KV:%f\n",kV);
-            printf(">>PRE-mAs:%f\n",mAs);
-            printf(">>PRE-In:%f\n\n",In);
+            debugPrint("________________________________________________________________________________\n");
+            debugPrint("                INIZIO PROCEDURA CALIBRAZIONE PROFILO:\n");
+            debugPrintF("\n>>PRE-KV:",kV);
+            debugPrintF(">>PRE-mAs:",mAs);
+            debugPrintF(">>PRE-In:",In);
 
            // Partenza sequenza
             _EVCLR(_EV2_WAIT_AEC);
@@ -1580,10 +1578,10 @@ void mcc_xray_analog_calib_profile(void){
 
          }else{
             // ____________ DATI PER IMPULSO
-            printf("\n>>PULSE-KV:%f\n",kV);
-            printf(">>PULSE-mAs:%f\n",mAs);
-            printf(">>PULSE-In:%f\n",In);
-            printf(">>PULSE-PULSES:%d\n\n",pulses);
+            debugPrintF("\n>>PULSE-KV:",kV);
+            debugPrintF(">>PULSE-mAs:",mAs);
+            debugPrintF(">>PULSE-In:",In);
+            debugPrintI(">>PULSE-PULSES:",pulses);
             _EVSET(_EV2_WAIT_AEC);
          }
 }
@@ -1672,13 +1670,13 @@ void mcc_xray_analog_calib_tube(void){
         rxStdParam.dmAs_released = 0;
         rxStdParam.pulses_released = 0;
 
-        printf("________________________________________________________________________________\n");
-        if(mcc_cmd.buffer[20]) printf("                INIZIO PROCEDURA CALIBRAZIONE CORRENTE ANODICA TUBO:\n");
-        else printf("                INIZIO PROCEDURA CALIBRAZIONE KV TUBO:\n");
+        debugPrint("________________________________________________________________________________\n");
+        if(mcc_cmd.buffer[20]) debugPrint("                INIZIO PROCEDURA CALIBRAZIONE CORRENTE ANODICA TUBO:\n");
+        else debugPrint("                INIZIO PROCEDURA CALIBRAZIONE KV TUBO:\n");
 
-        printf("\n>>KV:%f\n",kV);
-        printf(">>mAs:%f\n",mAs);
-        printf(">>In:%f\n\n",In);
+        debugPrintF("\n>>KV:",kV);
+        debugPrintF(">>mAs:",mAs);
+        debugPrintF(">>In:",In);
 
        // Partenza sequenza
         _EVCLR(_EV2_WAIT_AEC);
@@ -1694,21 +1692,21 @@ void mccBiopsySimulator(void){
     unsigned short X, Y;
 
     if(mcc_cmd.buffer[0]== 1){ // Impostazione stato della connessione
-        printf("EXEC SIM CONNECTION\n");
+        debugPrint("EXEC SIM CONNECTION\n");
         if(mcc_cmd.buffer[1]==1) SimConnessione(true);
         else SimConnessione(false);
     }else if(mcc_cmd.buffer[0]== 2){ // Impostazione stato del pulsante di sblocco
-        printf("EXEC SIM SBLOCCO\n");
+        debugPrint("EXEC SIM SBLOCCO\n");
         if(mcc_cmd.buffer[1]==1) SimSetPush(true);
         else SimSetPush(false);
     }else if(mcc_cmd.buffer[0]== 3){ // Impostazione Adapter Id
-        printf("EXEC SIM ADAPTER\n");
+        debugPrint("EXEC SIM ADAPTER\n");
         SimSetAdapter(mcc_cmd.buffer[1]);
     }else if(mcc_cmd.buffer[0]== 4){ // Simulazione pulsanti console
-        printf("EXEC CONSOLE PUSH\n");
+        debugPrint("EXEC CONSOLE PUSH\n");
         SimSetConsolePush(mcc_cmd.buffer[1]);
     }else if(mcc_cmd.buffer[0]== 5){ // Simulazione pulsanti console
-        printf("EXEC CONSOLE XY\n");
+        debugPrint("EXEC CONSOLE XY\n");
         // Il dato deve essere in millimetri rispetto al vertice in alto a sinistra (dmm)
         SimSetJXY(XtoJoysticX(mcc_cmd.buffer[1] + 256 * mcc_cmd.buffer[2]),YtoJoysticY(mcc_cmd.buffer[3] + 256 * mcc_cmd.buffer[4]));
     }
@@ -1746,7 +1744,6 @@ void mcc_audio(void){
     case 1: // Riproduzione messaggi vocali
         // Cerca uno spazio libero nella coda
         if(nextAudioMessageCode !=0) {
-            printf("VM MESSAGE %d BUSY\n",mcc_cmd.buffer[1] );
             return;
         }
 
@@ -1766,21 +1763,21 @@ void mcc_rtc(void){
     int num;
     switch(mcc_cmd.buffer[0]){
     case 0: // Init RTC
-        if(rtcInit()==0) printf("RTC INIIALIZED\n");
-        else printf("RTC INIIT FAILED\n");
+        if(rtcInit()==0) debugPrint("RTC INIIALIZED\n");
+        else debugPrint("RTC INIIT FAILED\n");
         break;
 
     case 1: // Comando di set
         if(!generalConfiguration.rtc_present){
             if(rtcInit()!=0) {
-                printf("RTC DEVICE NOT PRESENT");
+                debugPrint("RTC DEVICE NOT PRESENT");
                 return;
             }
             generalConfiguration.rtc_present = true;
         }
 
         if(mcc_cmd.len!=9) {
-            printf("WRONG PARAMETERS\n");
+            debugPrint("WRONG PARAMETERS\n");
             break;
         }
         num = (int)mcc_cmd.buffer[2] + (int)mcc_cmd.buffer[3]*256;
@@ -1817,17 +1814,17 @@ void mcc_244_A_functions(void){
             buffer[0]=0;
             buffer[1] = generalConfiguration.revisioni.pcb244.maj;
             buffer[2] = generalConfiguration.revisioni.pcb244.min;
-            printf("PCB244A: richiesta revisione: %d.%d\n", buffer[1],buffer[2]);
+            debugPrintI2("PCB244A: richiesta revisione:",buffer[1],".",buffer[2]);
             size=3;
         }else{
-            printf("PCB244A: richiesta revisione fallita\n");
+            debugPrint("PCB244A: richiesta revisione fallita\n");
             buffer[0]=1;
             size=1;
         }
         break;
     case MCC_PCB244_A_GET_RADx1:
         if(!PCB244_A_sampleRad()){
-            printf("PCB244A: comando di campionamento fallito\n");
+            debugPrint("PCB244A: comando di campionamento fallito\n");
             buffer[0]=1;
             size=1;
             break;
@@ -1839,17 +1836,18 @@ void mcc_244_A_functions(void){
             buffer[1] = _DEVREGL(RG244_A_RAD1,PCB244_A_CONTEST);
             buffer[2] = _DEVREGH(RG244_A_RAD1,PCB244_A_CONTEST);
             val = _DEVREG(RG244_A_RAD1,PCB244_A_CONTEST);
-            printf("PCB244A: richiesta radx1:0x%x - %d\n", val,val);
+
+            debugPrintX("PCB244A: richiesta rad (x1):", val);
             size=3;
         }else {
-            printf("PCB244A: richiesta radx1 fallita\n");
+            debugPrint("PCB244A: richiesta radx1 fallita\n");
             buffer[0]=1;
             size=1;
         }
         break;
     case MCC_PCB244_A_GET_RADx5:
         if(!PCB244_A_sampleRad()){
-            printf("PCB244A: comando di campionamento fallito\n");
+            debugPrint("PCB244A: comando di campionamento fallito\n");
             buffer[0]=1;
             size=1;
             break;
@@ -1861,17 +1859,18 @@ void mcc_244_A_functions(void){
             buffer[1] = _DEVREGL(RG244_A_RAD5,PCB244_A_CONTEST);
             buffer[2] = _DEVREGH(RG244_A_RAD5,PCB244_A_CONTEST);
             val = _DEVREG(RG244_A_RAD5,PCB244_A_CONTEST);
-            printf("PCB244A: richiesta radx5:0x%x - %d\n", val,val);
+            debugPrintX("PCB244A: richiesta rad (x5):", val);
+
             size=3;
         }else {
-            printf("PCB244A: richiesta radx5 fallita\n");
+            debugPrint("PCB244A: richiesta radx5 fallita\n");
             buffer[0]=1;
             size=1;
         }
         break;
     case MCC_PCB244_A_GET_RADx25:
         if(!PCB244_A_sampleRad()){
-            printf("PCB244A: comando di campionamento fallito\n");
+            debugPrint("PCB244A: comando di campionamento fallito\n");
             buffer[0]=1;
             size=1;
             break;
@@ -1883,10 +1882,10 @@ void mcc_244_A_functions(void){
             buffer[1] = _DEVREGL(RG244_A_RAD25,PCB244_A_CONTEST);
             buffer[2] = _DEVREGH(RG244_A_RAD25,PCB244_A_CONTEST);
             val = _DEVREG(RG244_A_RAD25,PCB244_A_CONTEST);
-            printf("PCB244A: richiesta radx25:0x%x - %d\n", val,val);
+            debugPrintX("PCB244A: richiesta rad (x25):", val);
             size=3;
         }else {
-            printf("PCB244A: richiesta radx25 fallita\n");
+            debugPrint("PCB244A: richiesta radx25 fallita\n");
             buffer[0]=1;
             size=1;
         }
@@ -1901,7 +1900,7 @@ void mcc_244_A_functions(void){
                 buffer[0]=1;
             }else{
                 buffer[0]=0;
-                printf("OFFSET = %d\n", val);
+
                 buffer[2] = val & 0xFF;
                 buffer[3] = (val>>8) & 0xFF;
                 PCB244_A_sampleRad();
@@ -1918,7 +1917,7 @@ void mcc_244_A_functions(void){
 
             if(!PCB244_A_setOffset(val)){
                 buffer[0]=1;
-                printf("Setting Offset failed!\n", val);
+                debugPrintI("Setting Offset failed! ", val);
             }else{
                 buffer[0]=0;
                 _time_delay(200);
@@ -1931,11 +1930,12 @@ void mcc_244_A_functions(void){
                 PCB244_A_GetRad5(10);
                 buffer[6] = _DEVREGL(RG244_A_RAD5,PCB244_A_CONTEST);
                 buffer[7] = _DEVREGH(RG244_A_RAD5,PCB244_A_CONTEST);
-                printf("Offset:%d, rad1:%d rad5:%d\n", val,_DEVREG(RG244_A_RAD1,PCB244_A_CONTEST),_DEVREG(RG244_A_RAD5,PCB244_A_CONTEST));
+
+                debugPrintI3("Offset:",val, "rad1:",_DEVREG(RG244_A_RAD1,PCB244_A_CONTEST), "rad5:",_DEVREG(RG244_A_RAD5,PCB244_A_CONTEST));
             }
 
         }else{
-            printf("ESECUZIONE AZZERAMENTO OFFSET\n;");
+            debugPrint("ESECUZIONE AZZERAMENTO OFFSET\n;");
             size=8;
             if(PCB244_A_zeroOffset()) buffer[0]=0;
             else buffer[0]=1;
@@ -1951,7 +1951,7 @@ void mcc_244_A_functions(void){
 
         break;
     case MCC_PCB244_A_ACTIVATE_GRID:
-        printf("ESECUZIONE TEST GRID\n;");
+        debugPrint("ESECUZIONE TEST GRID\n;");
         pcb244A_Start2dGrid(mcc_cmd.buffer[1]);
         break;
     case MCC_PCB244_A_GET_CASSETTE:
@@ -1960,9 +1960,9 @@ void mcc_244_A_functions(void){
         buffer[1]=generalConfiguration.potterCfg.cassette;
         buffer[2]=generalConfiguration.potterCfg.cassetteExposed;
         size=3;
-        if((buffer[1]) && (!buffer[2])) printf("PCB244A:  CASSETTA PRESENTE NON ESPOSTA\n");
-        else if((buffer[1]) && (buffer[2])) printf("PCB244A:  CASSETTA PRESENTE GIA' ESPOSTA\n");
-        else      printf("PCB244A:  MANCANZA CASSETTA\n");
+        if((buffer[1]) && (!buffer[2])) debugPrint("PCB244A:  CASSETTA PRESENTE NON ESPOSTA\n");
+        else if((buffer[1]) && (buffer[2])) debugPrint("PCB244A:  CASSETTA PRESENTE GIA' ESPOSTA\n");
+        else      debugPrint("PCB244A:  MANCANZA CASSETTA\n");
         break;
 
     case MCC_PCB244_A_GET_ID:
@@ -1975,14 +1975,14 @@ void mcc_244_A_functions(void){
 
         switch(buffer[1]){
         case POTTER_2D:
-            if(buffer[2]==POTTER_DESCR_18x24) printf("PCB244A:  POTTER 18x24\n");
-            else printf("PCB244A:  POTTER 24x30\n");
+            if(buffer[2]==POTTER_DESCR_18x24) debugPrint("PCB244A:  POTTER 18x24\n");
+            else debugPrint("PCB244A:  POTTER 24x30\n");
             break;
         case POTTER_MAGNIFIER:
-            printf("PCB244A:  POTTER MAGNIFIER. MAG FACTOR=%d\n",buffer[3]);
+            debugPrintI("PCB244A:  POTTER MAGNIFIER. MAG FACTOR=",buffer[3]);
             break;
         case POTTER_UNDEFINED:
-            printf("PCB244A:  POTTER UNDEFINED\n");
+            debugPrint("PCB244A:  POTTER UNDEFINED\n");
             break;
         }
 
@@ -1992,22 +1992,22 @@ void mcc_244_A_functions(void){
 
             switch(mcc_cmd.buffer[1]){
             case _ANALOG_DETECTOR_FRONT_FIELD:
-                printf("PCB244A: impostato campo FRONT\n");
+                debugPrint("PCB244A: impostato campo FRONT\n");
                 break;
             case _ANALOG_DETECTOR_MIDDLE_FIELD:
-                printf("PCB244A: impostato campo MIDDLE\n");
+                debugPrint("PCB244A: impostato campo MIDDLE\n");
                 break;
             case _ANALOG_DETECTOR_BACK_FIELD:
-                printf("PCB244A: impostato campo BACK\n");
+                debugPrint("PCB244A: impostato campo BACK\n");
                 break;
             default:
-                printf("PCB244A: impostato campo OPEN\n");
+                debugPrint("PCB244A: impostato campo OPEN\n");
             }
 
             buffer[0]=0;
             size=1;
         }else{
-            printf("PCB244A: errore impostazione campo\n");
+            debugPrint("PCB244A: errore impostazione campo\n");
             buffer[0]=1;
             size=1;
         }
@@ -2024,10 +2024,10 @@ void mcc_244_A_functions(void){
     case MCC_PCB244_A_MANUAL_MAGNIFIER:
         if(mcc_cmd.buffer[1]){
             generalConfiguration.potterCfg.manualMagnifier = true;
-            printf("PCB244A: Ingranditore Manuale Attivo\n");
+            debugPrint("PCB244A: Ingranditore Manuale Attivo\n");
         }else{
             generalConfiguration.potterCfg.manualMagnifier = false;
-            printf("PCB244A: Ingranditore Manuale Disattivo\n");
+            debugPrint("PCB244A: Ingranditore Manuale Disattivo\n");
         }
 
         // Risponde con lo stato ricevuto
@@ -2050,7 +2050,7 @@ void mcc_parking_mode(void)
     unsigned char buffer[2];
     buffer[0] = MCC_PARKING_MODE_COMMANDS_START_PARKING;
 
-    printf("GUI PARKING MODE REQUEST\n");
+    debugPrint("GUI PARKING MODE REQUEST\n");
 
     // Posizionament del Tilt a 0
     actuatorsTrxMove(0);
@@ -2061,7 +2061,7 @@ void mcc_parking_mode(void)
     }
     if(!generalConfiguration.trxExecution.success){
         // Errore timeout posizionamento lenze
-        printf("GUI TIMEOUT TRX PARKING");
+        debugPrint("GUI TIMEOUT TRX PARKING");
         buffer[1] = ERROR_PARKING_TILT_SETTING;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
@@ -2071,12 +2071,12 @@ void mcc_parking_mode(void)
     // Posizionamento del Braccio in posizione Alta per assicurare una corretta rotazione del braccio
     if(generalConfiguration.gantryCfg.armMotor){
             if(generalConfiguration.armExecution.lenze_run){
-                printf("GUI LENZE BUSY DURING SAFE POSITIONING\n");
+                debugPrint("GUI LENZE BUSY DURING SAFE POSITIONING\n");
                 buffer[1] = ERROR_PARKING_LENZE_BUSY;
                 mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
                 return;
             }
-            printf("GUI LENZE UNPARK:%d,%d\n",generalConfiguration.armExecution.lenze_pot, generalConfiguration.lenzeCfg.parkingSafePoint);
+            debugPrintI2("GUI LENZE UNPARK: POT=",generalConfiguration.armExecution.lenze_pot,"SAFEPOINT=",generalConfiguration.lenzeCfg.parkingSafePoint);
             actuatorsLenzeUnpark();
 
             // Attesa fine movimento di parcheggio
@@ -2087,7 +2087,7 @@ void mcc_parking_mode(void)
 
             if(generalConfiguration.armExecution.lenze_run){
                 // Errore timeout posizionamento lenze
-                printf("GUI TIMEOUT LENZE IN SAFE POSITIONING\n");
+                debugPrint("GUI TIMEOUT LENZE IN SAFE POSITIONING\n");
                 buffer[1] = ERROR_PARKING_LENZE_TMO;
                 mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
                 return;
@@ -2095,14 +2095,14 @@ void mcc_parking_mode(void)
 
             // Verifica se il potenziometro ha raggiunto il target atteso
             if(generalConfiguration.armExecution.lenze_pot < generalConfiguration.lenzeCfg.parkingSafePoint){
-                printf("GUI LENZE NOT CORRECTLY POSITIONED:%d, %d\n",generalConfiguration.armExecution.lenze_pot, generalConfiguration.lenzeCfg.parkingSafePoint);
+                debugPrintI2("GUI LENZE NOT CORRECTLY POSITIONED. POT=",generalConfiguration.armExecution.lenze_pot,"SAFEPOINT=",generalConfiguration.lenzeCfg.parkingSafePoint);
 
                 buffer[1] = ERROR_PARKING_LENZE_POSITION;
                 mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
                 return;
             }
 
-            printf("GUI ARM ROTATION FOR PARKING");
+            debugPrint("GUI ARM ROTATION FOR PARKING");
 
             // Attivazione Arm a 180 in modo parking (senza correzione altezza)
             if(generalConfiguration.armExecution.dAngolo>0) actuatorsArmMove(200);
@@ -2116,7 +2116,7 @@ void mcc_parking_mode(void)
             }
             if(!generalConfiguration.armExecution.success){
                 // Errore timeout posizionamento lenze
-                printf("GUI TIMEOUT ARM DURING PARKING\n");
+                debugPrint("GUI TIMEOUT ARM DURING PARKING\n");
                 buffer[1] = ERROR_PARKING_ARM_TMO;
                 mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
                 return;
@@ -2140,7 +2140,7 @@ void mcc_parking_mode(void)
 
     if(generalConfiguration.armExecution.lenze_run){
         // Errore timeout posizionamento lenze
-        printf("GUI TIMEOUT COMPRESSION PARKING LENZE\n");
+        debugPrint("GUI TIMEOUT COMPRESSION PARKING LENZE\n");
         buffer[1] = ERROR_PARKING_LENZE_TMO;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
@@ -2166,14 +2166,14 @@ void mcc_unparking_mode(void)
     unsigned char buffer[2];
     buffer[0] = MCC_PARKING_MODE_COMMANDS_START_UNPARKING;
 
-    printf("GUI UNPARKING MODE GUI REQUEST\n");
+    debugPrint("GUI UNPARKING MODE GUI REQUEST\n");
     generalConfiguration.lenze_park_enable_run = true;
     actuatorsManageEnables();
     _time_delay(200);
 
     // Attivazione della modalità di sblocco parcheggio
     if(generalConfiguration.armExecution.lenze_run){
-        printf("GUI LENZE BUSY DURING UNPARKING\n");
+        debugPrint("GUI LENZE BUSY DURING UNPARKING\n");
         buffer[1] = ERROR_PARKING_LENZE_BUSY;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
@@ -2191,14 +2191,14 @@ void mcc_unparking_mode(void)
 
     if(generalConfiguration.armExecution.lenze_run){
         // Errore timeout posizionamento lenze
-        printf("GUI TIMEOUT LENZE DURING UNPARKING\n");
+        debugPrint("GUI TIMEOUT LENZE DURING UNPARKING\n");
         buffer[1] = ERROR_PARKING_LENZE_TMO;
         mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS, buffer, 2);
         return;
     }
 
 
-    printf("GUI UNPARKING LENZE OK, POT:%d\n", generalConfiguration.armExecution.lenze_pot);
+    debugPrintI("GUI UNPARKING LENZE OK, POT:", generalConfiguration.armExecution.lenze_pot);
     generalConfiguration.lenzeCfg.startupInParkingMode = 0;
     generalConfiguration.lenze_park_enable_run = true;
     actuatorsManageEnables();
@@ -2215,5 +2215,26 @@ void mcc_unparking_mode(void)
 
 
   return ;
+}
+
+void mccPrint(void)
+{
+    if(mcc_cmd.buffer[0] == MCC_DEBUG_PRINT_ENABLE_CMD){
+        if(mcc_cmd.buffer[1] == 1){
+                debugPrintEna(true);
+                debugPrint("ATTIVAZIONE DEBUG PRINT  DRIVER");
+        }else{
+                debugPrintEna(false);
+                debugPrint("DISATTIVAZIONE DEBUG PRINT DRIVER");
+        }
+    }else if(mcc_cmd.buffer[0] == MCC_DRIVER_PRINT_ENABLE_CMD){
+        if(mcc_cmd.buffer[1] == 1){
+                printEna(true);
+                debugPrint("ATTIVAZIONE PRINT DRIVER");
+        }else{
+                printEna(false);
+                debugPrint("DISATTIVAZIONE PRINT DRIVER");
+        }
+    }
 }
 /* EOF */

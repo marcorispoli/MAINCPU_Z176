@@ -6,8 +6,7 @@
 #include "../appinclude.h"
 #include "../globvar.h"
 #include "../audio.h"
-#include "../systemlog.h"
-extern systemLog* pSysLog;
+
 
 extern audio* pAudio;
 
@@ -1365,7 +1364,7 @@ void  AnalogPageOpen::activateProjection(void) {
     // Invio comando
     if(pConsole->pGuiMcc->sendFrame(MCC_CMD_ARM,1,data, 2)==FALSE)
     {
-        qDebug() << "CONSOLE <SetArm>: ERRORE COMANDO MCC";
+        DEBUG("CONSOLE <SetArm>: ERRORE COMANDO MCC");
         PageAlarms::activateNewAlarm(_DB_ALLARMI_ALR_SOFT,ERROR_MCC,TRUE); // Self resetting
     }
 
@@ -1420,14 +1419,14 @@ bool AnalogPageOpen::openPageRequest(void){
     ApplicationDatabase.setData(_DB_STUDY_STAT,(unsigned char) _OPEN_STUDY_ANALOG);
     biopsyPanel->workflow = _BIOPSY_NO_STATUS;; // inizializza lo stato della biopsia
     cumulativeXdose = 0; // Azzera la dose accumulata nelo studio corrente
-    pSysLog->log("OPEN STUDY __________________________________________________________________");
+    LOG("OPEN STUDY __________________________________________________________________");
     pConfig->selectOperatingPage();
     return true;
 }
 
 bool AnalogPageOpen::closePageRequest(void){
     ApplicationDatabase.setData(_DB_CLOSE_STUDY_INT,(int) 1,DBase::_DB_FORCE_SGN);
-    pSysLog->log("CLOSE STUDY __________________________________________________________________");
+    LOG("CLOSE STUDY __________________________________________________________________");
     return true;
 }
 
@@ -1459,11 +1458,11 @@ bool AnalogPageOpen::closePageRequest(void){
          startXraySequence();
          break;
      case QUEUED_LOG_FLUSH:
-         pSysLog->log(str);
-         pSysLog->flush();
+         LOG(str);
+         pInfo->pSysLog->flush();
          break;
      case QUEUED_LOG:
-         pSysLog->log(str);
+         LOG(str);
          break;
      case QUEUED_INIT_PAGE:
          // Con la Biopsia il campio pagina viene gestito a parte

@@ -96,7 +96,7 @@ void EchoDisplay::rxData(QByteArray data)
             ApplicationDatabase.setData(index,cval,opt|DBase::_DB_NO_ECHO);
             break;
         default:
-            qDebug("DB campo non riconosciuto");
+            DEBUG("EchoDisplay: DB campo non riconosciuto");
             return;
         }
         break;
@@ -120,7 +120,7 @@ void EchoDisplay::rxData(QByteArray data)
         break;
 
     default:
-        qDebug("PACCHETTO NON RICONOSCIUTO");
+        DEBUG("EchoDisplay:PACCHETTO NON RICONOSCIUTO");
         return;
     }
 

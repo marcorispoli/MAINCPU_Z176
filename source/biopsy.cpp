@@ -41,7 +41,7 @@ biopsy::biopsy(QObject *parent) :
 
     // Nel caso in cui ci fosse un errore nel file o il file non
     // esiste vengono caricati dei valori di default
-    if(openCfg() == FALSE)  pSysLog->log("BIOPSY: UNABLE TO CREATE CONFIG FILE, USE DEFAULTS");
+    if(openCfg() == FALSE)  LOG("BIOPSY: UNABLE TO CREATE CONFIG FILE, USE DEFAULTS");
 
 }
 
@@ -160,7 +160,7 @@ bool biopsy::storeConfig(void)
     file.flush();
     file.close();
 
-    pSysLog->log("BIOPSY: STORED CALIBRATION FILE");
+    LOG("BIOPSY: STORED CALIBRATION FILE");
     return true;
 }
 
