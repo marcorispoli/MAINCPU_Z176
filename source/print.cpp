@@ -1,75 +1,381 @@
 #include "appinclude.h"
 #include "globvar.h"
 
-// Comandi da inviare a Console
-#define MASTER_PRINT_PORT 10020
-#define SLAVE_PRINT_PORT  10021
 
+static qint64 orig = QDateTime::currentMSecsSinceEpoch();
 
-
-void printDebug::activateConnections(void){
-    QObject::connect(printTcp,SIGNAL(clientConnection(bool)),this,SLOT(printConnectionHandler(bool)),Qt::UniqueConnection);
-    QObject::connect(this,SIGNAL(printTxHandler(QByteArray)), printTcp,SLOT(txData(QByteArray)),Qt::UniqueConnection);
-
-#ifdef __PRINT
-    if(isMaster)
-        printTcp->Start(QHostAddress(__PRINT),MASTER_PRINT_PORT);
-    else
-        printTcp->Start(QHostAddress(__PRINT),SLAVE_PRINT_PORT);
-#endif
+// Messaggi provenienti dallelibrerie Qt
+void  qtOutput(QtMsgType type, const char *msg);
+void  qtOutput(QtMsgType type, const char *msg)
+{
+    QTMSG(QString(msg));
+    return;
 }
 
-printDebug::printDebug(QObject *parent) :
+//
+
+
+infoClass::infoClass(QObject *parent) :
     QObject(0)
 {
-    printConnected = FALSE;
-    coda.clear();
-    // Socket per segnali asincroni
-    printTcp = new TcpIpClient();
-    activateConnections();
+    qInstallMsgHandler(qtOutput);
+    serviceTcp = new TcpIpServer();
+    connected = false;
+
+    // Inizializzazione file di Log generale
+    pSysLog = new systemLog("/home/user/syslog.txt", 0);
+    pSysLog->log("--------- PROGRAM START ------------",false);
+    pSysLog->flush();
+    connect(this,SIGNAL(logTxHandler(QString)),this,SLOT(serviceFileLogHandler(QString)),Qt::UniqueConnection);
+}
+
+void infoClass::activateConnections(void) {
+    //QObject::connect(serviceTcp,SIGNAL(rxData(QByteArray)),this,SLOT(serviceRxHandler(QByteArray)),Qt::UniqueConnection);
+    if(isMaster) connect(serviceTcp,SIGNAL(serverConnection(bool)),this,SLOT(notificheMasterConnectionHandler(bool)),Qt::UniqueConnection);
+    else connect(serviceTcp,SIGNAL(serverConnection(bool)),this,SLOT(notificheSlaveConnectionHandler(bool)),Qt::UniqueConnection);
+    serviceTcp->Start(_PRINT_SERVICE_PORT);
+
+    if(isMaster) pPrintMcc = new mccPrintCom(_DEF_M4_MASTER_DEBUG_MESSAGES_MCC); // Ricezione Print da Master
+    else pPrintMcc = new mccPrintCom(_DEF_M4_SLAVE_DEBUG_MESSAGES_MCC); // Ricezione Print da Master
 
 }
 
-
-
-void printDebug::printConnectionHandler(bool stat)
+void infoClass::serviceRxHandler(QByteArray data)
 {
-    printConnected = stat;
+    data.append("\r");
+    data.append("\n");
+    serviceTcp->txData(data);
+}
 
-    if(stat==true) print(QString("HELLO\n\r"));
+void infoClass::notificheMasterConnectionHandler(bool stat)
+{
+    unsigned char data[2];
+
+    if(stat)
+    {
+        // Connessione automatica al servizio di log eventi
+        serviceTcp->txData(QString("---------   MASTER DEBUG INTERFACE -------------\r\n").toAscii());
+        connected = true;
+
+        // Connette tutti i sockets
+        connect(pConsole,SIGNAL(consoleTxHandler(QByteArray)),this,SLOT(serviceTxConsoleHandler(QByteArray)),Qt::UniqueConnection);
+        connect(pConsole,SIGNAL(consoleRxSgn(QByteArray)),this,SLOT(serviceRxConsoleHandler(QByteArray)),Qt::UniqueConnection);
+        connect(pToConsole,SIGNAL(notificheTxHandler(QByteArray)),this,SLOT(serviceTxAsyncHandler(QByteArray)),Qt::UniqueConnection);
+        connect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(serviceErrorTxHandler(int,QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(printTxHandler(QString)),this,SLOT(servicePrintHandler(QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(debugTxHandler(QString)),this,SLOT(serviceDebugHandler(QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(logTxHandler(QString)),this,SLOT(serviceLogHandler(QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(qtTxHandler(QString)),this,SLOT(serviceQtHandler(QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(m4TxHandler(QString)),this,SLOT(serviceM4Handler(QString)),Qt::UniqueConnection);
+
+
+        data[0] = MCC_DEBUG_PRINT_ENABLE_CMD;
+        data[1] = 1;
+        pConsole->pGuiMcc->sendFrame(MCC_PRINT,1,data,2);
+    }else
+    {
+        disconnect(this);
+        connected = false;
+
+        disconnect(pConsole,SIGNAL(consoleTxHandler(QByteArray)),this,SLOT(serviceTxConsoleHandler(QByteArray)));
+        disconnect(pConsole,SIGNAL(consoleRxSgn(QByteArray)),this,SLOT(serviceRxConsoleHandler(QByteArray)));
+        disconnect(pToConsole,SIGNAL(notificheTxHandler(QByteArray)),this,SLOT(serviceTxAsyncHandler(QByteArray)));
+        disconnect(paginaAllarmi,SIGNAL(newAlarmSgn(int,QString)),this,SLOT(serviceErrorTxHandler(int,QString)));
+        disconnect(this,SIGNAL(printTxHandler(QString)),this,SLOT(servicePrintHandler(QString)));
+        disconnect(this,SIGNAL(debugTxHandler(QString)),this,SLOT(serviceDebugHandler(QString)));
+        disconnect(this,SIGNAL(logTxHandler(QString)),this,SLOT(serviceLogHandler(QString)));
+        disconnect(this,SIGNAL(qtTxHandler(QString)),this,SLOT(serviceQtHandler(QString)));
+        disconnect(this,SIGNAL(m4TxHandler(QString)),this,SLOT(serviceM4Handler(QString)));
+
+        data[0] = MCC_DEBUG_PRINT_ENABLE_CMD;
+        data[1] = 0;
+        pConsole->pGuiMcc->sendFrame(MCC_PRINT,1,data,2);
+
+    }
+
+    return;
+}
+
+void infoClass::notificheSlaveConnectionHandler(bool stat)
+{
+    unsigned char data[2];
+
+    if(stat)
+    {
+        // Connessione automatica al servizio di log eventi
+        serviceTcp->txData(QString("---------   SLAVE DEBUG INTERFACE -------------\r\n").toAscii());
+        connected = true;
+
+        connect(this,SIGNAL(printTxHandler(QString)),this,SLOT(servicePrintHandler(QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(debugTxHandler(QString)),this,SLOT(serviceDebugHandler(QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(logTxHandler(QString)),this,SLOT(serviceLogHandler(QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(qtTxHandler(QString)),this,SLOT(serviceQtHandler(QString)),Qt::UniqueConnection);
+        connect(this,SIGNAL(m4TxHandler(QString)),this,SLOT(serviceM4Handler(QString)),Qt::UniqueConnection);
+
+
+        data[0] = MCC_DEBUG_PRINT_ENABLE_CMD;
+        data[1] = 1;
+        pConfig->pSlaveMcc->sendFrame(MCC_PRINT,1,data,2);
+    }else
+    {
+        disconnect(this);
+        connected = false;
+
+        disconnect(this,SIGNAL(printTxHandler(QString)),this,SLOT(servicePrintHandler(QString)));
+        disconnect(this,SIGNAL(debugTxHandler(QString)),this,SLOT(serviceDebugHandler(QString)));
+        disconnect(this,SIGNAL(logTxHandler(QString)),this,SLOT(serviceLogHandler(QString)));
+        disconnect(this,SIGNAL(qtTxHandler(QString)),this,SLOT(serviceQtHandler(QString)));
+        disconnect(this,SIGNAL(m4TxHandler(QString)),this,SLOT(serviceM4Handler(QString)));
+
+        data[0] = MCC_DEBUG_PRINT_ENABLE_CMD;
+        data[1] = 0;
+        pConfig->pSlaveMcc->sendFrame(MCC_PRINT,1,data,2);
+
+    }
+
+    return;
+}
+
+// Handler messaggi spediti verso console: deve essere trasformato in UNICODE
+void infoClass::serviceTxConsoleHandler(QByteArray data)
+{
+    QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
+    QString stringa = codec->toUnicode(data);
+    stringa = "AWS<" + stringa + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+
+// Handler messaggi ricevuti da console: deve essere trasformato in UNICODE
+void infoClass::serviceRxConsoleHandler(QByteArray data)
+{
+    QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
+    QString stringa = codec->toUnicode(data);
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "AWS>" + stringa + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
     return;
 }
 
 
-/*
- *  Questa funzione viene lanciata per notificare la AWS di un comando di movimento braccio in corso
- */
-void printDebug::print(QString stringa)
+// Risposte asincrone verso Console: UNICODE
+void infoClass::serviceTxAsyncHandler(QByteArray data)
 {
-    static int idx=0;
 
-    stringa.prepend(QString("[%1]:>").arg(idx++));
-    stringa.append("\n\r");
+    QTextCodec *codec = QTextCodec::codecForName(UNICODE_TYPE);
+    QString stringa = codec->toUnicode(data);
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +   "ASYNC AWS>" + stringa + "\r\n";
 
-    // Se c'è il server in ascolto
-    if(printConnected){
-        if(coda.size()){
-            stringa.prepend(coda);
-            coda.clear();
-        }
+    serviceTcp->txData(stringa.toAscii());
+     return;
+}
 
-        emit printTxHandler(stringa.toAscii());
+
+void infoClass::serviceErrorTxHandler(int codice, QString msg)
+{
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +   "ERROR AWS>" + QString("%1:").arg(codice) + msg + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+
+void infoClass::serviceLogHandler(QString data)
+{
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "LOG: "+ data + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+
+void infoClass::serviceFileLogHandler(QString data)
+{
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "LOG: "+ data + "\r\n";
+    pInfo->pSysLog->log(stringa);
+    return;
+}
+
+void infoClass::serviceDebugHandler(QString data)
+{
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +   "DBG: "+ data + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+
+
+void infoClass::serviceQtHandler(QString data)
+{
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "QT: "+ data + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+
+void infoClass::serviceM4Handler(QString data)
+{
+    QString stringa;
+    float time = (float) (QDateTime::currentMSecsSinceEpoch()-orig)/1000;
+    stringa = QString("%1:").arg(QString::number(time,'f',2)) +  "M4: "+ data + "\r\n";
+    serviceTcp->txData(stringa.toAscii());
+    return;
+}
+
+
+void infoClass::resetTimestamp(void){
+    orig = QDateTime::currentMSecsSinceEpoch();
+}
+
+void mccPrintCom::mccRxHandler(_MccFrame_Str mccframe)
+{
+    M4MSG(QString((const char*)mccframe.buffer));
+}
+
+#define _MAX_LOG_LINES 10000
+#define _MAX_LOG_BUFFER 1000
+
+systemLog::systemLog(QString filename, QObject *parent) :
+    QObject(parent)
+{
+    QList<QString> dati;
+    QString frame;
+
+    // Apertura file LOG
+    this->filename = filename;
+    file.setFileName(filename);
+    enabled =false;
+    fileLines = 0;
+
+    // Se non esiste lo crea con l'intestazione
+    if(!file.exists()){
+        if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) return;
+        frame = QString("%1\n").arg((int) 0);
+        file.write(frame.toAscii().data());
+        fileLines = 0;
+        file.close();
+        if (!file.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)) return;
+        enabled = true;
         return;
     }
 
-    // Non oltre 1000 caratteri
-    if(coda.size()>1000) coda.clear();
-    coda.append(stringa);
+    // Se esiste lo apre ed aggiorna il numero di linee
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) return;
 
+    // Legge la prima riga per determinare il numero dil linee
+    if(file.atEnd()) return;
+
+    frame = file.readLine();
+    fileLines =frame.toInt();
+    file.close();
+    enabled = true;
+
+    // Controllo sul massimo numero di linee possibili
+    if(fileLines >= _MAX_LOG_LINES) resizeFile();
+
+
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)){enabled=false; return;}
+
+    activated = true;
     return;
 
 
 }
+void systemLog::log(QString event){
+    if(!activated) return;
+    if(!enabled) return;
+    QString stringa = QString("[%1] >%2\n").arg(QDateTime::currentDateTime().toString("dd.MM.yy hh.mm.ss ap")).arg(event);
+    file.write(stringa.toAscii().data());
+    fileLines++;
+    changed = true;
+
+}
+
+// prefix==true attiva la stampa della data
+void systemLog::log(QString event,bool prefix){
+    if(!activated) return;
+    if(!enabled) return;
+
+    QString stringa;
+    if(prefix) stringa = QString("[%1] >%2\n").arg(QDateTime::currentDateTime().toString("dd.MM.yy hh.mm.ss ap")).arg(event);
+    else stringa = QString("%1\n").arg(event);
+
+    file.write(stringa.toAscii().data());
+    fileLines++;
+    changed = true;
+
+}
+
+void systemLog::flush(void){
+    if(!enabled) return;
+    if(!changed) return;
+    file.close();
+
+    // Aggiorna le linee
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) return;
+    QString frame = QString("%1\n").arg((int) fileLines);
+    file.write(frame.toAscii().data());
+    file.close();
+    file.flush();
+
+    // Effettua un sync
+    QString command = QString("sync");
+    system(command.toStdString().c_str());
+    changed = false;
+
+     if (!file.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)){enabled=false; return;}
+}
+
+void systemLog::resizeFile(void){
+    QList<QString> dati;
+    QByteArray frame;
+    QString command;
+
+    QFile newfile("/newlog");
+    if (!newfile.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+
+    // Aggiorna le linee
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
 
 
+    // Legge le prime linee per scartarle
+    int j= fileLines -  _MAX_LOG_LINES +  _MAX_LOG_BUFFER +1;
+    while(!file.atEnd())
+    {
+        file.readLine();
+        j--;
+        if(!j) break;
+    }
 
+    // Scrive il numero di righe tolte le prime
+    fileLines = _MAX_LOG_LINES - _MAX_LOG_BUFFER;
+    QString stringa = QString("%1\n").arg((int) fileLines);
+    newfile.write(stringa.toAscii().data());
+
+    // Copia le righe restanti
+    while(!file.atEnd())
+    {
+        frame = file.readLine();
+        newfile.write(frame.data());
+    }
+
+    file.close();
+    newfile.close();
+    file.flush();
+    newfile.flush();
+
+    command = QString("sync");
+    system(command.toStdString().c_str());
+    command = QString("mv /newlog ") + filename;
+    system(command.toStdString().c_str());
+    command = QString("sync");
+    system(command.toStdString().c_str());
+    changed = false;
+
+
+}

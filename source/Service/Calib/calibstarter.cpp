@@ -160,7 +160,7 @@ void calibstarter::initPage(void){
         else ApplicationDatabase.setData(_DB_SERVICE13_INT,(int) 0,DBase::_DB_FORCE_SGN);
 
         connect(pConsole,SIGNAL(mccServiceNotify(unsigned char,unsigned char, QByteArray)), this,SLOT(onServiceNotify(unsigned char,unsigned char, QByteArray)),Qt::UniqueConnection);
-        pSysLog->log("SERVICE PANEL: CALIB STARTER");
+        LOG("SERVICE PANEL: CALIB STARTER");
     }
 
     ApplicationDatabase.setData(_DB_SERVICE10_INT,(int)0,DBase::_DB_NO_CHG_SGN|DBase::_DB_NO_ECHO); // Pulsante Start

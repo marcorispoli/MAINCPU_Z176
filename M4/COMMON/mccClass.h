@@ -34,6 +34,7 @@ typedef struct
   unsigned char buffer[_MCC_DIM];
 }_MccFrame_Str;
 
+ext bool mccDebugPrint(char* buffer, int buflen);
 
 ext bool mccSendBuffer(MCC_ENDPOINT* ep, unsigned char cmd, unsigned char id, unsigned char* buffer, unsigned char len); // Crea il frame da spedire
 ext bool mccSendBufferFlags(MCC_ENDPOINT* ep, unsigned char cmd, unsigned char id, unsigned char* buffer, unsigned char len,unsigned char data1, unsigned char data2);

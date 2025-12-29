@@ -449,13 +449,13 @@ void CiA402_Trx_Stat(void){
 void funcCiA402_SwitchOnDisabled(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 SWITCH ON DISABLED\n",DEVICE);
+        debugPrint("TRX: CiA402 SWITCH ON DISABLED");
 
     }
 
     // Upload successfully completed: change status
     // Command Shutdown to enter the ReadyToSwitchedOn status
-    printf("%s: SWITCH STATUS ATTEMPT TO -READY T SWITCH- STATUS...\n",DEVICE);
+
     CiA402_SwitchOnDisabled_To_ReadyToSwitchOn(CANOPEN_TRX_CONTEXT,pStat);
     return;
 
@@ -464,7 +464,7 @@ void funcCiA402_SwitchOnDisabled(_PD4_Status_t* pStat)
 void funcCiA402_QuickStopActive(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 QUICK STOP ACTIVE\n",DEVICE);        
+        debugPrint("TRX: CiA402 QUICK STOP ACTIVE");
     }
 
 
@@ -476,7 +476,7 @@ void funcCiA402_QuickStopActive(_PD4_Status_t* pStat)
 void funcCiA402_FaultReactionActive(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 FAULT REACTION ACTIVE\n",DEVICE);
+        debugPrint("TRX: CiA402 FAULT REACTION ACTIVE");
     }
 }
 
@@ -529,7 +529,7 @@ void funcCiA402_Fault(_PD4_Status_t* pStat)
         case TRX_MOVE_WITH_TRIGGER:
         case TRX_MANUAL_MOVE_TO_POSITION:
             // Fault condition during a command
-            printf("TRX FAULT DURING COMMAND\n");
+            debugPrint("TRX: FAULT DURING COMMAND\n");
             pStat->event_type = pStat->operatingMode;            
             if(SystemOutputs.CPU_PEND_ENA) pStat->event_code = TRX_DISABLED_ERROR;
             else  pStat->event_code = TRX_DEVICE_ERROR;
@@ -548,7 +548,7 @@ void funcCiA402_Fault(_PD4_Status_t* pStat)
         }
         pStat->operatingMode = TRX_FAULT;
         error = pStat->errors;
-        printf("%s: CiA402 FAULT %x\n",DEVICE,error);
+        debugPrintX("TRX: CiA402 FAULT Code=",error);
         return;
     }
 
@@ -562,7 +562,7 @@ void funcCiA402_Fault(_PD4_Status_t* pStat)
         }
 
         // Prova a ritornare operativo
-        printf("%s: CiA402 RESET FAULT\n",DEVICE);
+        debugPrint("TRX:  CiA402 RESET FAULT");
         Pd4CiA402FaultReset(CANOPEN_TRX_CONTEXT,pStat);
 
         pStat->event_type = TRX_FAULT;
@@ -584,21 +584,21 @@ void funcCiA402_Fault(_PD4_Status_t* pStat)
         }
 
         error = pStat->errors;
-        printf("%s: CiA402 FAULT %x\n",DEVICE,error);
+        debugPrintX("TRX: CiA402 FAULT Code=",error);
      }
 }
 
 void funcCiA402_UndefinedStat(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 UNDEFINED STAT\n",DEVICE);
+        debugPrint("TRX:  CiA402 UNDEFINED STAT");
     }
 }
 
 void funcCiA402_NotReadyToSwitch(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 NOT READY TO SWITCH ON\n",DEVICE);
+        debugPrint("TRX:  CiA402 NOT READY TO SWITCH ON");
     }
 }
 
@@ -606,7 +606,7 @@ void funcCiA402_NotReadyToSwitch(_PD4_Status_t* pStat)
 void funcCiA402_ReadyToSwitchOn(_PD4_Status_t* pStat)
 {
     if(pStat->statChanged){
-        printf("%s: CiA402 READY TO SWITCH ON\n",DEVICE);
+        debugPrint("TRX:  CiA402 READY TO SWITCH ON");
     }
 
     // Verifies if the Application enables to Switch On the motor
@@ -630,7 +630,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
     static int pollingCount=POLLING_COUNT;
 
     if(pStat->statChanged){
-        printf("%s: CiA402 SWITCHED ON\n",DEVICE);
+        debugPrint("TRX:  CiA402 SWITCHED ON");
         pollingCount = POLLING_COUNT;
 
         // Reset the operating mode register
@@ -665,7 +665,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
 
     // Verifica se deve attivare l'azzeramento del braccio
     if((driver_stat.zeroSettingOK==false)&&(driver_stat.configured)){
-        printf("%s: Execution of Automatic zero setting \n",DEVICE);
+        debugPrint("TRX:  Execution of Automatic zero setting");
         pStat->reqCommand=TRX_NO_COMMAND;
         if(_initZeroSetting(pStat)==false){
             pStat->event_type = TRX_ZERO_SETTING;
@@ -682,7 +682,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
     case TRX_IDLE:
         break;
     case TRX_ZERO_SETTING:
-        printf("%s: Execution of zero setting \n",DEVICE);
+
         pStat->reqCommand=TRX_NO_COMMAND;
         if(_initZeroSetting(pStat)==false){
             pStat->event_type = TRX_ZERO_SETTING;
@@ -694,7 +694,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
 
 
     case TRX_MOVE_WITH_TRIGGER:
-        printf("%s: Execution of positioning strating with trigger signal\n",DEVICE);
+
         pStat->reqCommand=TRX_NO_COMMAND;
         if(_initPositionTriggerSetting(pStat)==false){
             pStat->event_type = TRX_MOVE_WITH_TRIGGER;
@@ -705,7 +705,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
         break;
 
     case TRX_MOVE_TO_POSITION:
-        printf("%s: Execution of positioning \n",DEVICE);
+
         pStat->reqCommand=TRX_NO_COMMAND;
         if(_initPositionSetting(pStat)==false){
             printf("TRX Init Fallito\n");
@@ -718,7 +718,7 @@ void funcCiA402_SwitchedOn(_PD4_Status_t* pStat)
         break;
 
     case TRX_MANUAL_MOVE_TO_POSITION:
-        printf("%s: Execution of manual positioning \n",DEVICE);
+
         pStat->reqCommand=TRX_NO_COMMAND;
         if(_initManualPositionSetting(pStat)==false){
             pStat->event_type = TRX_MANUAL_MOVE_TO_POSITION;
@@ -897,7 +897,7 @@ bool _initPositionTriggerSetting(_PD4_Status_t* pStat){
     }
 
     if(index==0){
-        printf("%s: ERROR TIMEOUT OF THE RUNNING NANOJ PROGRAM\n",DEVICE);
+        debugPrint("TRX: ERROR TIMEOUT OF THE RUNNING NANOJ PROGRAM");
         return false;
     }
 
@@ -924,7 +924,7 @@ void _positionSettingLoop(_PD4_Status_t* pStat){
     static uint16_t memCtrl=0xFFFF;
 
     if(pStat->statChanged){
-        printf("%s: POSITION SETTING MODE STARTED: Timeout value = %d \n",DEVICE, pStat->activation_timeout);
+        debugPrint("TRX:  POSITION SETTING MODE STARTED");
         // Set the BIT4 of Control Word to start the sequence
         Pd4CiA402SetControlOD(POSITION_SETTING_START,CANOPEN_TRX_CONTEXT,pStat);        
     }
@@ -970,7 +970,7 @@ void _manualPositionSettingLoop(_PD4_Status_t* pStat){
 
 
     if(pStat->statChanged){
-        printf("%s: MANUAL POSITION SETTING MODE STARTED \n",DEVICE);
+        debugPrint("TRX:  MANUAL POSITION SETTING MODE STARTED");
         // Set the BIT4 of Control Word to start the sequence
         Pd4CiA402SetControlOD(POSITION_SETTING_START,CANOPEN_TRX_CONTEXT,pStat);
     }
@@ -992,7 +992,7 @@ void _manualPositionSettingLoop(_PD4_Status_t* pStat){
             }
 
             // Target NOK
-            printf("%s: TARGET NOK PER OSTACOLO:%d\n",DEVICE,pStat->dAngolo);
+            debugPrint("TRX:  TARGET NOK PER OSTACOLO");
             pStat->positionOk = false;
             pStat->event_type = TRX_MANUAL_MOVE_TO_POSITION;
             pStat->event_code = TRX_OBSTACLE_ERROR;
@@ -1017,7 +1017,7 @@ void _manualPositionSettingLoop(_PD4_Status_t* pStat){
             }
 
             // Target OK
-            printf("%s: TARGET OK PER RILASCIO PULSANTI:%d\n",DEVICE,pStat->dAngolo);
+            debugPrint("TRX:  TARGET OK PER RILASCIO PULSANTI");
             pStat->positionOk = true;
             pStat->event_type = TRX_MANUAL_MOVE_TO_POSITION;
             pStat->event_code = TRX_NO_ERRORS;
@@ -1038,7 +1038,7 @@ void _manualPositionSettingLoop(_PD4_Status_t* pStat){
             memCtrl = od.val;
             if((od.val&0x1400)==0x1400){
                 // Target OK
-                printf("%s: TARGET OK\n",DEVICE);
+                debugPrint("TRX:TARGET OK");
                 pStat->positionOk = true;
                 pStat->event_type = TRX_MANUAL_MOVE_TO_POSITION;
                 pStat->event_code = TRX_NO_ERRORS;
@@ -1064,7 +1064,7 @@ void _positionTriggerSettingLoop(_PD4_Status_t* pStat){
     static uint16_t memCtrl=0xFFFF;
 
     if(pStat->statChanged){
-        printf("%s: POSITION SETTING MODE STARTED: Timeout value = %d \n",DEVICE, driver_stat.activation_timeout);
+        debugPrint("TRX:  POSITION TRIGGER MODE STARTED");
     }
 
     // Lettura posizione corrente
@@ -1081,7 +1081,7 @@ void _positionTriggerSettingLoop(_PD4_Status_t* pStat){
         memCtrl = pStat->statusword;
         if((pStat->statusword&0x1400)==0x1400){
             // Target OK
-            printf("%s: TARGET OK\n",DEVICE);
+            debugPrint("TRX: TARGET OK");
             pStat->positionOk = true;
             pStat->event_type = TRX_MOVE_WITH_TRIGGER;
             pStat->event_code = TRX_NO_ERRORS;
@@ -1111,7 +1111,7 @@ void _zeroSettingLoop(_PD4_Status_t* pStat){
     bool zeroSettingError=false;
 
     if(pStat->statChanged){
-        printf("%s: ZERO SETTING MODE STARTED \n",DEVICE);
+        debugPrint("TRX:  ZERO SETTING MODE STARTED");
         // Set the BIT4 of Control Word to start the sequence
         Pd4CiA402SetControlOD(ZERO_SETTING_START,CANOPEN_TRX_CONTEXT,pStat);
     }
@@ -1256,6 +1256,13 @@ bool trxSetCommand(_trx_command_t command, void* data){
             driver_stat.event_code = TRX_ERROR_INVALID_STATUS;
             driver_stat.event_data = 0;
             _EVSET(_EV0_TRX_EVENT);
+
+            if(driver_stat.configured == false) debugPrint("TRX ZERO SETTING  REJECTED FOR CONFIG");
+            else if(driver_stat.operatingMode!=TRX_IDLE) debugPrint("TRX ZERO SETTING  REJECTED FOR NOT IDLE");
+            else if(driver_stat.errors) debugPrint("TRX ZERO SETTING  REJECTED FOR DRIVER ERRORS");
+            else if(SystemInputs.CPU_LIFT_DROP) debugPrint("TRX ZERO SETTING  REJECTED FOR LIFT DROP");
+
+            return false;
         }
 
         _mutex_lock(&driver_stat.req_mutex);
@@ -1271,6 +1278,16 @@ bool trxSetCommand(_trx_command_t command, void* data){
             driver_stat.event_code = TRX_ERROR_INVALID_STATUS;
             driver_stat.event_data = 0;
             _EVSET(_EV0_TRX_EVENT);
+
+            if(driver_stat.configured == false) debugPrint("TRX TRIGGER  REJECTED FOR CONFIG");
+            else if(driver_stat.zeroSettingOK== false) debugPrint("TRX TRIGGER  REJECTED FOR NO VALID ZERO");
+            else if(driver_stat.operatingMode!=TRX_IDLE) debugPrint("TRX TRIGGER  REJECTED FOR NOT IDLE");
+            else if(data==null) debugPrint("TRX TRIGGER REJECTED FOR DATA NULL");
+            else if(driver_stat.errors) debugPrint("TRX TRIGGER  REJECTED FOR DRIVER ERRORS");
+            else if(SystemInputs.CPU_LIFT_DROP) debugPrint("TRX TRIGGER REJECTED FOR LIFT DROP");
+
+            return false;
+
         }
 
         _mutex_lock(&driver_stat.req_mutex);
@@ -1289,14 +1306,17 @@ bool trxSetCommand(_trx_command_t command, void* data){
             driver_stat.event_type = TRX_MOVE_TO_POSITION;
             driver_stat.event_code = TRX_ERROR_INVALID_STATUS;
             driver_stat.event_data = 0;
-            if(driver_stat.configured==false) printf("TRX NON CONFIGURATO!\n");
-            else if (driver_stat.zeroSettingOK== false)  printf("TRX NON INIZIALIZZATO!\n");
-            else if (driver_stat.operatingMode!=TRX_IDLE)  printf("TRX NON IN IDLE !\n");
-            else if (data==null)  printf("TRX DATA NULL !\n");
-            else if (driver_stat.errors)  printf("TRX DRIVER IN ERROR !\n");
-            else    printf("TRX BOH IN ERROR!\n");
 
             _EVSET(_EV0_TRX_EVENT);
+
+            if(driver_stat.configured == false) debugPrint("TRX MOVE  REJECTED FOR CONFIG");
+            else if(driver_stat.zeroSettingOK== false) debugPrint("TRX MOVE  REJECTED FOR NO VALID ZERO");
+            else if(driver_stat.operatingMode!=TRX_IDLE) debugPrint("TRX MOVE  REJECTED FOR NOT IDLE");
+            else if(data==null) debugPrint("TRX MOVE REJECTED FOR DATA NULL");
+            else if(driver_stat.errors) debugPrint("TRX MOVE  REJECTED FOR DRIVER ERRORS");
+            else if(SystemInputs.CPU_LIFT_DROP) debugPrint("TRX MOVE REJECTED FOR LIFT DROP");
+
+            return false;
         }
 
         _mutex_lock(&driver_stat.req_mutex);
@@ -1314,6 +1334,15 @@ bool trxSetCommand(_trx_command_t command, void* data){
             driver_stat.event_code = TRX_ERROR_INVALID_STATUS;
             driver_stat.event_data = 0;
             _EVSET(_EV0_TRX_EVENT);
+
+            if(driver_stat.configured == false) debugPrint("TRX MANUAL  REJECTED FOR CONFIG");
+            else if(driver_stat.zeroSettingOK== false) debugPrint("TRX MANUAL  REJECTED FOR NO VALID ZERO");
+            else if(driver_stat.operatingMode!=TRX_IDLE) debugPrint("TRX MANUAL  REJECTED FOR NOT IDLE");
+            else if(data==null) debugPrint("TRX MANUAL REJECTED FOR DATA NULL");
+            else if(driver_stat.errors) debugPrint("TRX MANUAL  REJECTED FOR DRIVER ERRORS");
+            else if(SystemInputs.CPU_LIFT_DROP) debugPrint("TRX MANUAL REJECTED FOR LIFT DROP");
+
+            return false;
         }
 
         _mutex_lock(&driver_stat.req_mutex);
@@ -1400,8 +1429,7 @@ bool trxUploadActivationContext(unsigned char index, short target){
     default: return false;
     }
 
-    printf("SPEED=%d, ACC=%d, DEC=%d\n",targetSpeed, targetAcc, targetDec);
-    printf("IMPOSTAZIONE ATTIVAZIONE TRX: TARGET=%d, SPEED=%d, ACC=%d, DEC=%d\n",target,cGRADsec_TO_ROT_min(targetSpeed), cGRADsec_TO_ROT_min(targetAcc), cGRADsec_TO_ROT_min(targetDec));
+    debugPrintI3("TRX SPEED=", targetSpeed,"ACC=", targetAcc,"DEC=",targetDec);
 
     // Caricamento registri del target
     _canopen_ObjectDictionary_t odspeed={OD_6081_00,cGRADsec_TO_ROT_min(targetSpeed)};
@@ -1565,13 +1593,13 @@ bool trxSafetyDuringMotion(int activation_mode){
             Pd4CiA402QuickStop(CANOPEN_TRX_CONTEXT, &driver_stat);
 
             if(driver_stat.statusword & 0x2000){
-                printf("%s: TARGET NOK PER ERRORE DI INSEGUIMENTO:%d\n",DEVICE,driver_stat.dAngolo);
+                debugPrint("TRX: TARGET NOK PER ERRORE DI INSEGUIMENTO");
                 driver_stat.event_code = TRX_OBSTACLE_OBSTRUCTION_ERROR;
             }else if(!driver_stat.activation_timeout){
-                printf("%s: TARGET NOK PER TIMEOUT:%d\n",DEVICE,driver_stat.dAngolo);
+                debugPrint("TRX: TARGET NOK PER TIMEOUT");
                 driver_stat.event_code = TRX_TIMEOUT_ERROR;
             }else{
-                printf("%s: TARGET NOK PER DISPOSITIVO RILEVAMENTO OSTACOLO:%d\n",DEVICE,driver_stat.dAngolo);
+                debugPrint("TRX: TARGET NOK PER DISPOSITIVO RILEVAMENTO OSTACOLO");
                 driver_stat.event_code = TRX_OBSTACLE_ERROR;
             }
 

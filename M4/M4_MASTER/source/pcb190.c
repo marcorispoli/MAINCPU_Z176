@@ -128,11 +128,11 @@ void pcb190_driver(uint32_t taskRegisters)
          // Disabilita la diagnostica
          if(pcb190DisableLSStarterDiagnostic()==false){
              ls_starter_test = 0;
-             printf("FALLITA PREPARAZIONE TEST STARTER\n");
+             debugPrint("FALLITA PREPARAZIONE TEST STARTER\n");
              continue;
          }
 
-         printf("TEST STARTER LS IN PREPARAZIONE..\n");
+         debugPrint("TEST STARTER LS IN PREPARAZIONE..\n");
          // Disabilita eventuali faults
          pcb190ResetFault();
 
@@ -158,7 +158,7 @@ void pcb190_driver(uint32_t taskRegisters)
          buffer[4] = _DEVREGL(RG190_AR_MAIN_IOFF,PCB190_CONTEST);
          buffer[5] = _DEVREGL(RG190_AR_SHIFT_IOFF,PCB190_CONTEST);
 
-         printf("LOW SPEED STARTER DATA:MR=%d SR=%d MK=%d SK=%d MOFF=%d SOFF=%d\n", buffer[0],buffer[1],buffer[2],buffer[3],buffer[4],buffer[5]);
+
          mccServiceNotify(1,SRV_TEST_LS_STARTER,buffer,sizeof(buffer));
          ls_starter_test = 0;
 
@@ -193,7 +193,7 @@ void pcb190_driver(uint32_t taskRegisters)
        if(write_ok==TRUE)
        {
         STATUS.updconf = 0;
-        printf("PCB190:CONFIG UPDATED!\n");
+        debugPrint("PCB190:CONFIG UPDATED!\n");
         
         // Invia segnale di aggiornamento cfg      
         _EVSET(_EV0_PCB190_CFG_UPD);
@@ -320,8 +320,7 @@ int pcb190StartRxStd(void)
   frame.cmd=SER422_COMMAND;
   frame.data1=_CMD1(PCB190_START_RX_STD);
   frame.data2=_CMD2(PCB190_START_RX_STD);
-  printf("START RX %d %d\n",frame.data1,frame.data2);
-  
+
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   
   return (int) frame.retcode;
@@ -342,7 +341,7 @@ int pcb190StartRxAecStd(void)
   frame.cmd=SER422_COMMAND;
   frame.data1=_CMD1(PCB190_START_RX_STD_AEC);
   frame.data2=_CMD2(PCB190_START_RX_STD_AEC);
-  printf("START RX %d %d\n",frame.data1,frame.data2);
+
   
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   _mutex_unlock(&(CONTEST.pollinglist_mutex));
@@ -407,7 +406,7 @@ bool pcb190SetFuoco(unsigned char fuoco)
   else frame.data1=_CMD1(PCB190_SELECT_FUOCO); 
   frame.data2=fuoco;
   
-  printf("ATTIVA FUOCO CODICE:%d\n",fuoco);
+  debugPrintI("PCB190. ATTIVA FUOCO CODICE:",fuoco);
   Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
   _mutex_unlock(&(CONTEST.pollinglist_mutex));
   
@@ -422,7 +421,7 @@ bool pcb190StarterH(void)
 
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
-  printf("PCB190: ESECUZIONE STARTER H\n");
+  debugPrint("PCB190: ESECUZIONE STARTER H\n");
 
   // Prepara il comando 
   frame.address = TARGET_ADDRESS;
@@ -443,7 +442,7 @@ bool pcb190StarterL(void)
 
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
-  printf("PCB190: ESECUZIONE STARTER L\n");
+  debugPrint("PCB190: ESECUZIONE STARTER L\n");
   
   // Prepara il comando 
   frame.address = TARGET_ADDRESS;
@@ -466,7 +465,7 @@ bool pcb190StopStarter(void)
   // Il driver si blocca esattamente dopo aver letto i registri di stato
   _mutex_lock(&(CONTEST.pollinglist_mutex));
   
-  printf("PCB190: ESECUZIONE STOP STARTER \n");
+  debugPrint("PCB190: ESECUZIONE STOP STARTER \n");
 
   // Prepara il comando 
   frame.address = TARGET_ADDRESS;
@@ -490,7 +489,7 @@ bool pcb190OffStarter(void)
   // Il driver si blocca esattamente dopo aver letto i registri di stato
   _mutex_lock(&(CONTEST.pollinglist_mutex));
 
-  printf("PCB190: ESECUZIONE OFF STARTER \n");
+  debugPrint("PCB190: ESECUZIONE OFF STARTER \n");
 
   // Prepara il comando
   frame.address = TARGET_ADDRESS;
@@ -515,7 +514,7 @@ bool waitPcb190Ready(unsigned char attempt)
     if(!_TEST_BIT(PCB190_RX_BUSY)) return TRUE;
     _time_delay(100);
   }
-  printf("PCB190: TIMEOUT ATTESA READY\n");
+  debugPrint("PCB190: TIMEOUT ATTESA READY\n");
   return FALSE;
 }
 
@@ -849,7 +848,7 @@ bool pcb190UploadExpose(_RxStdSeq_Str* Param, bool isAEC)
 {
   if (isAEC)
   {
-   printf("AEC-PULSE UPLOAD PCB190\n");
+
    // DATI CARICATI DOPO IL PRE IMPULSO
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_RXHVEXP),Param->esposizione.HV, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -860,7 +859,7 @@ bool pcb190UploadExpose(_RxStdSeq_Str* Param, bool isAEC)
    if(Ser422WriteRegister(_REGID(RG190_MIN_IANODICA),Param->esposizione.MINI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_MAX_IANODIA),Param->esposizione.MAXI, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
    if(Ser422WriteRegister(_REGID(RG190_AEC),1, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   printf("PCB 190 AEC: Param->esposizione.TMO=%d - 0x%x\n",Param->esposizione.TMO,Param->esposizione.TMO);
+
    return TRUE;
   }
   
@@ -878,7 +877,7 @@ bool pcb190UploadExpose(_RxStdSeq_Str* Param, bool isAEC)
 
    if(Ser422WriteRegister(_REGID(PR_RX_OPT),Param->config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
 
-   printf("Param->esposizione.TMO=%d - 0x%x\n",Param->esposizione.TMO,Param->esposizione.TMO);
+
    return TRUE;
 }
 
@@ -901,9 +900,9 @@ bool pcb190UploadAnalogOnlyPreExpose(_RxStdSeq_Str* Param)
    Param->config =  0x01; // NO DETECTOR
    Param->config |= 0x04; // ANALOGIC MODELS
    Param->config |= 0x08; // ONLY PRE PULSE DURING AEC
-   printf("CARICAMETO DATI PCB190 PER ANALOGICA SOLO PRE IMPULSO");
+
    if(Ser422WriteRegister(_REGID(PR_RX_OPT),Param->config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
-   printf("Param->esposizione.TMO=%d - 0x%x\n",Param->esposizione.TMO,Param->esposizione.TMO);
+
    return TRUE;
 }
 
@@ -913,7 +912,7 @@ bool pcb190UploadAnalogCalibTubeExpose(_RxStdSeq_Str* Param)
 
    if(Param->esposizione.TMO &0x80) tmo = (Param->esposizione.TMO & 0x7F) * 10;
    else tmo = (Param->esposizione.TMO & 0x7F) * 100;
-   printf("CARICAMETO DATI PCB190 PER CALIBRAZIONE TUBO: TIMEOUT=%d\n", tmo);
+
 
    // Datai primari di esposizione
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -939,7 +938,7 @@ bool pcb190UploadAnalogCalibTubeExpose(_RxStdSeq_Str* Param)
 bool pcb190UploadAnalogPreExpose(_RxStdSeq_Str* Param)
 {
 
-   printf("PRE AEC PCB190 UPLOADING..\n");
+
 
    // Datai primari di esposizione
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -964,7 +963,7 @@ bool pcb190UploadAnalogPreExpose(_RxStdSeq_Str* Param)
 bool pcb190UploadAnalogManualExpose(_RxStdSeq_Str* Param)
 {
 
-   printf("ANALOG MANUAL EXPOSURE PCB190 UPLOADING..\n");
+
 
    // Dati primari di esposizione
    if(Ser422WriteRegister(_REGID(RG190_RXHVTMO),Param->esposizione.TMO, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
@@ -1008,8 +1007,8 @@ bool config_pcb190(bool setmem, unsigned char blocco, unsigned char* buffer, uns
   unsigned char hs_config;
   if(generalConfiguration.gantryCfg.highSpeedStarter) hs_config = 1;
   else hs_config = 0;
-  if(hs_config) printf("190: HIGH SPEED STARTER\n");
-  else printf("190: LOW SPEED STARTER\n");
+  if(hs_config) debugPrint("190: HIGH SPEED STARTER\n");
+  else debugPrint("190: LOW SPEED STARTER\n");
 
   if(Ser422WriteRegister(_REGID(PR190_STARTER),hs_config, 10,&PCB190_CONTEST)!=_SER422_NO_ERROR) return FALSE;
 
@@ -1067,52 +1066,6 @@ bool pcb190DisableLSStarterDiagnostic(void){
 
 
 void pcb190PrintParametri(){
-  
-#ifndef PRINTCFG
-   return ;
-#endif
-
-  printf("--------- PARAMETRI PCB190 --------------\n");
-
-
-  printf("FILAMENT-ABS-LIMIT:%d\n",generalConfiguration.pcb190Cfg.IFIL_LIMIT);
-  printf("FILAMENT-SET-LIMIT:%d\n",generalConfiguration.pcb190Cfg.IFIL_MAX_SET);
-  printf("FILAMENT-WARMING_DAC:%d\n",generalConfiguration.pcb190Cfg.IFIL_DAC_WARM);
-  printf("HV CONVERSION:%f\n",((float) generalConfiguration.pcb190Cfg.HV_CONVERTION / 1000.0));
-  printf("kV Conversion:k=%f, ofs = %f\n",(float) generalConfiguration.pcb190Cfg.kV_CALIB / 1000,  (float) generalConfiguration.pcb190Cfg.kV_OFS / 1000);
-  if(generalConfiguration.gantryCfg.highSpeedStarter) printf("HS STARTER CONFIGURED\n");
-  else{
-      printf("LOW SPEED STARTER CONFIGURATION:\n");
-      if(generalConfiguration.pcb190Cfg.starter_off_after_exposure){
-          printf("STARTER OFF AFTER X-RAY  ");
-          if(generalConfiguration.pcb190Cfg.starter_off_with_brake) printf("WITH BRAKE \n\n");
-          else printf("WITHOUT BRAKES \n\n");
-      }else{
-          printf("STARTER KEEPS ALIVE WITH TIMOUT\n");
-          if(generalConfiguration.pcb190Cfg.starter_off_with_brake) printf("THE BRAKE IS USED TO STOP THE STARTER\n\n");
-          else printf("THE BRAKE IS NOT USED\n\n");
-      }
-
-      printf(" CAL MAX MAIN OFF:%d\n", generalConfiguration.pcb190Cfg.cal_max_main_off);
-      printf(" CAL MAX SHIFT OFF:%d\n",generalConfiguration.pcb190Cfg.cal_max_shift_off);
-      printf(" CAL MAX MAIN RUN:%d\n", generalConfiguration.pcb190Cfg.cal_max_main_run);
-      printf(" CAL MAX SHIFT RUN:%d\n", generalConfiguration.pcb190Cfg.cal_max_shift_run);
-      printf(" CAL MAX MAIN KEEP:%d\n", generalConfiguration.pcb190Cfg.cal_max_main_keep);
-      printf(" CAL MAX SHIFT KEEP:%d\n", generalConfiguration.pcb190Cfg.cal_max_shift_keep);
-      printf(" CAL MAX MAIN BRK:%d\n", generalConfiguration.pcb190Cfg.cal_max_main_brk);
-      printf(" CAL MAX SHIFT BRK:%d\n", generalConfiguration.pcb190Cfg.cal_max_shift_brk);
-
-      printf(" CAL MIN MAIN RUN:%d\n", generalConfiguration.pcb190Cfg.cal_min_main_run);
-      printf(" CAL MIN SHIFT RUN:%d\n", generalConfiguration.pcb190Cfg.cal_min_shift_run);
-      printf(" CAL MIN MAIN KEEP:%d\n", generalConfiguration.pcb190Cfg.cal_min_main_keep);
-      printf(" CAL MIN SHIFT KEEP:%d\n",generalConfiguration.pcb190Cfg.cal_min_shift_keep);
-      printf(" CAL MIN MAIN BRK:%d\n", generalConfiguration.pcb190Cfg.cal_min_main_brk);
-      printf(" CAL MIN SHIFT BRK:%d\n", generalConfiguration.pcb190Cfg.cal_min_shift_brk);
-
-    }
-
-
-
 
 }
 
@@ -1122,11 +1075,11 @@ float pcb190ConvertKvRead(unsigned char val){
 
 void enterFreezeMode(void){
     // Entra in Freeze
-     printf("PB190 ENTRA IN FREEZE\n");
+
     _EVCLR(_EV1_PCB190_RUN);
     _EVSET(_EV1_PCB190_FREEZED); // Notifica l'avvenuto Blocco
     _EVWAIT_ANY(_MOR2(_EV1_DEVICES_RUN,_EV1_PCB190_RUN)); // Attende lo sblocco
-     printf("PB190 ESCE DAL FREEZE\n");
+
      STATUS.freeze = 0;
 }
 

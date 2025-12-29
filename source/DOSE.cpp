@@ -162,7 +162,7 @@ bool DOSE::storeKermaConfig(QString filtro){
     file.close();
     file.flush();
 
-    pSysLog->log("CONFIG: KERMA CONFIGURATION FILE");
+    LOG("CONFIG: KERMA CONFIGURATION FILE");
 
     // Effettua un sync
     QString command = QString("sync");
@@ -217,18 +217,6 @@ float DOSE::getKerma(kermaCnf_Str *pKerma, int dkV){
     }else if(kV<=40){
             return AK35 + (kV-35)*km30_35;
     }else return 0;
-
-
-    //PRINT(QString("AKH:%1 AKM:%2 AKL:%3 \n").arg(pKerma->AKH ).arg(pKerma->AKM ).arg(pKerma->AKL));
-    //PRINT(QString("KVH:%1 KVM:%2 KVL:%3 \n").arg(pKerma->KVH ).arg(pKerma->KVM ).arg(pKerma->KVL));
-    //PRINT(QString("kml:%1 kmh:%2 \n").arg(kml).arg(khm));
-    /*
-    float kml = (pKerma->AKM - pKerma->AKL) / (pKerma->KVM - pKerma->KVL);
-    float khm = (pKerma->AKH - pKerma->AKM) / (pKerma->KVH - pKerma->KVM);
-
-    if(kV <= pKerma->KVM )  return pKerma->AKM - kml * (float) ((float) pKerma->KVM  - kV );
-    else return pKerma->AKM + khm * (float) (kV - pKerma->KVM);
-*/
 
 }
 

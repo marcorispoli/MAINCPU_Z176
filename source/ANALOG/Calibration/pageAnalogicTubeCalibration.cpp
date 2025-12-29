@@ -56,7 +56,7 @@ void AnalogCalibPageOpen::initTubeCalibration(void){
     tube_calibration = true;
 
     if(isMaster){
-        pSysLog->log("SERVICE PANEL: ANALOGIC TUBE CALIBRATION");
+        LOG("SERVICE PANEL: ANALOGIC TUBE CALIBRATION");
 
     }
     setTubeData();

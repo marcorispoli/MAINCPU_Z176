@@ -193,7 +193,7 @@ void calibfilter::initPage(void){
                 fname[i]="";
             }
 
-            pSysLog->log("SERVICE PANEL: CALIB FILTER");
+            LOG("SERVICE PANEL: CALIB FILTER");
         }
 
         ApplicationDatabase.setData(_DB_SERVICE1_STR,fname[0], DBase::_DB_FORCE_SGN);

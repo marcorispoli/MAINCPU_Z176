@@ -107,7 +107,7 @@ void calibzerosetting::initPage(void){
 
     if(isMaster){
         connect(pConsole,SIGNAL(mccGuiNotify(unsigned char,unsigned char,QByteArray)),this,SLOT(guiNotify(unsigned char,unsigned char,QByteArray)),Qt::UniqueConnection);
-        pSysLog->log("SERVICE PANEL: ZERO SETTING");
+        LOG("SERVICE PANEL: ZERO SETTING");
     }
 
     timerDisable = startTimer(500);

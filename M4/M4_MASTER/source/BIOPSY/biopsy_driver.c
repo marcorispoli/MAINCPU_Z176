@@ -434,7 +434,7 @@ bool BiopsyDriverMoveXYZ(unsigned char* statusL, unsigned char* statusH)
 {
     unsigned char rx_buffer[4];
     unsigned char tx_buffer[4];
-printf("BIOPSY DRIVER XYZ\n");
+
     tx_buffer[0] = 0x10;
     tx_buffer[1] = 0;
     tx_buffer[2] = 0;
@@ -462,7 +462,7 @@ bool BiopsyDriverMoveHOME(unsigned char* statusL, unsigned char* statusH)
     tx_buffer[0] = 0x10;
     tx_buffer[1] = 3;
     tx_buffer[2] = 0;
-printf("BIOPSY DRIVER HOME\n");
+
 #ifdef __BIOPSY_SIMULATOR
     sim_serialCommand(tx_buffer,rx_buffer);
 #else
@@ -485,7 +485,7 @@ bool BiopsyDriverMoveDecZ(unsigned char* statusL, unsigned char* statusH)
     tx_buffer[0] = 0x10;
     tx_buffer[1] = 1;
     tx_buffer[2] = 0;
-printf("BIOPSY DRIVER DEC Z\n");
+
 #ifdef __BIOPSY_SIMULATOR
     sim_serialCommand(tx_buffer,rx_buffer);
 #else
@@ -508,7 +508,7 @@ bool BiopsyDriverMoveIncZ(unsigned char* statusL, unsigned char* statusH)
     tx_buffer[0] = 0x10;
     tx_buffer[1] = 2;
     tx_buffer[2] = 0;
-printf("BIOPSY DRIVER INC Z\n");
+
 #ifdef __BIOPSY_SIMULATOR
     sim_serialCommand(tx_buffer,rx_buffer);
 #else
@@ -527,7 +527,7 @@ bool BiopsyDriverMoveDecX(unsigned char* statusL, unsigned char* statusH)
 {
     unsigned char rx_buffer[4];
     unsigned char tx_buffer[4];
-printf("BIOPSY DRIVER DEC X\n");
+
     tx_buffer[0] = 0x0E;
     tx_buffer[1] = 0;
     tx_buffer[2] = 0;
@@ -554,7 +554,7 @@ bool BiopsyDriverMoveIncX(unsigned char* statusL, unsigned char* statusH)
     tx_buffer[0] = 0x0E;
     tx_buffer[1] = 1;
     tx_buffer[2] = 0;
-printf("BIOPSY DRIVER INC X\n");
+
 #ifdef __BIOPSY_SIMULATOR
     sim_serialCommand(tx_buffer,rx_buffer);
 #else
@@ -577,7 +577,7 @@ bool BiopsyDriverMoveDecY(unsigned char* statusL, unsigned char* statusH)
     tx_buffer[0] = 0x0F;
     tx_buffer[1] = 0;
     tx_buffer[2] = 0;
-    printf("BIOPSY DRIVER DEC Y\n");
+
 #ifdef __BIOPSY_SIMULATOR
     sim_serialCommand(tx_buffer,rx_buffer);
 #else
@@ -596,7 +596,7 @@ bool BiopsyDriverMoveIncY(unsigned char* statusL, unsigned char* statusH)
 {
     unsigned char rx_buffer[4];
     unsigned char tx_buffer[4];
-    printf("BIOPSY DRIVER INC Y\n");
+
 
     tx_buffer[0] = 0x0F;
     tx_buffer[1] = 1;
@@ -620,7 +620,7 @@ bool BiopsyDriverMoveIncY(unsigned char* statusL, unsigned char* statusH)
 
 bool BiopsyDriverReset(void)
 {
-    printf("BIOPSY DRIVER RESET\n");
+
     unsigned char rx_buffer[4];
     unsigned char tx_buffer[4];
 

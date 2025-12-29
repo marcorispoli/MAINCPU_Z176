@@ -288,7 +288,7 @@ void lenzeLoop(void)
 
     if(driver_stat.internal_errors){
         if(driver_stat.internal_errors!=error){
-            printf("LENZE ERRORE INTERNO:\n");
+            debugPrint("LENZE ERRORE INTERNO:");
             printf(i510ErrorString(driver_stat.internal_errors));
             driver_stat.event_type = LENZE_FAULT;
             driver_stat.event_code = LENZE_DEVICE_ERROR;
@@ -298,7 +298,7 @@ void lenzeLoop(void)
         }
     }else if(driver_stat.diagnostic_errors){
         if(driver_stat.diagnostic_errors!=error){
-            printf("LENZE ERRORE DIAGNOSTICO:%d\n",driver_stat.diagnostic_errors);
+            debugPrintI("LENZE ERRORE DIAGNOSTICO:",driver_stat.diagnostic_errors);
             driver_stat.event_type = LENZE_FAULT;
             driver_stat.event_code = driver_stat.diagnostic_errors;
             driver_stat.event_data = 0;
@@ -308,7 +308,7 @@ void lenzeLoop(void)
     }else{
         if(error) {
             // Reset Errors
-            printf("LENZE RESET ERRORS\n");
+            debugPrint("LENZE RESET ERRORS\n");
             driver_stat.event_type = LENZE_FAULT;
             driver_stat.event_code = 0;
             driver_stat.event_data = 0;
@@ -513,7 +513,7 @@ bool lenzeActivateUnpark(void){
     lenzeSetSpeedAuto(0,targetPosition,PRESET_MANUAL);
 
     // Partenza braccio
-    printf("LENZE UNPARKING: ACTIVATION\n");
+    debugPrint("LENZE UNPARKING: ACTIVATION\n");
     lenzeActivateAuto(upward_dir);
     return true;
 }

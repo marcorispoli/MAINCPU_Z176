@@ -85,7 +85,7 @@ void AnalogCalibPageOpen::initProfileCalibration(void){
         setProfileData();
     }
 
-    if(isMaster)  pSysLog->log("SERVICE PANEL: ANALOGIC PROFILE CALIBRATION");
+    LOG("SERVICE PANEL: ANALOGIC PROFILE CALIBRATION");
 }
 
 void AnalogCalibPageOpen::setProfileData(void){
@@ -544,7 +544,7 @@ void AnalogCalibPageOpen::profileGuiNotify(unsigned char id, unsigned char mccco
             data[20] = 1;
             data[21] =  ESPOSIMETRO_INVALID_AEC_DATA;
             pConsole->pGuiMcc->sendFrame(MCC_XRAY_ANALOG_CALIB_PROFILE,1,data,22);
-            PRINT(QString("PROFILE ERROR AEC:%1 ").arg(error));           
+            DEBUG(QString("PROFILE ERROR AEC:%1 ").arg(error));
             return;
         }
 
@@ -554,19 +554,19 @@ void AnalogCalibPageOpen::profileGuiNotify(unsigned char id, unsigned char mccco
         pGeneratore->setmAs((float) profile_rxdmas/10);
         pCollimatore->manualFilter = pc_selected_filtro;
         if(!pCollimatore->manualSetFiltro()){
-          PRINT(QString("ERRORORE IMPOSTAZIONE FILTRO MANUALE"));
+          DEBUG(QString("ERRORORE IMPOSTAZIONE FILTRO MANUALE"));
         }
 
         // Impostazione dati di esposizione
         unsigned char errcode = pGeneratore->validateAnalogData(ANALOG_TECH_MODE_MANUAL, true, false);
         if(errcode){
-            PRINT(QString("ERRORORE VALIDAZIONE GENERATORE:%1 ").arg(error));
+            DEBUG(QString("ERRORORE VALIDAZIONE GENERATORE:%1 ").arg(error));
             xrayErrorInCommand(errcode);
             return;
         }
 
-        PRINT(QString("PROFILE AEC DATA IN: PROFILE=%1 PLOG=%2, FILTRO=%3, ANODO=%4").arg(pGeneratore->pAECprofiles->getCurrentProfilePtr()->filename).arg(profile_rxplog).arg(pc_selected_filtro).arg( pGeneratore->selectedAnodo));
-        PRINT(QString("PROFILE AEC DATA OUT: KV=%1(%2) MAS=%3, PULSES =%4").arg(profile_rxkV).arg(pGeneratore->selectedVdac).arg((float) profile_rxdmas/10).arg(profile_rxpulses));
+        DEBUG(QString("PROFILE AEC DATA IN: PROFILE=%1 PLOG=%2, FILTRO=%3, ANODO=%4").arg(pGeneratore->pAECprofiles->getCurrentProfilePtr()->filename).arg(profile_rxplog).arg(pc_selected_filtro).arg( pGeneratore->selectedAnodo));
+        DEBUG(QString("PROFILE AEC DATA OUT: KV=%1(%2) MAS=%3, PULSES =%4").arg(profile_rxkV).arg(pGeneratore->selectedVdac).arg((float) profile_rxdmas/10).arg(profile_rxpulses));
 
 
         data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);

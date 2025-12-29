@@ -693,7 +693,7 @@ void serverDebug::handleDebug(QByteArray data)
         serviceTcp->txData(QByteArray("logFlush  \r\n"));
         serviceTcp->txData(QByteArray("----------------------------------------------------------------------------------\r\n"));
     }else if(data.contains("logFlush")){
-        pSysLog->flush();
+        pInfo->pSysLog->flush();
     }else if(data.contains("getPulse")){
         QList<QByteArray> parametri;
         parametri = getNextFieldsAfterTag(data, QString("getPulse"));
@@ -3739,16 +3739,16 @@ void serverDebug::handleSystem(QByteArray data)
                 return;
             }
             if(parametri[0]=="ON"){
-                pSysLog->activate(false);
-                pSysLog->activate(true);
+                pInfo->pSysLog->activate(false);
+                pInfo->pSysLog->activate(true);
                 serviceTcp->txData(QByteArray("LOG ACTIVATED AND FLUSHED!\r\n"));
             }else if(parametri[0]=="OFF"){
-                pSysLog->activate(false);
+                pInfo->pSysLog->activate(false);
                 serviceTcp->txData(QByteArray("LOG DISABLED AND FLUSHED!\r\n"));
             }else{
                 serviceTcp->txData(QByteArray("LOG ACTIVATED AND FLUSHED!\r\n"));
-                pSysLog->activate(false);
-                pSysLog->activate(true);
+                pInfo->pSysLog->activate(false);
+                pInfo->pSysLog->activate(true);
             }
 
             return;

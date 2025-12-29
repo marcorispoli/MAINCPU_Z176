@@ -82,9 +82,9 @@ void rxNotifyData(unsigned char type, unsigned char code)
     aec_imean=aec_vmean=0;
     if(naec!=0){
         for(i=0;i<naec;i++){
-          printf("(AEC-%d): I[%f(mA), %d(RAW)]  V[%f(kV), %d(RAW)] \n",i,((((float) is[i])*200.)/255.), is[i],pcb190ConvertKvRead(vs[i]),vs[i]);               
-          aec_imean+=(float) is[i];
-          aec_vmean+=(float) vs[i];          
+            debugPrintI4("AEC: I[(x10)",((int) is[i])*2000/255," - ",is[i],"] V[(x10)",(int)(pcb190ConvertKvRead(vs[i])*10)," - ",vs[i]);
+            aec_imean+=(float) is[i];
+            aec_vmean+=(float) vs[i];
         }
         aec_imean=aec_imean/naec;
         aec_vmean=aec_vmean/naec;
@@ -94,8 +94,8 @@ void rxNotifyData(unsigned char type, unsigned char code)
     imean=vmean=0;
     float kvmean=0;
     if((samples-naec)>0){
-        for(i=naec;i<samples;i++){
-            printf("(PLS-%d): I[%f(mA), %d(RAW)]  V[%f(kV), %d(RAW)] \n",(int) (i-naec),((((float) is[i])*200.0)/255.0), is[i],pcb190ConvertKvRead(vs[i]),vs[i]);
+        for(i=naec;i<samples;i++){            
+            debugPrintI4("PLS: I[(x10)",((int) is[i])*2000/255," - ",is[i],"] V[(x10)",(int)(pcb190ConvertKvRead(vs[i])*10)," - ",vs[i]);
             imean+=(float) is[i];
             vmean+=(float) vs[i];
         }
@@ -133,18 +133,14 @@ void rxNotifyData(unsigned char type, unsigned char code)
 
 
     // Stampa dei valori
-    printf("HV-BUS(V):%f\n",(float) _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST) * ((float) generalConfiguration.pcb190Cfg.HV_CONVERTION / 1000.0));
-    printf("I_FIL (mA):%f\n",ifil_rxend * 47.98);
-    
+    debugPrintF2("HVBUS:",(float) _DEVREGL(RG190_HV_RXEND,PCB190_CONTEST) * ((float) generalConfiguration.pcb190Cfg.HV_CONVERTION / 1000.0), "IFIL:",ifil_rxend * 47.98);
+
     if(naec){
-      printf("AEC-Imean(mA)=%f\n",(aec_imean*200.)/255.);
-      printf("AEC-kVmean(kV)=%f\n",(float) pcb190ConvertKvRead(nearest(aec_vmean)));
-      printf("Tmed_Pre(ms)=%d\n",tmed_pre);
+        debugPrintF3("AEC: Imean=", (aec_imean*200.)/255., "kVmean=", (float) pcb190ConvertKvRead(nearest(aec_vmean)), "Tmed=",(float) tmed_pre);
     }
+
     if(samples-naec){
-      printf("PLS-I(mA)=%f\n",(imean*200.)/255.);
-      printf("PLS-V(kV)=%f, dKv:%f\n",kvmean,scarto_v/10.);
-      printf("Tmed_Pulse(ms)=%d\n",tmed_pls );
+      debugPrintF3("PLS: Imean=",(imean*200.)/255. , "kVmean=", kvmean,  "Tmed=",(float) tmed_pls);
    }
     
     
@@ -170,7 +166,6 @@ void rxNotifyData(unsigned char type, unsigned char code)
     if((samples - naec) >0) data[NSAMPLES_PLS] = (unsigned char) (samples - naec);
     else data[NSAMPLES_PLS] = 0;
   
-    printf("AEC:%d, PLS:%d \n",data[NSAMPLES_AEC], data[NSAMPLES_PLS]);
 
     int index = SAMPLES_BUFFER;
     for(i=0; i<samples; i++, index++){

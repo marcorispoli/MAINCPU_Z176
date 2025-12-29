@@ -13,6 +13,7 @@ const flexcan_config_t flex_canopen_data = {
 
 void canopenPrintSDOErrors(uint32_t errcode, unsigned short index, unsigned char subidx){
     printf("SDO IDX:0x%x SBX:0x%x ERROR: ",index,subidx);
+
     switch(errcode){
         case 0x05030000: printf("Toggle bit not changed!");break;
         case 0x05040001: printf("Command specifier unknown!");break;

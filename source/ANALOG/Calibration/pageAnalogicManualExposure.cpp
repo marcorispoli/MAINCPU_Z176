@@ -374,8 +374,6 @@ void AnalogCalibPageOpen::manualCalculatorSlot(bool stat){
     int maxKV = ApplicationDatabase.getDataI(_DB_MANUAL_MAX_KV);
     int maxDMAS = ApplicationDatabase.getDataI(_DB_MANUAL_MAX_DMAS);
 
-    PRINT(QString("MAX KV:%1").arg((int) maxKV));
-    PRINT(QString("MAX DMAS:%1").arg((int) maxDMAS));
 
     if(pCalculator->activation_code == 0) {
         int kv = dataField.toInt();
@@ -484,15 +482,14 @@ void AnalogCalibPageOpen::manualExposureGuiNotify(unsigned char id, unsigned cha
 
 
         // Debug Info
-        logstring = "ReadkV:" + QString("%1").arg(dvmean) + ", ";
+        logstring = "MCC_XRAY_ANALOG_MANUAL: ";
+        logstring += "ReadkV:" + QString("%1").arg(dvmean) + ", ";
         logstring += "mAs:" + QString("%1").arg(dmas/10) + ", ";
         logstring += "Time:" + QString("%1").arg(tpulse) + ", ";
         logstring += "IMean:" + QString("%1").arg(dimean) + ", ";
 
 
-        PRINT(logstring);
-
-
+        DEBUG(logstring);
 
         if(data.at(0)){
 
@@ -509,12 +506,7 @@ void AnalogCalibPageOpen::manualExposureGuiNotify(unsigned char id, unsigned cha
             ApplicationDatabase.setData(_DB_MANUAL_KERMA,(int) 0);
 
         }else{
-            /*
-            int dvmean = ((int) data[13]+ 256 * (int) data[14]);
-            int dmas = ((int) data[1]+ 256 * (int) data[2]);
-            int tpulse = ((int) data[17]+ 256 * (int) data[18]);
-            float dimean = dmas * 1000 / tpulse;
-*/
+
             // Calcolo del KERMA al livello di 58mm dal piano del potter
             ugKermaNominale = pGeneratore->pDose->getConvertedUgKerma(ApplicationDatabase.getDataI(_DB_MANUAL_KV)*10,ApplicationDatabase.getDataI(_DB_MANUAL_MAS)*10, 58, ApplicationDatabase.getDataI(_DB_MANUAL_FILTER));
 

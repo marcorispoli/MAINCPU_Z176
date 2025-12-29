@@ -365,6 +365,25 @@ void main_task(uint32_t initial_data)
 
                     mccGuiNotify(1,MCC_PARKING_MODE_COMMANDS,buffer,5);
                     break;
+      case MCC_PRINT:
+                if(mcc_cmd.buffer[0] == MCC_DEBUG_PRINT_ENABLE_CMD){
+                    if(mcc_cmd.buffer[1] == 1){
+                            debugPrintEna(true);
+                            debugPrint("ATTIVAZIONE DEBUG PRINT  DRIVER");
+                    }else{
+                            debugPrintEna(false);
+                            debugPrint("DISATTIVAZIONE DEBUG PRINT DRIVER");
+                    }
+                }else if(mcc_cmd.buffer[0] == MCC_DRIVER_PRINT_ENABLE_CMD){
+                    if(mcc_cmd.buffer[1] == 1){
+                            printEna(true);
+                            debugPrint("ATTIVAZIONE PRINT DRIVER");
+                    }else{
+                            printEna(false);
+                            debugPrint("DISATTIVAZIONE PRINT DRIVER");
+                    }
+                }
+                break;
       default:
         printf("MCC NON DECODIFICATO:%d\n", mcc_cmd.cmd);
         break;

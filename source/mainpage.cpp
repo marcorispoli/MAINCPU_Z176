@@ -190,7 +190,7 @@ void MainPage::childStatusPage(bool stat,int opt)
         return;
     }
 
-
+    pInfo->resetTimestamp();
     disableButtons(2000); // Disabilita i pulsanti in ingresso
 
     // Assegna la password da utilizzare per il pannello di service

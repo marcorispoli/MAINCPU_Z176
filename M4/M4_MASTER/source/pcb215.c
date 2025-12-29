@@ -641,7 +641,7 @@ bool pcb215MovePadDownward(unsigned char mode, bool force)
   _mutex_lock(&(CONTEST.pollinglist_mutex));
   if((!_TEST_BIT(PCB215_IDLE)))
   {// Solo in IDLE viene accettato il comando
-    printf("NON IDLE MODE!");
+
     _mutex_unlock(&(CONTEST.pollinglist_mutex));
     return FALSE;
   }
@@ -660,7 +660,7 @@ bool pcb215MovePadDownward(unsigned char mode, bool force)
         Ser422Send(&frame, SER422_BLOCKING,CONTEST.ID);
         if(frame.retcode!=SER422_COMMAND_OK) 
         {
-          printf("SET IDLE FALLITO!:(error %d)  buf1:%d, buf2:%d --",frame.retcode,frame.data1,frame.data2);
+
           _mutex_unlock(&(CONTEST.pollinglist_mutex));
           return FALSE;
         }
@@ -790,7 +790,7 @@ bool pcb215UpdateRegisters(void)
       if(_DEVREGL(RG215_FLAGS1,CONTEST) & 0x80){
           if(!luce_centratore){
               // La luce del centratore deve essere attivata
-              printf("PCB215: LUCE CENTRATORE\n");
+
               luce_centratore = pcb249U2LampCmd(3,20);
               timer_luce_centratore=10;
           } else{
@@ -812,14 +812,14 @@ bool pcb215UpdateRegisters(void)
                   _mutex_unlock(&output_mutex);
                   data=PCB215_ERROR_PEDALS_STARTUP;
                   while(mccPCB215Notify(1,PCB215_NOTIFY_ERRORS,&data,1)==false) _time_delay(200);
-                  printf("ERRORE PEDALI COMPRESSORE\n");
+                  debugPrint("ERRORE PEDALI COMPRESSORE\n");
               }else timer_fault_pedals++;
-              printf("timer:%d\n",timer_fault_pedals);
+
           }else timer_fault_pedals = 10; // Reset time
       }else{
           if(fault_pedals){
               if(timer_fault_pedals==0){
-                  printf("RESET FAULT PEDALI\n");
+                  debugPrint("RESET FAULT PEDALI\n");
                   fault_pedals=false;
                   _mutex_lock(&output_mutex);
                   SystemOutputs.CPU_COMPRESSOR_ENA = 1;
@@ -828,7 +828,7 @@ bool pcb215UpdateRegisters(void)
                   data=PCB215_NO_ERRORS;
                   while(mccPCB215Notify(1,PCB215_NOTIFY_ERRORS,&data,1)==false) _time_delay(200);
               }else timer_fault_pedals--;
-              printf("timer:%d\n",timer_fault_pedals);
+
           }else timer_fault_pedals = 0;
       }
 
@@ -845,8 +845,7 @@ bool pcb215UpdateRegisters(void)
         // In compressione aggiorna il livello di comnpressione e lo spessore
         _EVSET(_EV0_PCB215_COMPRESSION);
         generalConfiguration.isInCompression = true;
-        //printf("in compressione: pad=%d\n",generalConfiguration.comprCfg.padSelezionato);
-        //if(IS_VALID_PAD)
+
         if(Ser422ReadRegister(_REGID(RG215_STRENGTH),4,&CONTEST)!=_SER422_NO_ERROR) return FALSE;      
 
         
@@ -996,7 +995,7 @@ void pcb215VerifyComprData(void)
 
   if(classifyPad()) // Determina il PAD rilevato dalla PCB215  
   {
-    printf("RILEVATO CAMBIO PAD:%d\n", generalConfiguration.comprCfg.padSelezionato);
+    debugPrintI("RILEVATO CAMBIO PAD:", generalConfiguration.comprCfg.padSelezionato);
     
     // Se il Pad è cambiato ..
     notifyGui = TRUE; // Effettua la notifica dei dati all'applicazione
@@ -1006,7 +1005,7 @@ void pcb215VerifyComprData(void)
     if(IS_VALID_PAD) 
     {
       Ser422WriteRegister(_REGID(COMPRESSOR_STR_K),PAD.kF,4,&CONTEST);
-      printf("NUOVO PAD: kF = %d\n",PAD.kF);
+      debugPrintI("NUOVO PAD: kF = ",PAD.kF);
     }
     if(!IS_VALID_PAD)  
     {
@@ -1016,8 +1015,8 @@ void pcb215VerifyComprData(void)
       Ser422WriteRegister(_REGID(POSITION_PAD_TARA), tara,4,&CONTEST);      
       Ser422WriteRegister(_REGID(COMPRESSION_THRESHOLD_H), soglia_compressione,4,&CONTEST);
       Ser422WriteRegister(_REGID(COMPRESSION_THRESHOLD_L), soglia_compressione-10,4,&CONTEST);
-      printf("TARA:%d\n",tara);
-      printf("SOGLIA DI COMPRESSIONE:%d\n",soglia_compressione);
+      debugPrintI("TARA:",tara);
+      debugPrintI("SOGLIA DI COMPRESSIONE:",soglia_compressione);
     }   
     
   } //// CAMBIO PAD
@@ -1042,7 +1041,7 @@ void pcb215VerifyComprData(void)
 
     if(soglia_compressione!=backup_soglia_compressione)
     {
-      printf("SOGLIA DI COMPRESSIONE:%d\n",soglia_compressione);      
+      debugPrintI("SOGLIA DI COMPRESSIONE:",soglia_compressione);
       backup_soglia_compressione = soglia_compressione;
     }
 
@@ -1060,7 +1059,7 @@ void pcb215VerifyComprData(void)
     
     if(tara!=backup_tara)
     {
-      printf("TARA:%d\n",tara);
+      debugPrintI("TARA:",tara);
       backup_tara = tara;
     }
  
@@ -1078,8 +1077,8 @@ void pcb215VerifyComprData(void)
   if(protezionePaziente != CONFIG.protezionePaziente)
   {
     protezionePaziente = CONFIG.protezionePaziente;
-    if(protezionePaziente) printf("RILEVATA PRESENZA PROTEZIONE PAZIENTE 2D/3D");
-    else printf("RILEVATA ASSENZA PROTEZIONE PAZIENTE 2D/3D");
+    if(protezionePaziente) debugPrint("RILEVATA PRESENZA PROTEZIONE PAZIENTE 2D/3D");
+    else debugPrint("RILEVATA ASSENZA PROTEZIONE PAZIENTE 2D/3D");
     updateLimitPos = TRUE;
   }
 
@@ -1106,7 +1105,7 @@ void pcb215VerifyComprData(void)
       Ser422WriteRegister(_REGID(POSITION_LOW_MODO_0), offset,4,&CONTEST);
     }
     
-    if(_DEVREG(RG215_FUNC,CONTEST)!=1) printf("ATTIVAZIONE MODO ZERO\n");
+    if(_DEVREG(RG215_FUNC,CONTEST)!=1) debugPrint("ATTIVAZIONE MODO ZERO\n");
     Ser422WriteRegister(_REGID(RG215_FUNC), 1,4,&CONTEST);
     Ser422WriteRegister(_REGID(COMPRESSION_THRESHOLD_H), 15,4,&CONTEST);
     Ser422WriteRegister(_REGID(COMPRESSION_THRESHOLD_L), 5,4,&CONTEST);
@@ -1114,14 +1113,14 @@ void pcb215VerifyComprData(void)
   }else if(!IS_VALID_PAD)
   {
     Ser422WriteRegister(_REGID(POSITION_LOW_MODO_0), 30,4,&CONTEST);
-    if(_DEVREG(RG215_FUNC,CONTEST)!=1) printf("ATTIVAZIONE MODO ZERO\n");
+    if(_DEVREG(RG215_FUNC,CONTEST)!=1) debugPrint("ATTIVAZIONE MODO ZERO\n");
     Ser422WriteRegister(_REGID(RG215_FUNC), 1,4,&CONTEST);
     Ser422WriteRegister(_REGID(COMPRESSION_THRESHOLD_H), 15,4,&CONTEST);
     Ser422WriteRegister(_REGID(COMPRESSION_THRESHOLD_L), 5,4,&CONTEST);
   }else
   {
      Ser422WriteRegister(_REGID(POSITION_LOW_MODO_0), 0,4,&CONTEST);
-    if(_DEVREG(RG215_FUNC,CONTEST)!=0) printf("ATTIVAZIONE COMPRESSIONE NORMALE\n");
+    if(_DEVREG(RG215_FUNC,CONTEST)!=0) debugPrint("ATTIVAZIONE COMPRESSIONE NORMALE\n");
     Ser422WriteRegister(_REGID(RG215_FUNC), 0,4,&CONTEST);
   }
   
@@ -1150,7 +1149,7 @@ void pcb215VerifyComprData(void)
       if(padLimitPosition > CALIBRATION.maxMechPosition) padLimitPosition = CALIBRATION.maxMechPosition;  
             
       Ser422WriteRegister(_REGID(POSITION_LIMIT), padLimitPosition,4,&CONTEST);
-      printf("NUOVA POSIZIONE LIMITE NACCHERA:%d\n",padLimitPosition);
+      debugPrintI("NUOVA POSIZIONE LIMITE NACCHERA:",padLimitPosition);
   }
   
 
@@ -1183,7 +1182,7 @@ void pcb215VerifyComprData(void)
           // Ricalcolo Spessore
           spessore-=sbalzo;
           generalConfiguration.potterCfg.potMagFactor = mag_factor;
-          //printf("POTTER MAG FACTOR ANALOGICO = %d\n", mag_factor);
+
     }
 
     data[COMPRESSORE_THICKL] = (unsigned char) (spessore &0xFF);
@@ -1273,7 +1272,7 @@ bool classifyPad(void)
   if(i!=padLevel)
   {
     padLevel = i;
-    printf("CLASSIFICATO N:%d, LIVELLO RAW:%d\n", padLevel, usval);    
+    debugPrintI2("CLASSIFICATO PAD: CODE:", padLevel,"LIVELLO:",  usval);
   }
   
   // <TBD> Classificazione PAD BIOP_3D
@@ -1420,8 +1419,8 @@ void pcb215ConfigCalibMode(void)
   _DeviceAppRegister_Str ConfList;  
 
   if(generalConfiguration.comprCfg.calibrationMode == false){
-    printf("Impossibile configurare PCB215 per la calibrazione.\n");
-    printf("Il sistema NON è in modo calibrazione\n");
+    debugPrint("Impossibile configurare PCB215 per la calibrazione.\n");
+    debugPrint("Il sistema NON è in modo calibrazione\n");
     return;
   }
 
@@ -1449,37 +1448,7 @@ void pcb215ForceUpdateData(void)
 
 
 void pcb215PrintConfig(void){
-  printf("CONFIGURAZIONE PCB215:---------------------------------\n");
-  printf("POS-K =%d\n", generalConfiguration.comprCfg.calibration.calibPosK);
-  printf("POS-OFS =%d\n", generalConfiguration.comprCfg.calibration.calibPosOfs);
-  
-  printf("\n");
-  for(int i=0; i< PAD_ENUM_SIZE; i++){    
-    printf("PAD-%d, OFFSET:%d, KF:%d, PESO:%d\n",i, generalConfiguration.comprCfg.calibration.pads[i].offset,generalConfiguration.comprCfg.calibration.pads[i].kF,generalConfiguration.comprCfg.calibration.pads[i].peso);
-  }
 
-  printf("\nF0 =%d\n", generalConfiguration.comprCfg.calibration.F0);
-  printf("KF0 =%d\n", generalConfiguration.comprCfg.calibration.KF0);
-  printf("F1 =%d\n", generalConfiguration.comprCfg.calibration.F1);
-  printf("KF1 =%d\n", generalConfiguration.comprCfg.calibration.KF1);
-  printf("MAX COMPRESSION: =%d\n", generalConfiguration.comprCfg.calibration.max_compression_force);
-
-  printf("MAX MECH =%d\n", generalConfiguration.comprCfg.calibration.maxMechPosition);
-  printf("MAX POS =%d\n", generalConfiguration.comprCfg.calibration.maxPosition);
-  printf("MAX PROT =%d\n", generalConfiguration.comprCfg.calibration.maxProtection);
-  
-  for(int i=0; i< 8; i++){    
-    printf("INGRANDITORE-%d, SBALZO:%d, FATTORE:%d\n",i, generalConfiguration.comprCfg.calibration.sbalzoIngranditore[i],generalConfiguration.comprCfg.calibration.fattoreIngranditore[i]);
-  }
-
-  // Soglie di riconoscimento pad
-  for(int i=0; i< 10; i++){
-    printf("THRESHOLD[%d]=%d\n",i, generalConfiguration.comprCfg.calibration.thresholds[i]);
-  }
-
-  printf("---------------------------------------------------\n");
-
-  
 }
 /*
 Funzione configuratrice:
@@ -1578,11 +1547,11 @@ bool pcb215ResetBoard(void)
 
 void enterFreezeMode(void){
   
-    printf("PB215 ENTRA IN FREEZE\n");
+
     _EVCLR(_EV1_PCB215_RUN);
     _EVSET(_EV1_PCB215_FREEZED); // Notifica l'avvenuto Blocco
     _EVWAIT_ANY(_MOR2(_EV1_DEVICES_RUN,_EV1_PCB215_RUN)); // Attende lo sblocco
-    printf("PB215 ESCE DAL FREEZE\n");
+
     STATUS.freeze = 0;
 }
 
@@ -1592,7 +1561,7 @@ void ERROR_HANDLER(void)
    _EVCLR(_EV1_PCB215_CONNECTED);
 
    // Riconfigurazione del driver a seguito della ripartenza
-   printf("PCB215 ERRORE: ATTESA RICONNESSIONE E RICONFIGURAZIONE REGISTRI\n"); 
+   debugPrint("PCB215 ERRORE: ATTESA RICONNESSIONE E RICONFIGURAZIONE REGISTRI\n");
   
    while(1){
     
@@ -1600,10 +1569,10 @@ void ERROR_HANDLER(void)
     
     // Richiesta revisione firmware a target
     while(GetFwRevision()==FALSE) _time_delay(100);
-    printf("PCB215:REVISIONE FW TARGET:%d.%d\n",STATUS.maj_code,STATUS.min_code);     
+
 
     // Carica sulla periferica lo stato dei registri cosi come erano prima del reset
-    printf("PCB215: DOWNLOAD REGISTRI ...\n");
+    debugPrint("PCB215: DOWNLOAD REGISTRI ...\n");
     if(Ser422UploadRegisters(10, &CONTEST)== FALSE)   continue;  
    
     // Carica Tutti i registri RD / RW
@@ -1627,7 +1596,7 @@ void ERROR_HANDLER(void)
   _EVSET(_EV1_PCB215_CONNECTED);
   
   // Ripartenza completata. Può tornare da dove aveva lasciato
-  printf("PCB215 RIPARTITA CORRETTAMENTE\n"); 
+  debugPrint("PCB215 RIPARTITA CORRETTAMENTE\n");
 
   return;
 }
@@ -1654,17 +1623,17 @@ int pcb215GetSpessoreNonCompresso(void){
 
     spessore = _DEVREG(RG215_DOSE,CONTEST);
 
-    printf("POSIZIONE CARRELLO:%d\n", spessore);
+    debugPrintI("POSIZIONE CARRELLO:", spessore);
 
     // Verifica se c'è inserito l'ingranditore
     if(POTTER==POTTER_MAGNIFIER){
-        printf("OFFSET INGRANDIMENTO:%d\n", INGRANDIMENTO);
+        debugPrintI("OFFSET INGRANDIMENTO:", INGRANDIMENTO);
         spessore-=INGRANDIMENTO;
     }else{
-        printf("OFFSET PAD:%d\n", PAD.offset);
+        debugPrintI("OFFSET PAD:", PAD.offset);
         spessore+= PAD.offset; // Aggiunge l'offset del Pad utilizzato
     }
-    printf("POSIZIONE COMPRESSORE:%d\n", spessore);
+    debugPrintI("POSIZIONE COMPRESSORE:", spessore);
 
     // Se lo spessore è <=1 viene fissato a 1mm
     if(spessore<1) spessore =1;

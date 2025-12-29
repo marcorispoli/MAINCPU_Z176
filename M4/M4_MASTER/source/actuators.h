@@ -31,8 +31,6 @@ ext void actuatorsRxFromActuators(uint8_t* data);
 // Funzioni per sequenze raggi
 ext bool actuatorsTrxWaitReady(int tmo);                    // Attende posizionamento con timeout in 100ms / unit
 ext bool actuatorsActivateTrxTriggerStart(void);
-ext bool actuatorsMoveTomoTrxHome(unsigned char tomoMode);
-ext bool actuatorsMoveTomoTrxEnd(unsigned char tomoMode, bool expwin_trigger);
 
 
 ext void actuatorsTrxStop(int tmo); // Ferma il movimento del tubo in corso

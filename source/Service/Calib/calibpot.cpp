@@ -143,7 +143,7 @@ void calibpot::initPage(void){
     if(isMaster){
         ApplicationDatabase.setData(_DB_SERVICE4_INT,(int) pConfig->lenzeConfig.min_lenze_position);
         ApplicationDatabase.setData(_DB_SERVICE5_INT,(int) pConfig->lenzeConfig.max_lenze_position);
-        pSysLog->log("SERVICE PANEL: CALIB UP/DOWN POSITION");
+        LOG("SERVICE PANEL: CALIB UP/DOWN POSITION");
     }
 
     pCalculator = new numericPad(rotview,view, parent);

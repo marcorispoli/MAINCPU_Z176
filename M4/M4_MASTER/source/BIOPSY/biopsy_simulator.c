@@ -307,12 +307,12 @@ void BIOPSY_simdriver(uint32_t taskRegisters)
  *__________________________________________________________________________*/
 void SimSetPush(bool stat){
     sim_sblocco = stat;
-    printf("SIMULATORE BYM:PULSANTE SBLOCCO >%d\n", sim_sblocco);
+
 }
 
 void SimSetAdapter(int id){
     bym_Needle = id;
-    printf("SIMULATORE BYM:NEEDLE >%d\n", bym_Needle);
+
 }
 
 void SimSetConsolePush(unsigned char push){
@@ -333,18 +333,18 @@ void SimSetConsolePush(unsigned char push){
     else bym_InputA &=~ 0x04;
 
 
-    printf("SIMULATORE BYM: BOTTONE CONSOLE >%x\n", push);
+
     sim_timer_bottoni = 10;
 }
 
 void SimSetJXY(unsigned short X, unsigned short Y){
     bym_JoysticX = X;
     bym_JoysticY = Y;
-    printf("SIMULATORE BYM:JX=%d, JY=%d\n", bym_JoysticX, bym_JoysticY);
+
 }
 
 void SimConnessione(bool stat){
-    printf("SIMULATORE BYM:CONNESSIONE >%d\n", stat);
+
     sim_connected = stat;
 
 }

@@ -19,6 +19,6 @@
 #include "biopsy.h"
 #include "loader.h"
 #include "print.h"
-#include "systemlog.h"
+
 
 #endif // APPINCLUDE_H

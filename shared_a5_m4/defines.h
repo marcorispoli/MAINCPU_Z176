@@ -16,7 +16,6 @@
 //#define __ROT_WITH_COMPRESSION
 //#define __NO_SLAVE_STUB
 //#define  __NO_CANBUS
-#define __PRINT   "192.168.30.10" // Attiva le Print di debug sulle GUI
 
 //#define __FORCE_DIGITAL // Effettua lo stub per la PCB244-A
 //#define _CANDEVICE_SIMULATION // Stub per mancanza CAN BUS su m4_slave

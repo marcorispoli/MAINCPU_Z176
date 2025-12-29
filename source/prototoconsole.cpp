@@ -308,12 +308,11 @@ void protoToConsole::notificheConnectionHandler(bool stat)
     notificheConnected = stat;
     if(stat)
     {
-
         ApplicationDatabase.setData(_DB_AWS_CONNECTION,(unsigned char) 1,0);
     }
     else
     {
-        PRINT("AWS DISCONNECTED");
+
         ApplicationDatabase.setData(_DB_AWS_CONNECTION,(unsigned char) 0,0);
     }
     return;

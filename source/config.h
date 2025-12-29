@@ -27,6 +27,8 @@ public:
 
     void masterUpdateDatabase(void); // Effettua un aggiornamento del database sullo slave laddove necessario
 
+    void enableSlavePrint(void);
+
     explicit Config(bool master, QObject *parent = 0);
     void configMaster(void);
     void configSlave(void);
@@ -36,9 +38,6 @@ public:
 
     // Caricamento files di configurazione per dispositivi su CAN
     bool readTrxConfig(void);
-    bool saveTomoConfig(QString filename);
-    bool readTomoConfig(QString filename);
-    QString getTomoFilename(void);
 
     bool readArmConfig(void);
     bool readLenzeConfig(void);
@@ -47,7 +46,7 @@ public:
     bool saveArmConfig(void);
     bool saveLenzeConfig(void);
 
-    bool setTomoSpeedMode(QString tomoMode, int console_id); // Impostazione file di configurazione rotazioni
+
 
     void updateAllDrivers(void);
     void updateGeneral(void);
@@ -88,7 +87,7 @@ public:
     #define SLAVE_EXECUTE_SHELL      "SetShellCommand"
     #define SLAVE_TOOLS_DATA         "SlaveToolsData"
     #define SYNC_TO_SLAVE            "SyncToSlave"
-
+    #define SLAVE_ENABLE_PRINT       "SlaveEnablePrint"
 
     // Comandi aggiornamento firmware
     #define SLAVE_EXTRACT_ARCHIVE           "SlaveExtract"   // Master-> Slave

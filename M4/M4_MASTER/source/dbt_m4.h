@@ -75,7 +75,7 @@ _____________________________________________________________________________*/
 //////////////////////////////////////////////////////////////////////////////
 //  INCLUDE FILES APPLICAZIONE
 //////////////////////////////////////////////////////////////////////////////
-#include <debug_print.h>
+
 #include <shared.h>     // Strutture e costanti condivise con progetto A5
 #include <common.h>     // Strutture e costanti condivise Master/Slave
 #include <canopen.h>    // CAN OPEN BUS

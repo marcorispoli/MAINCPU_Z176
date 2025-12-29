@@ -85,7 +85,6 @@ HEADERS += \
     source/AEC.h \
     source/DOSE.h \
     source/Service/Tools/audioTool.h \
-    source/systemlog.h \
     source/ANALOG/pannelloColli.h \
     source/Service/Tools/pottertool.h \
     source/ANALOG/pannelloBiopsia.h \
@@ -158,7 +157,6 @@ SOURCES += \
     source/AEC.cpp \
     source/DOSE.cpp \
     source/Service/Tools/audioTool.cpp \
-    source/systemlog.cpp \
     source/ANALOG/Calibration/pageAnalogicCollimationCalibration.cpp \
     source/ANALOG/pannelloColli.cpp \
     source/Service/Tools/pottertool.cpp \

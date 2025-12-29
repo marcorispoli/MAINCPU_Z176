@@ -28,118 +28,6 @@ void actuatorsStartProcess(bool lenze, bool trx, bool arm){
 
 unsigned char pending_arm_cmd_id;
 
-/*
- *  Activate the TRX to Home position and ready to start
- *  with the detector signal <expwin>
- */
-bool actuatorsMoveTomoTrxHome(unsigned char tomoType)
-{
-    uint8_t buffer[8];
-    short target;
-    unsigned char context;
-
-    // TRX non motorizzato
-    if(!generalConfiguration.gantryCfg.trxMotor){
-        generalConfiguration.trxExecution.completed=true;
-        generalConfiguration.trxExecution.success=true;
-        generalConfiguration.trxExecution.id=0;
-        return true;
-    }
-
-
-    // Se il tubo è già in movimento si suppone che sia verso home.
-    // Questa funzione infatti deve essereusata solo nelle sequenze raggi.
-    if(generalConfiguration.trxExecution.run) return true;
-    if(generalConfiguration.trxExecution.faultcode) return false; // Il Tubo è in fault
-
-    buffer[0]= ACTUATORS_MOVE_TRX;
-
-    switch(tomoType){
-        case _TOMO_MODE_WIDE:
-            target = generalConfiguration.trxCfg.tomo.w.home_position;
-            context = CONTEXT_TRX_WIDE;
-        break;
-        case _TOMO_MODE_INTERMEDIATE:
-            target = generalConfiguration.trxCfg.tomo.i.home_position;
-            context = CONTEXT_TRX_INTERMEDIATE;
-        break;
-        case _TOMO_MODE_NARROW:
-            target = generalConfiguration.trxCfg.tomo.n.home_position;
-            context = CONTEXT_TRX_NARROW;
-        break;
-        case _TOMO_MODE_STATIC:
-            target = 0;
-            context = CONTEXT_TRX_2D;
-        break;
-
-    default:
-        DEBUG_PRINT1(__DBG_ACTUATOR_WRONG_PARAM_TRX_HOME, tomoType);
-        return false;
-    }
-
-    generalConfiguration.trxExecution.completed=false;
-    generalConfiguration.trxExecution.id=0;
-
-    TO_LE16(&buffer[1],target);
-    buffer[3] = context;
-    buffer[4] = 0;
-    CanSendToActuatorsSlave(buffer);
-
-    return TRUE;
-}
-
-
-bool actuatorsMoveTomoTrxEnd(unsigned char tomoType, bool expwin_trigger)
-{
-    uint8_t buffer[8];
-    short target;
-    unsigned char context;
-
-    // TRX non motorizzato
-    if(!generalConfiguration.gantryCfg.trxMotor){
-        generalConfiguration.trxExecution.completed=true;
-        generalConfiguration.trxExecution.success=true;
-        generalConfiguration.trxExecution.id=0;
-        return true;
-    }
-
-    if(generalConfiguration.trxExecution.faultcode) return false; // Il Tubo è in fault
-    if(generalConfiguration.trxExecution.run) return false; // Il tubo è in movimento
-
-    buffer[0]= ACTUATORS_MOVE_TRX;
-    switch(tomoType){
-    case _TOMO_MODE_WIDE:
-        target = generalConfiguration.trxCfg.tomo.w.end_position;
-        context = CONTEXT_TRX_WIDE;
-
-    break;
-    case _TOMO_MODE_INTERMEDIATE:
-        target = generalConfiguration.trxCfg.tomo.i.end_position;
-        context = CONTEXT_TRX_INTERMEDIATE;
-    break;
-    case _TOMO_MODE_NARROW:
-        target = generalConfiguration.trxCfg.tomo.n.end_position;
-        context = CONTEXT_TRX_NARROW;
-    break;
-
-    default:
-        DEBUG_PRINT1(__DBG_ACTUATOR_WRONG_PARAM_TRX_END, tomoType);
-        return false;
-    }
-
-    generalConfiguration.trxExecution.completed=false;
-    generalConfiguration.trxExecution.id=0;
-
-    TO_LE16(&buffer[1],target);
-    buffer[3] = context;
-    if(expwin_trigger) buffer[4]=1;
-    else buffer[4]=0;
-    CanSendToActuatorsSlave(buffer);
-
-
-    return TRUE;
-}
-
 // Muove TRX di un angolo espresso in centesimi di grado
 bool actuatorsTrxMove(int angolo)
 {
@@ -165,8 +53,7 @@ bool actuatorsTrxMove(int angolo)
     buffer[4]=0;
     CanSendToActuatorsSlave(buffer);
 
-    DEBUG_PRINT1(__DBG_ACTUATOR_TRX_MOVE_COMMAND, angolo);
-
+    debugPrintI("ACTUATOR_TRX_MOVE_COMMAND",angolo);
     return true;
 }
 
@@ -222,7 +109,7 @@ bool actuatorsTrxActivateZeroSetting(void){
 
     buffer[0]= ACTUATORS_SET_TRX_ZERO;
     CanSendToActuatorsSlave(buffer);    
-    DEBUG_PRINT(__DBG_ACTUATOR_TRX_ZERO_COMMAND);
+    debugPrint("ACTUATOR_TRX_ZERO_COMMAND");
     return true;
 }
 
@@ -251,8 +138,7 @@ void actuatorsTrxStop(int tmo ){
     generalConfiguration.trxExecution.completed=false;
     buffer[0]= ACTUATORS_TRX_QUICK_STOP;
     CanSendToActuatorsSlave(buffer);
-
-    DEBUG_PRINT(__DBG_ACTUATOR_TRX_QUICK_STOP_COMMAND);
+    debugPrint("ACTUATOR_TRX_QUICK_STOP_COMMAND");
 
     if(tmo==0) return;
     while(tmo--){
@@ -317,7 +203,8 @@ int actuatorsArmMove(int angolo){
         return 0;
     }
 
-    DEBUG_PRINT1(__DBG_ACTUATOR_ARM_MOVE_COMMAND,angolo);
+    debugPrintI("ACTUATOR_ARM_MOVE_COMMAND", angolo);
+
     generalConfiguration.armExecution.completed=false;
 
     // Reset della modalità di movimento manuale
@@ -359,15 +246,15 @@ void actuatorsManualArmMove(unsigned char mode){
         return;
     }
 
-    if((generalConfiguration.trxExecution.run)||(generalConfiguration.armExecution.run)){
-        DEBUG_PRINT(__DBG_ACTUATOR_ARM_BUSY);
+    if((generalConfiguration.trxExecution.run)||(generalConfiguration.armExecution.run)){        
+        debugPrint("ACTUATOR_ARM_BUSY");
         return ;
     }
 
     // Rotation enable Bus Hardware test
     if(!SystemOutputs.CPU_ROT_ENA)
     {
-        DEBUG_PRINT(__DBG_ACTUATOR_ARM_DISABLED_BY_ROTENA);
+        debugPrint("ACTUATOR_ARM_DISABLED_BY_ROTENA");
         return;
     }
 
@@ -397,7 +284,8 @@ void actuatorsManualArmMove(unsigned char mode){
     TO_LE16(&buffer[3], angolo * 10);   // Imposta il target Angolo di arrivo
 
     buffer[5] = mode;
-    DEBUG_PRINT1(__DBG_ACTUATOR_ARM_MANUAL_MODE_CMD,mode);
+    debugPrintI("ACTUATOR_ARM_MANUAL_MODE_CMD",(int) mode);
+
 
     // Invalida il target e imposta un valore che sia riconoscibile come esito di un movimento manuale.
     generalConfiguration.armExecution.dAngolo_target = -3000;
@@ -419,14 +307,14 @@ void actuatorsManualTrxMove(unsigned char mode){
     }
 
     if((generalConfiguration.trxExecution.run)||(generalConfiguration.armExecution.run)){
-        DEBUG_PRINT(__DBG_ACTUATOR_TRX_BUSY);
+        debugPrint("ACTUATOR_TRX_BUSY");
         return ;
     }
 
     // Rotation enable Bus Hardware test
     if(!SystemOutputs.CPU_PEND_ENA)
     {
-        DEBUG_PRINT(__DBG_ACTUATOR_TRX_DISABLED_BY_PENDENA);
+        debugPrint("ACTUATOR_TRX_DISABLED_BY_PENDENA");
         return; // TRX_DISABLED_ERROR;
     }
 
@@ -442,10 +330,11 @@ void actuatorsManualTrxMove(unsigned char mode){
     TO_LE16(&buffer[1],angolo);
     if(mode==_MANUAL_ACTIVATION_TRX_STANDARD){
         buffer[3] = CONTEXT_TRX_2D;
-        DEBUG_PRINT1(__DBG_ACTUATOR_TRX_MANUAL_MOVE_STANDARD,angolo);
+        debugPrintI("ACTUATOR_TRX_MANUAL_MOVE_STANDARD",angolo);
+
     }else{
         buffer[3] = CONTEXT_TRX_SLOW_MOTION;
-        DEBUG_PRINT1(__DBG_ACTUATOR_TRX_MANUAL_MOVE_SLOW,angolo);
+        debugPrintI("ACTUATOR_TRX_MANUAL_MOVE_SLOW",angolo);
     }
     buffer[4]=0;
 
@@ -565,7 +454,7 @@ bool config_lenze(bool setmem, unsigned char blocco, unsigned char* buffer, unsi
       data[3+i] = pData[i];
   }
 
-  printf("ACTUATORS CONFIGURAZIONE LENZE\n");
+  debugPrint("ACTUATORS CONFIGURAZIONE LENZE\n");
   _EVCLR(_EV1_LENZE_CONFIGURED);
   CanSendToActuatorsSlave(data);
   _EVWAIT_ALL(_EV1_LENZE_CONFIGURED);
@@ -815,8 +704,8 @@ void actuatorsRxFromArm(uint8_t* data){
 
     // _______________ FEEDBACK DI EFFETTIVA ATTIVAZIONE COMANDI BRACCIO E TUBO ________________
     case ACTUATORS_MOVE_ARM_ON: // Feedback di comando di movimento accettato
-        if(data[1]==1) DEBUG_PRINT(__DBG_ACTUATOR_ARM_ACTIVATED);
-        else DEBUG_PRINT(__DBG_ACTUATOR_ARM_MANUAL_ACTIVATED);
+        if(data[1]==1) debugPrint("ACTUATOR_ARM_ACTIVATED");
+        else debugPrint("ACTUATOR_ARM_MANUAL_ACTIVATED");
         generalConfiguration.armExecution.run=true;
         break;
 
@@ -830,7 +719,7 @@ void actuatorsRxFromArm(uint8_t* data){
         // Esito movimento
         if(data[1]){
             generalConfiguration.armExecution.success = false;
-            DEBUG_PRINT2(__DBG_ACTUATOR_ARM_ERROR,data[1],data[2]);
+            debugPrintI2("ACTUATOR_ARM_ERROR: TYPE=",data[1],"CODE=",data[2]);
             generalConfiguration.armExecution.valid_target = false; // Invalida  il target: verrà visualizzato l'angolo derivato dall'inclinometro
 
             // Se ID==0 GuiNotify non invia, dunque occorre inviare l'errore tramite altro comando ..
@@ -852,7 +741,7 @@ void actuatorsRxFromArm(uint8_t* data){
 
         generalConfiguration.armExecution.valid_target = true; // Angolo Valido!
         generalConfiguration.armExecution.success = true;
-        DEBUG_PRINT(__DBG_ACTUATOR_ARM_COMPLETED);
+        debugPrint("ACTUATOR_ARM_COMPLETED");
 
         // Se il Lenze è ancora in movimento, allora delega il risultato al LENZE
         if(generalConfiguration.armExecution.lenze_run) return;
@@ -872,12 +761,12 @@ void actuatorsRxFromArm(uint8_t* data){
 
         // Esito movimento
         if(data[1]){
-            generalConfiguration.armExecution.success = false;
-            DEBUG_PRINT2(__DBG_ACTUATOR_ARM_MANUAL_ERROR,data[1],data[2]);
+            generalConfiguration.armExecution.success = false;            
+            debugPrintI2("ACTUATOR_ARM_MANUAL_ERROR: TYPE=",data[1],"CODE=", data[2]);
             generalConfiguration.armExecution.valid_target = false;
         }else{
             generalConfiguration.armExecution.success = true;
-            DEBUG_PRINT(__DBG_ACTUATOR_ARM_MANUAL_COMPLETED);
+            debugPrint("ACTUATOR_ARM_MANUAL_COMPLETED");
             generalConfiguration.armExecution.dAngolo_target = -3000;
             generalConfiguration.armExecution.valid_target = true;
         }
@@ -899,8 +788,11 @@ void actuatorsRxFromArm(uint8_t* data){
         generalConfiguration.armExecution.faultcode = buffer[0];
         generalConfiguration.armExecution.faultsubcode = buffer[1];
 
-        if(data[1]) DEBUG_PRINT4(__DBG_ACTUATOR_ARM_FAULT,data[1],data[4],data[5],data[2]+256*data[3]);
-        else DEBUG_PRINT(__DBG_ACTUATOR_ARM_RESET_FAULT);
+        if(data[1]){
+            debugPrintI("ACTUATOR_ARM_FAUL CODE:", (int) data[1]);
+        }else{
+            debugPrint("ACTUATOR_ARM_RESET_FAULT");
+        }
         break;
 
     case ACTUATORS_SET_ARM_CONFIG:
@@ -941,7 +833,7 @@ void actuatorsRxFromArm(uint8_t* data){
             if(generalConfiguration.armExecution.valid_count) generalConfiguration.armExecution.valid_count--;
 
             if(generalConfiguration.armExecution.run){
-                DEBUG_PRINT(__DBG_ACTUATOR_ARM_RESET_POLLING);
+                debugPrint("ACTUATOR_ARM_RESET_POLLING");
                 generalConfiguration.armExecution.run=false;
                 generalConfiguration.armExecution.completed = true;
                 generalConfiguration.armExecution.success=false;
@@ -974,16 +866,17 @@ void actuatorsRxFromTrx(uint8_t* data){
 
 
     switch(data[0]){
-    case ACTUATORS_TRX_IDLE:        
-        DEBUG_PRINT(__DBG_ACTUATOR_TRX_IDLE);
+    case ACTUATORS_TRX_IDLE:
+        debugPrint("ACTUATOR_TRX_IDLE");
         generalConfiguration.trxExecution.run=false;
         generalConfiguration.trxExecution.completed=true;
         generalConfiguration.trxExecution.idle=true;
         break;
 
     case ACTUATORS_MOVE_TRX_ON: // Feedback di comando di movimento accettato
-        if(data[1]==1) DEBUG_PRINT(__DBG_ACTUATOR_TRX_ACTIVATED);
-        else DEBUG_PRINT(__DBG_ACTUATOR_TRX_ZERO_ACTIVATED);
+        if(data[1]==1)  debugPrint("ACTUATOR_TRX_ACTIVATED");
+        else  debugPrint("ACTUATOR_TRX_ZERO_ACTIVATED");
+
         generalConfiguration.trxExecution.run=true;
         generalConfiguration.trxExecution.idle=false;
         break;
@@ -998,7 +891,7 @@ void actuatorsRxFromTrx(uint8_t* data){
         // Esito movimento
         if(data[1]){
             generalConfiguration.trxExecution.success = false;
-            DEBUG_PRINT3(__DBG_ACTUATOR_TRX_ERROR,data[1],data[2],generalConfiguration.trxExecution.cAngolo);
+            debugPrintI3("ACTUATOR_TRX_ERROR. Type=",data[1],"SUB=",data[2],"ANGOLO=",generalConfiguration.trxExecution.cAngolo);
 
             // Se ID==0 GuiNotify non invia, dunque occorre inviare l'errore tramite altro comando ..
             if(generalConfiguration.trxExecution.id==0){
@@ -1012,7 +905,7 @@ void actuatorsRxFromTrx(uint8_t* data){
             }
         }else{
             generalConfiguration.trxExecution.success = true;
-            DEBUG_PRINT1(__DBG_ACTUATOR_TRX_COMPLETED,generalConfiguration.trxExecution.cAngolo);
+            debugPrintI("ACTUATOR_TRX_COMPLETED. ANGOLO=",generalConfiguration.trxExecution.cAngolo);
         }
         buffer[0] = data[1]; // Codice esito proveniente dai drivers..
         buffer[1] = data[2]; // sub codice in caso di errore da fault
@@ -1027,11 +920,11 @@ void actuatorsRxFromTrx(uint8_t* data){
         FROM_LE16(sval,&data[3]);
         generalConfiguration.trxExecution.cAngolo = sval;
         generalConfiguration.trxExecution.success = true;
-        DEBUG_PRINT1(__DBG_ACTUATOR_TRX_MANUAL_COMPLETED,generalConfiguration.trxExecution.cAngolo);
+        debugPrintI("ACTUATOR_TRX_MANUAL_COMPLETED. ANGOLO=",generalConfiguration.trxExecution.cAngolo);
         break;
 
     case ACTUATORS_TRX_QUICK_STOP:
-        DEBUG_PRINT(__DBG_ACTUATOR_TRX_QUICKSTOP_COMPLETED);
+        debugPrint("ACTUATOR_TRX_QUICKSTOP_COMPLETED");
 
         generalConfiguration.trxExecution.run=false;
         generalConfiguration.trxExecution.completed=true;
@@ -1054,10 +947,11 @@ void actuatorsRxFromTrx(uint8_t* data){
         // Esito movimento
         if(data[1]){
             generalConfiguration.trxExecution.success = false;
-            DEBUG_PRINT3(__DBG_ACTUATOR_TRX_ZERO_ERROR,data[1],data[2],generalConfiguration.trxExecution.cAngolo);
+            debugPrintI("ACTUATOR_TRX_ZERO_ERROR. ANGOLO=",generalConfiguration.trxExecution.cAngolo);
+
         }else{
             generalConfiguration.trxExecution.success = true;
-            DEBUG_PRINT1(__DBG_ACTUATOR_TRX_ZERO_COMPLETED,generalConfiguration.trxExecution.cAngolo);
+            debugPrintI("ACTUATOR_TRX_ZERO_COMPLETED. ANGOLO=",generalConfiguration.trxExecution.cAngolo);
         }
 
         buffer[0] = data[1]; // Codice esito proveniente dai drivers..
@@ -1084,8 +978,8 @@ void actuatorsRxFromTrx(uint8_t* data){
         FROM_LE16(sval,&data[6]);
         generalConfiguration.trxExecution.cAngolo = sval;
 
-        if(data[1]) DEBUG_PRINT5(__DBG_ACTUATOR_TRX_FAULT,data[1],data[4],data[5],data[2]+256*data[3], generalConfiguration.trxExecution.cAngolo);
-        else DEBUG_PRINT1(__DBG_ACTUATOR_TRX_RESET_FAULT,generalConfiguration.trxExecution.cAngolo);
+        if(data[1]) debugPrintI2("ACTUATOR_TRX_FAULT. CODE=", data[1],"ANGOLO=", generalConfiguration.trxExecution.cAngolo);
+        else debugPrintI("ACTUATOR_TRX_RESET_FAULT. ANGOLO=", generalConfiguration.trxExecution.cAngolo);
 
         break;
 
@@ -1125,7 +1019,7 @@ void actuatorsRxFromTrx(uint8_t* data){
         // Messaggio in polling per resettare eventuali situazioni rimaste appese
         if(data[1]==ACUATORS_TRX_POLLING_IDLE){
             if(generalConfiguration.trxExecution.run){
-                DEBUG_PRINT(__DBG_ACTUATOR_TRX_RESET_POLLING);
+                debugPrint("ACTUATOR_TRX_RESET_POLLING");
 
                 generalConfiguration.trxExecution.run=false;
                 generalConfiguration.trxExecution.completed = true;
@@ -1171,12 +1065,12 @@ void actuatorsRxFromLenze(uint8_t* data){
 
         if(data[1]==0){
             generalConfiguration.armExecution.lenze_run = true;
-            printf("ACTUATORS LENZE ATTIVATO IN MODO AUTOMATICO\n");
+            debugPrint("ACTUATORS LENZE ATTIVATO IN MODO AUTOMATICO\n");
             return;
         }
 
         // Segnalazione di fine movimento lenze
-        printf("ACTUATORS COMUNICAZIONE LENZE FINE MOVIMENTO AUTOMATICO\n");
+        debugPrint("ACTUATORS COMUNICAZIONE LENZE FINE MOVIMENTO AUTOMATICO\n");
         generalConfiguration.armExecution.lenze_run = false;
         generalConfiguration.armExecution.lenze_pot = data[2] + 256 * data[3];
 

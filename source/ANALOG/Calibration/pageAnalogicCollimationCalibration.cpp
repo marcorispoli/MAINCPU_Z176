@@ -122,7 +122,7 @@ void AnalogCalibPageOpen::initCollimationCalibration(void){
     // Imposta le condizioni di ready
     getCollimationCalibrationReady(DBase::_DB_FORCE_SGN);
 
-    pSysLog->log("SERVICE PANEL: ANALOGIC COLLIMATION CALIBRATION");
+    LOG("SERVICE PANEL: ANALOGIC COLLIMATION CALIBRATION");
 
 
 }
