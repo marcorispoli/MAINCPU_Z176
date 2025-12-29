@@ -1998,7 +1998,7 @@ unsigned char Generatore::validateAnalogData(unsigned char modo, bool calibMode,
 
     if(!isValidFuoco()) return ERROR_INVALID_FUOCO;
     if((selectedDmAs==0) || (selectedDmAs>_MAX_MAS*10)){
-        PRINT(QString("ERRORE VALIDATE DATA DMAS: selected=%1").arg(selectedDmAs));
+        DEBUG(QString("ERRORE VALIDATE DATA DMAS: selected=%1").arg(selectedDmAs));
         return ERROR_INVALID_MAS;
     }
 
@@ -2477,7 +2477,7 @@ int Generatore::getMaxDMas(float fKv, QString anodo, unsigned char fuoco)
         if(mas<=tube[kV-_MIN_KV].mAs.at(i).a) mas = tube[kV-_MIN_KV].mAs.at(i).a; // Assegna il valore massimo possibile
     }
 
-    PRINT(QString("GET MAX DMAS: selkv= %1 kv=%2, mAs =%3").arg(fKv).arg(kV).arg(mas));
+
     return mas;
 
 }
@@ -2504,7 +2504,7 @@ int Generatore::getMaxDMas(void)
         if(mas<=tube[kv-_MIN_KV].mAs.at(i).a) mas = tube[kv-_MIN_KV].mAs.at(i).a; // Assegna il valore massimo possibile
     }
 
-    PRINT(QString("GET MAX DMAS: selkv= %1 kv=%2, mAs =%3").arg(selectedKv).arg(kv).arg(mas));
+
     return mas;
 
 }

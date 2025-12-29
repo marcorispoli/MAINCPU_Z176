@@ -3,6 +3,39 @@
 
 #include "application.h"
 
+class systemLog : public QObject
+{
+    Q_OBJECT
+public:
+    explicit systemLog(QString filename, QObject *parent = 0);
+    void log(QString event);
+    void log(QString event,bool prefix);
+    void flush(void);
+    void resizeFile(void);
+    void activate(bool status){
+        if(status) activated=true;
+        else{
+            activated = false;
+            flush();
+        }
+    }
+
+signals:
+
+public slots:
+
+private:
+    QFile file;
+    QString filename;
+    int fileLines;
+    bool enabled;
+    bool changed;
+
+    bool activated;
+
+};
+
+
 class mccPrintCom: public mccCom
 {
 public:
@@ -28,7 +61,7 @@ public:
     bool connected;
     void activateConnections(void);
     void resetTimestamp(void);
-
+    systemLog*       pSysLog;
 
 #define PRINT(x)    pInfo->emit_debugTxHandler(x)
 #define DEBUG(x)    pInfo->emit_debugTxHandler(x) // Messaggi visualizzati esclusivamente su socket
@@ -41,6 +74,7 @@ public slots:
 
     void emit_debugTxHandler(QString msg) {emit debugTxHandler(msg); }
     void emit_logTxHandler(QString msg)   {emit logTxHandler(msg); }
+
     void emit_qtTxHandler(QString msg)    {emit qtTxHandler(msg); }
     void emit_m4TxHandler(QString msg)    {emit m4TxHandler(msg); }
 
@@ -56,10 +90,13 @@ public slots:
     void serviceTxAsyncHandler(QByteArray data);      // Handler invio dati verso canale async di AWS
     void serviceErrorTxHandler(int codice, QString msg);// Handler dei messaggi inviati sul canale errori di AWS
     void serviceLogHandler(QString data);
+    void serviceFileLogHandler(QString data);
     void serviceDebugHandler(QString data);
 
     void serviceQtHandler(QString data);
     void serviceM4Handler(QString data);
+
+
 
 
 private:

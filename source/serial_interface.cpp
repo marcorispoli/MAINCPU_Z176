@@ -349,6 +349,5 @@ bool SerialInterface::sendExposureData(
     data.append('1');data.append('6');data.append(':');
     data.append(format2(cval));data.append('.');data.append(format2(cdig));data.append(';');
 
-    PRINT(QString(data));
     return sendMessage(data);
 }

@@ -242,12 +242,12 @@ void biopsy::mccStatNotify(unsigned char id_notify,unsigned char cmd, QByteArray
     ApplicationDatabase.setData(_DB_BIOP_MARG,(int) margZ_mm,0);
 
     if(bp_motion!=data.at(_BP_MOTION)){
-        PRINT(QString("BIOPSIA: BP_MOTION=%1").arg((int) data.at(_BP_MOTION)));
+        DEBUG(QString("BIOPSIA: BP_MOTION=%1").arg((int) data.at(_BP_MOTION)));
         bp_motion = data.at(_BP_MOTION);
     }
 
     if(bp_movecommand!=movingCommand){
-        PRINT(QString("BIOPSIA: MOVE CMD=%1").arg((int) movingCommand));
+        DEBUG(QString("BIOPSIA: MOVE CMD=%1").arg((int) movingCommand));
         bp_movecommand = movingCommand;
     }
 
@@ -554,8 +554,8 @@ bool biopsy::calcLesionPosition(void){
     float F_dmm_les_m15_JX = (float) dmm_les_m15_JX * config.readerKX;
     float F_dmm_les_m15_JY = (float) dmm_les_m15_JY * config.readerKY;
 
-    PRINT(QString("[   P(15) -- REF-X:%1 REF-Y:%2 LES-X:%3 LES-Y:%4  ]").arg(F_dmm_ref_p15_JX).arg(F_dmm_ref_p15_JY).arg(F_dmm_les_p15_JX).arg(F_dmm_les_p15_JY));
-    PRINT(QString("[   M(15) -- REF-X:%1 REF-Y:%2 LES-X:%3 LES-Y:%4  ]").arg(F_dmm_ref_m15_JX).arg(F_dmm_ref_m15_JY).arg(F_dmm_les_m15_JX).arg(F_dmm_les_m15_JY));
+    DEBUG(QString("[   P(15) -- REF-X:%1 REF-Y:%2 LES-X:%3 LES-Y:%4  ]").arg(F_dmm_ref_p15_JX).arg(F_dmm_ref_p15_JY).arg(F_dmm_les_p15_JX).arg(F_dmm_les_p15_JY));
+    DEBUG(QString("[   M(15) -- REF-X:%1 REF-Y:%2 LES-X:%3 LES-Y:%4  ]").arg(F_dmm_ref_m15_JX).arg(F_dmm_ref_m15_JY).arg(F_dmm_les_m15_JX).arg(F_dmm_les_m15_JY));
 
 
 
@@ -593,20 +593,20 @@ bool biopsy::calcLesionPosition(void){
     Ybio = (2*L * Ymp) / (Xmp + 2*L);
     Zfibra_dmm   =  (int) Zbio - 59;
 
-    PRINT(QString("[  CALC X:%1 Y:%2 Z:%3  ]").arg(Xbio).arg(Ybio).arg(Zbio));
+    DEBUG(QString("[  CALC X:%1 Y:%2 Z:%3  ]").arg(Xbio).arg(Ybio).arg(Zbio));
 
     // Spostamento in coordinate torretta + offset di correzione da calibrazione
     Xlesione_dmm =  _X0_BYM_TO_BIO_X0 - (int) Xbio + pBiopsy->config.offsetX;
     Ylesione_dmm =  _Y0_BYM_TO_BIO_Y0 - (int) Ybio + pBiopsy->config.offsetY;
     Zlesione_dmm =  pBiopsy->config.offsetFibra * 10 - Zfibra_dmm + pBiopsy->config.offsetZ;
 
-    PRINT(QString("[  LES X:%1 Y:%2 Z:%3 ZF:%4 THCK:%5 ]").arg(Xlesione_dmm).arg(Ylesione_dmm).arg(Zlesione_dmm).arg(Zfibra_dmm).arg(pCompressore->breastThick));
+    DEBUG(QString("[  LES X:%1 Y:%2 Z:%3 ZF:%4 THCK:%5 ]").arg(Xlesione_dmm).arg(Ylesione_dmm).arg(Zlesione_dmm).arg(Zfibra_dmm).arg(pCompressore->breastThick));
 
     // Controllo sullla raggiungibilità della lesione
     if(Zfibra_dmm <=40){
         lesioneValida = false;
         calcError = ERROR_BIOP_LESION_TOO_LOWER;
-        PRINT("LESIONE Z < 4mm");
+        DEBUG("LESIONE Z < 4mm");
         return false;
     }
 
@@ -614,7 +614,7 @@ bool biopsy::calcLesionPosition(void){
     if(Zfibra_dmm >= pCompressore->breastThick *10){
         lesioneValida = false;
         calcError = ERROR_BIOP_LESION_TOO_HIGH;
-        PRINT("LESIONE > THICKNESS");
+        DEBUG("LESIONE > THICKNESS");
         return false;
     }
 

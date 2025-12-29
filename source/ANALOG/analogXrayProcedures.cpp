@@ -361,9 +361,6 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
         emit queuedExecution(QUEUED_SELECTED_FILTER,0,""); // Impostazione Filtro di base
         emit queuedExecution(QUEUED_LOG_FLUSH,0,logstring); // Impostazione Filtro
 
-
-        PRINT(logstring);
-
         // With the DR MODE activated the serial RS-232 outputs exposure data
         if(ApplicationDatabase.getDataI(_DB_DRMODE)){
 
@@ -438,8 +435,8 @@ void AnalogPageOpen::guiNotify(unsigned char id, unsigned char mcccode, QByteArr
             XselectedDmAs = pGeneratore->selectedDmAs;
             XselectedIa = pGeneratore->selectedIn;
 
-            PRINT(QString("OPERATIVO AEC DATA IN: PROFILE=%1 PLOG=%2, FILTRO=%3, ANODO=%4").arg(pGeneratore->pAECprofiles->getCurrentProfilePtr()->filename).arg(rxplog).arg(rxfiltro).arg( pGeneratore->selectedAnodo));
-            PRINT(QString("OPERATIVO AEC DATA OUT: KV=%1(%2) MAS=%3, PULSES =%4").arg(rxkV).arg(pGeneratore->selectedVdac).arg((float) rxdmas/10).arg(rxpulses));
+            DEBUG(QString("OPERATIVO AEC DATA IN: PROFILE=%1 PLOG=%2, FILTRO=%3, ANODO=%4").arg(pGeneratore->pAECprofiles->getCurrentProfilePtr()->filename).arg(rxplog).arg(rxfiltro).arg( pGeneratore->selectedAnodo));
+            DEBUG(QString("OPERATIVO AEC DATA OUT: KV=%1(%2) MAS=%3, PULSES =%4").arg(rxkV).arg(pGeneratore->selectedVdac).arg((float) rxdmas/10).arg(rxpulses));
 
             data[0] =  (unsigned char) (pGeneratore->selectedVdac&0x00FF);
             data[1] =  (unsigned char) (pGeneratore->selectedVdac>>8);

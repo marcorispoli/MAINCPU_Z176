@@ -1674,7 +1674,7 @@ bool Config::saveLenzeConfig(void)
     QFile   file(filename);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        PRINT(QString("IMPOSSIBILE SALVARE IL FILE:")+filename);
+        DEBUG(QString("IMPOSSIBILE SALVARE IL FILE:")+filename);
         return FALSE;
     }
 
@@ -2520,7 +2520,7 @@ void Config::configSlaveRxHandler(QByteArray frame)
         awsPowerOff(); // Comando al client a basso livello del PC, se connesso
 
         if(pSlaveMcc->sendFrame(MCC_POWER_OFF,1,data,1)==false){
-            PRINT("FALLITO MCC POWER OFF!");
+            DEBUG("FALLITO MCC POWER OFF!");
         }
 
         // Attiva il timer per il reboot locale
@@ -2533,7 +2533,7 @@ void Config::configSlaveRxHandler(QByteArray frame)
         else data[0] = (unsigned char) protocollo.parametri[0].toInt();
 
         if(pSlaveMcc->sendFrame(MCC_POWER_OFF,1,data,1)==false){
-            PRINT("FALLITO MCC POWER OFF!");
+            DEBUG("FALLITO MCC POWER OFF!");
         }
 
         // Attiva il timer per il reboot locale
@@ -3482,8 +3482,7 @@ bool Config::checkPackage(void)
 
 #endif
     // Verifica se tutto è conforme
-    PRINT(revisionError);
-    PRINT("\n");
+    DEBUG(revisionError);
 
     if(!result){
         if(packageExist()) ApplicationDatabase.setData(_DB_SERVICE1_STR,"PACKAGE_PRESENT");
@@ -3801,7 +3800,7 @@ void Config::updateDate(void){
     echoDisplay.echoDate(D,M,Y,h,m,s,DBase::_DB_NO_OPT);
 
     command = QString("date -u %1.%2.%3-%4:%5:%6").arg(Y).arg(M).arg(D).arg(h).arg(m).arg(s);
-    PRINT(command);
+
     system(command.toStdString().c_str());
 
     command = QString("hwclock -w");

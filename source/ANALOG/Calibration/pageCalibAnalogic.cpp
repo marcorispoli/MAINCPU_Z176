@@ -211,7 +211,7 @@ void AnalogCalibPageOpen::initPage(void){
     connect(&ApplicationDatabase,SIGNAL(dbDataChanged(int,int)), this,SLOT(valueChanged(int,int)),Qt::UniqueConnection);
     connect(ui->alarm_butt,SIGNAL(released()),this,SLOT(onAlarmButt()),Qt::UniqueConnection);
 
-    PRINT("INIZIALIZZAZIONE CALIB PAGE");
+
     if(ApplicationDatabase.getDataU(_DB_NALLARMI_ATTIVI)) ui->alarm_frame->show();
     else ui->alarm_frame->hide();
 

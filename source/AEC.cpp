@@ -109,8 +109,7 @@ int AEC::selectProfile(QString name){
     if(profileList.size()==0) return -1;
 
     for(int i=0; i<profileList.size(); i++){
-        if(profileList[i].symbolicName == name){
-            PRINT(profileList[i].symbolicName);
+        if(profileList[i].symbolicName == name){            
             return i;
         }
     }
@@ -440,8 +439,7 @@ bool AEC::openAECProfiles(void){
         for(int vdx=0; vdx < validList.size(); vdx++){
             for(int ldx=0; ldx < profileList.size(); ldx++){
                 if(profileList[ldx].basefilename == validList[vdx]){
-                    orderedProfileList.append(profileList[ldx]);
-                    PRINT(QString("PROFILO:")+profileList[ldx].basefilename + "  ");
+                    orderedProfileList.append(profileList[ldx]);                    
                     break;
                 }
             }
@@ -638,20 +636,16 @@ int AEC::getAecData(int plog, int modo_filtro, int selected_filtro, int odindex,
 
     // Assegnazione filtro
     if(modo_filtro == ANALOG_FILTRO_FISSO){            
-        *filtro = pConfig->analogCnf.selected_filtro; // Filtro attualmente selezionato come filtro fisso
-        PRINT(QString("AEC MODO FILTRO FISSO: SELEZIONATO %1").arg(*filtro));
+        *filtro = pConfig->analogCnf.selected_filtro; // Filtro attualmente selezionato come filtro fisso        
     }else{
         if(pConfig->analogCnf.secondo_filtro != Collimatore::FILTRO_ND){
             if( plog < profilePtr->plog_threshold ){
-                *filtro = pConfig->analogCnf.secondo_filtro;
-                PRINT(QString("AEC FILTRO PER PLOG MINIMO: SELEZIONATO %1").arg(*filtro));
+                *filtro = pConfig->analogCnf.secondo_filtro;                
             }else{
                 *filtro = pConfig->analogCnf.primo_filtro;
-                PRINT(QString("AEC FILTRO PER PLOG NORMALE: SELEZIONATO %1").arg(*filtro));
             }
         }else{
             *filtro = pConfig->analogCnf.primo_filtro;
-            PRINT(QString("AEC SECONDO FILTRO NON CONFIGURATO: SELEZIONATO PRIMO FILTRO %1").arg(*filtro));
         }
     }
 
@@ -659,18 +653,18 @@ int AEC::getAecData(int plog, int modo_filtro, int selected_filtro, int odindex,
     QList<profilePoint_Str>* ptr ;
     if(selectedFSize == Generatore::FUOCO_LARGE){
         if(*filtro == Collimatore::FILTRO_Mo){
-            PRINT("AEC SELEZIONATO CURVE FUOCO GRANDE MOLIBDENO");
+
             ptr = &profilePtr->pulseStd_Mo_G;
         }else{
             ptr = &profilePtr->pulseStd_Rh_G;
-            PRINT("AEC SELEZIONATO CURVE FUOCO GRANDE RODIO");
+
         }
     }else{
         if(*filtro == Collimatore::FILTRO_Mo){
-            PRINT("AEC SELEZIONATO CURVE FUOCO PICCOLO MOLIBDENO");
+
             ptr = &profilePtr->pulseStd_Mo_P;
         }else{
-            PRINT("AEC SELEZIONATO CURVE FUOCO PICCOLO RODIO");
+
             ptr = &profilePtr->pulseStd_Rh_P;
         }
     }
