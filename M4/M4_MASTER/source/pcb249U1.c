@@ -35,7 +35,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
    CONTEST.evm = _EVM(_EV0_PCB249U1_CFG_UPD);
    CONTEST.evr = &_EVR(_EV0_PCB249U1_CFG_UPD);
    CONTEST.address = TARGET_ADDRESS;
-   printf("ATTIVAZIONE DRIVER PCB249U1: \n");
+
     
    //////////////////////////////////////////////////////////////////////////
    //                   FINE FASE DI INIZIALIZZAZIONE DRIVER               //             
@@ -58,27 +58,27 @@ void pcb249U1_driver(uint32_t taskRegisters)
    // Inizializzazione delle mutex
     if (_mutex_init(&(CONTEST.reglist_mutex), NULL) != MQX_OK)
     {
-      printf("PCB249U1: ERRORE INIT MUTEX. FINE PROGRAMMA");
+
       _mqx_exit(-1);
     }
 
     if (_mutex_init(&(CONTEST.pollinglist_mutex), NULL) != MQX_OK)
     {
-      printf("PCB249U1: ERRORE INIT MUTEX. FINE PROGRAMMA");
+
       _mqx_exit(-1);
     }
       
     // Reitera fino ad ottenere il risultato
     while(GetFwRevision()==FALSE)_time_delay(100);
-    printf("PCB249U1:REVISIONE FW TARGET:%d.%d\n",STATUS.maj_code,STATUS.min_code); 
+
 
     // Legge il registro che identifica il modello del Collimatore
     while(Ser422ReadRegister(_REGID(PR_COLLI_MODEL),10,&CONTEST)!=_SER422_NO_ERROR) _time_delay(200);
     if(_DEVREGL(PR_COLLI_MODEL,CONTEST)==0){
-        printf("PCB-14/249-2 ASSY 01 DETECTED\n");
+
         generalConfiguration.revisioni.pcb249U1.model = _COLLI_TYPE_ASSY_01;
     }else{
-        printf("PCB-14/249-2 ASSY 02 DETECTED\n");
+
         generalConfiguration.revisioni.pcb249U1.model = _COLLI_TYPE_ASSY_02;
     }
 
@@ -88,7 +88,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
          ((STATUS.maj_code >=3 ) && (generalConfiguration.revisioni.pcb249U1.model == _COLLI_TYPE_ASSY_01))
       ){
         generalConfiguration.collimator_model_error = true;
-        printf("INVALID COLLIMATOR ASSEMBLY VS FIRMWARE DETECTED!\n");
+
     }
 
     // Segnalazione driver connesso
@@ -118,10 +118,10 @@ void pcb249U1_driver(uint32_t taskRegisters)
    
    // Attende la ricezione della configurazione se necessario
    _EVSET(_EV2_PCB249U1_STARTUP_OK);
-   printf("PCB249U1: ATTENDE CONFIGURAZIONE..\n");
+
 
    _EVWAIT_ANY(_EV1_DEV_CONFIG_OK);
-   printf("PCB249U1: CONFIGURAZIONE OK. INIZIO LAVORO\n");
+
 
 
 
@@ -145,8 +145,9 @@ void pcb249U1_driver(uint32_t taskRegisters)
      // Gestione collimazione 2D
      if(_IS_EVENT(_EV0_PCB249U1_COLLI)){
 
-         u1colli_result = false;
-         printf("GESTIONE COLLIMAZIONE LAME LATERALI:L=%d, R=%d, T=%D\n",leftcolli_req,rightcolli_req,trapcolli_req);
+         u1colli_result = false;         
+         debugPrintI3("GESTIONE COLLIMAZIONE LAME LATERALI:L=",leftcolli_req,"R=",rightcolli_req,"T=",trapcolli_req);
+
          left = leftcolli_req;
          right = rightcolli_req;
          trap = trapcolli_req;
@@ -155,7 +156,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
          if((Ser422WriteRegister(_REGID(RG249U1_PR_2D_L_USER),left,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR) ||
            (Ser422WriteRegister(_REGID(RG249U1_PR_2D_R_USER),right,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)||
            (Ser422WriteRegister(_REGID(RG249U1_PR_2D_B_USER),trap,10,&PCB249U1_CONTEST) != _SER422_NO_ERROR)){
-             printf("ERRORE SCRITTURA REGISTRI TARGET COLLI LEFT RIGHT TRAP\n");
+             debugPrint("ERRORE SCRITTURA REGISTRI TARGET COLLI LEFT RIGHT TRAP\n");
              // Se è stata richiesta da GUI una risposta la invia
              if(u1colli_id){
                  Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
@@ -175,7 +176,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
 
          // Attesa READY dal dispositivo
          if(pcb249U1WaitBusy(80)==false){
-             printf("TIMEOUT COLLI U1 IN ATTESA DEL READY\n");
+             debugPrint("TIMEOUT COLLI U1 IN ATTESA DEL READY\n");
              // Se è stata richiesta da GUI una risposta la invia
              if(u1colli_id){
                  Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
@@ -197,7 +198,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
          if(_TEST_BIT(PCB249U1_FAULT))    pcb249U1ResetFaults();
 
          if(pcb249U1SetColliCmd(2)==false){
-             printf("ERRORE COMANDO COLLIMAZIONE U1\n");
+             debugPrint("ERRORE COMANDO COLLIMAZIONE U1\n");
              // Se è stata richiesta da GUI una risposta la invia
              if(u1colli_id){
                  Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
@@ -219,7 +220,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
 
          // Attesa READY dal dispositivo
          if(pcb249U1WaitBusy(80)==false){
-             printf("TIMEOUT POSIZIONAMENTO LAME U1\n");
+             debugPrint("TIMEOUT POSIZIONAMENTO LAME U1\n");
              // Se è stata richiesta da GUI una risposta la invia
              if(u1colli_id){
                  Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
@@ -239,7 +240,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
 
          // Risultato del posizionamento
          if(_TEST_BIT(PCB249U1_FAULT)) {
-             printf("ERRORE POSIZIONAMENTO LAME U1\n");
+             debugPrint("ERRORE POSIZIONAMENTO LAME U1\n");
              // Se è stata richiesta da GUI una risposta la invia
              if(u1colli_id){
                  Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
@@ -264,7 +265,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
          if((left==leftcolli_req)&&(right==rightcolli_req)&&(trap==trapcolli_req)){
              _EVCLR(_EV0_PCB249U1_COLLI);
              u1colli_result = true;
-             printf("COLLIMAZIONE U1 CONCLUSA: L:%d, R:%d, T:%d\n",left, right, trap);
+             debugPrintI3("COLLIMAZIONE U1 CONCLUSA: L=",left,"R=",right,"T=", trap);
              if(u1colli_id){
                  Ser422ReadRegister(_REGID(RG249U1_RIGHT_SENS),10,&CONTEST);
                  Ser422ReadRegister(_REGID(RG249U1_LEFT_SENS),10,&CONTEST);
@@ -311,7 +312,7 @@ void pcb249U1_driver(uint32_t taskRegisters)
        if(write_ok==TRUE)
        {
         STATUS.updconf = 0;
-        printf("PCB249U1:CONFIG UPDATED!\n");
+        debugPrint("PCB249U1:CONFIG UPDATED!\n");
         
         // Invia segnale di aggiornamento cfg      
         _EVSET(_EV0_PCB249U1_CFG_UPD);
@@ -473,7 +474,7 @@ bool identificazioneAccessorio(void)
   if(accessorio!=generalConfiguration.colliCfg.codiceAccessorio)
   {
     accessorio = generalConfiguration.colliCfg.codiceAccessorio;
-    printf("RILEVATO CAMBIO ACCESSORIO COLLIMATORE: %d Codice: V%d, RAW: %d\n",accessorio,codice,raw);
+    debugPrintI3("CAMBIO ACCESSORIO COLLIMATORE:",accessorio,"Codice:",codice,"RAW:",raw);
     return TRUE;
   }
   else return FALSE;
@@ -524,7 +525,7 @@ bool pcb249U1UpdateRegisters(void)
      if(back_temperatura != val)
      {
        back_temperatura = val;
-       printf("TEMPERATURA TUBO: %d\n", back_temperatura);
+       debugPrintI("TEMPERATURA TUBO:", back_temperatura);
        update=TRUE;
      }
    }
@@ -534,7 +535,6 @@ bool pcb249U1UpdateRegisters(void)
        if(Ser422Read16BitRegister(_REGID(RG249U1_GONIO16_TRX),4,&CONTEST) == _SER422_NO_ERROR){
            // Trasforma da 0.025° a 0.1°
            generalConfiguration.armExecution.dAngolo_inclinometro = (short) _DEVREG(RG249U1_GONIO16_TRX,CONTEST) / 4;
-          // printf("ANGOLO INCLINOMETRO=%d\n", generalConfiguration.armExecution.dAngolo_inclinometro);
            actuatorsUpdateAngles(); // Richiede di aggiornare l'insieme degli angoli
        }
    }
@@ -598,22 +598,22 @@ bool pcb249U1SetColliCmd(unsigned char mode)
   switch(mode)
   {
   case 0: // Modo 2D 24x30
-      printf("COLLIMATORE IN MODALITA 24x30!!\n");
+      debugPrint("COLLIMATORE IN MODALITA 24x30!!\n");
       frame.data1=_CMD1(PCB249U1_SET_COLLI_24x30);
       frame.data2=_CMD2(PCB249U1_SET_COLLI_24x30);
     break;
   case 1: // Modo 2D 18x24
-      printf("COLLIMATORE IN MODALITA 18x24!!\n");
+      debugPrint("COLLIMATORE IN MODALITA 18x24!!\n");
       frame.data1=_CMD1(PCB249U1_SET_COLLI_18x24);
       frame.data2=_CMD2(PCB249U1_SET_COLLI_18x24);
     break;
   case 2: // Modo 2D USER
-      printf("COLLIMATORE IN MODALITA USER!!\n");
+      debugPrint("COLLIMATORE IN MODALITA USER!!\n");
       frame.data1=_CMD1(PCB249U1_SET_COLLI_USER);
       frame.data2=_CMD2(PCB249U1_SET_COLLI_USER);
     break;
   case 3: // Modo Tomografia con inseguimento su formato 24x30
-      printf("COLLIMATORE IN MODALITA INSEGUIMENTO!!\n");
+      debugPrint("COLLIMATORE IN MODALITA INSEGUIMENTO!!\n");
       frame.data1=_CMD1(PCB249U1_SET_COLLI_TOMO);
       frame.data2=_CMD2(PCB249U1_SET_COLLI_TOMO);
     break;
@@ -737,7 +737,7 @@ bool pcb249U1initCollimator(void)
 
    _Ser422_Command_Str frame;
   
-   printf("PROCEDURA DI AZZERAMENTO AUTOMATICA COLLIMATORE\n");
+   debugPrint("PROCEDURA DI AZZERAMENTO AUTOMATICA COLLIMATORE\n");
    
   // Sospende il driver bloccando la mutex del polling
   // Il driver si blocca esattamente dopo aver letto i registri di stato
@@ -766,7 +766,7 @@ bool pcb249U1initCollimator(void)
      else return TRUE;
    }
    
-   printf("PROCEDURA DI AZZERAMENTO AUTOMATICA COLLIMATORE FALLITA!!\n");
+   debugPrint("PROCEDURA DI AZZERAMENTO AUTOMATICA COLLIMATORE FALLITA!!\n");
    return FALSE;
    
 }
@@ -982,12 +982,12 @@ bool setColliArray(void){
   }
 
 
-  printf("PCB249U1 AGGIORNATA ..\n");
+  debugPrint("PCB249U1 AGGIORNATA ..\n");
   pcb249U1SetWriteMode01();
   return true;
   
 fallito:
-  printf("PCB249U1 AGGIORNAMENTO FALLITO ..\n");
+  debugPrint("PCB249U1 AGGIORNAMENTO FALLITO ..\n");
   pcb249U1SetWriteMode01();
   return false;
 }
@@ -1031,8 +1031,7 @@ bool wait2DLeftRightTrapCompletion(int timeout){
     while(_IS_EVENT(_EV0_PCB249U1_COLLI)){
         _time_delay(100);
         tmo--;
-        if(!tmo){
-            printf("TIMEOUT ATTESA COMPLETAMENTO COLLIMAZIONE LEFT+RIHT DURANTE RAGGI\n");
+        if(!tmo){            
             return false;
         }
     }
@@ -1045,8 +1044,7 @@ bool wait2DLeftRightTrapCompletion(int timeout){
         while(_IS_EVENT(_EV0_PCB249U1_COLLI)){
             _time_delay(100);
             tmo--;
-            if(!tmo){
-                printf("TIMEOUT ATTESA COMPLETAMENTO COLLIMAZIONE LEFT+RIGHT DURANTE RAGGI\n");
+            if(!tmo){                
                 return false;
             }
         }

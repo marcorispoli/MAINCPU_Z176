@@ -458,7 +458,7 @@ int AnalogAECModeExposure(void){
     mccGuiNotify(1,MCC_XRAY_ANALOG_REQ_AEC_PULSE,data,8);
 
     // Attesa dati da interfaccia
-    debugPrint("ATTESA DATI AEC.");
+    debugPrint("ATTESA DATI AEC DA GUI");
     attempt=40;
     while(--attempt){
 
@@ -812,10 +812,10 @@ void getRxSamplesData(float* kv, unsigned char* kvraw, float* imed, int* time)
     float kvmean=0;
     if((samples-naec)>0){
         for(i=naec;i<samples;i++){
-            debugPrintI4("I( 10x mA):",(int) ((((float) is[i])*200.0*10)/255.0),
-                         "I(RAW):",(int) is[i],
-                         "V(10x kV):",(int) (10*pcb190ConvertKvRead(vs[i])),
-                         "V(RAW)]",(int) vs[i]
+            debugPrintI4("I[10x mA]",(int) ((((float) is[i])*200.0*10)/255.0),
+                         "I[RAW]",(int) is[i],
+                         "V[10x kV]",(int) (10*pcb190ConvertKvRead(vs[i])),
+                         "V[RAW]",(int) vs[i]
                         );
 
             imean+=(float) is[i];
@@ -848,10 +848,9 @@ void getRxSamplesData(float* kv, unsigned char* kvraw, float* imed, int* time)
     debugPrintF("I_FIL(mA):",ifil_rxend * 47.98);
 
     if(samples-naec){
-      debugPrintI4("PLS-I(10x mA):",(int) (10*(imean*200.)/255.),
-                   "PLS-V(10x kV):",(int) (10*kvmean),
-                   "SCARTO (10x):", (int)  scarto_v,
-                   "Tmed_Pulse(10x ms):",(int) (10*tmed_pls) );
+      debugPrintI3("PLS-I[10x mA]",(int) (10*(imean*200.)/255.),
+                   "PLS-V[10x kV]",(int) (10*kvmean),
+                   "Tmed_Pulse[10x ms]",(int) (10*tmed_pls) );
    }
 
     // Risultati se richiesti

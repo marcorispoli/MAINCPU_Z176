@@ -36,7 +36,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
    CONTEST.evm = _EVM(_EV0_PCB249U2_CFG_UPD);
    CONTEST.evr = &_EVR(_EV0_PCB249U2_CFG_UPD);
    CONTEST.address = TARGET_ADDRESS;
-   printf("ATTIVAZIONE DRIVER PCB249U2: \n");
+
     
    //////////////////////////////////////////////////////////////////////////
    //                   FINE FASE DI INIZIALIZZAZIONE DRIVER               //             
@@ -59,19 +59,19 @@ void pcb249U2_driver(uint32_t taskRegisters)
    // Inizializzazione delle mutex
     if (_mutex_init(&(CONTEST.reglist_mutex), NULL) != MQX_OK)
     {
-      printf("PCB249U2: ERRORE INIT MUTEX. FINE PROGRAMMA");
+
       _mqx_exit(-1);
     }
 
     if (_mutex_init(&(CONTEST.pollinglist_mutex), NULL) != MQX_OK)
     {
-      printf("PCB249U2: ERRORE INIT MUTEX. FINE PROGRAMMA");
+
       _mqx_exit(-1);
     }
       
     // Reitera fino ad ottenere il risultato
     while(GetFwRevision()==FALSE) _time_delay(100);
-    printf("PCB249U2:REVISIONE FW TARGET:%d.%d\n",STATUS.maj_code,STATUS.min_code); 
+
     
     // Segnalazione driver connesso
    _EVSET(_EV1_PCB249U2_CONNECTED);
@@ -92,9 +92,9 @@ void pcb249U2_driver(uint32_t taskRegisters)
     
     // Attende la ricezione della configurazione se necessario
    _EVSET(_EV2_PCB249U2_STARTUP_OK);
-   printf("PCB249U2: ATTENDE CONFIGURAZIONE..\n");
+
    _EVWAIT_ANY(_EV1_DEV_CONFIG_OK);
-   printf("PCB249U2: CONFIGURAZIONE OK. INIZIO LAVORO\n");
+
 
    
     // il registro RG249U2_PR_CALIBRATED se == 1 significa che è stata già calibrata
@@ -103,13 +103,13 @@ void pcb249U2_driver(uint32_t taskRegisters)
 
     if(_DEVREGL(RG249U2_PR_CALIBRATED,CONTEST)==1){
 
-        printf("ACQUISIZIONE POSIZIONE FILTRI CALIBRATI A BANCO\n");
+
         if((generalConfiguration.colli_filter[0]!=_DEVREGL(RG249U2_PR_FILTER0,CONTEST))||
            (generalConfiguration.colli_filter[1]!=_DEVREGL(RG249U2_PR_FILTER1,CONTEST))||
            (generalConfiguration.colli_filter[2]!=_DEVREGL(RG249U2_PR_FILTER2,CONTEST))||
            (generalConfiguration.colli_filter[3]!=_DEVREGL(RG249U2_PR_FILTER3,CONTEST))
            ) {
-              printf("AGGIORNAMENTO FILTRI SU MASTER....\n");
+
               generalConfiguration.colli_filter[0]=_DEVREGL(RG249U2_PR_FILTER0,CONTEST);
               generalConfiguration.colli_filter[1]=_DEVREGL(RG249U2_PR_FILTER1,CONTEST);
               generalConfiguration.colli_filter[2]=_DEVREGL(RG249U2_PR_FILTER2,CONTEST);
@@ -124,7 +124,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
         pcb249U2ResetCalibFilterFlag();
 
     }else{
-        printf("CARICAMENTO TARGET PER I FILTRI\n");
+
         Ser422WriteRegister(_REGID(RG249U2_PR_FILTER0),generalConfiguration.colli_filter[0] ,10,&CONTEST);
         Ser422WriteRegister(_REGID(RG249U2_PR_FILTER1),generalConfiguration.colli_filter[1] ,10,&CONTEST);
         Ser422WriteRegister(_REGID(RG249U2_PR_FILTER2),generalConfiguration.colli_filter[2] ,10,&CONTEST);
@@ -170,14 +170,14 @@ void pcb249U2_driver(uint32_t taskRegisters)
             comando_filtro = filtro_req;
             target_filtro = pos_req;
 
-            printf("POSIZIONAMENTO FILTRO IN ESECUZIONE: INDEX=%d, POS=%d\n", filtro_req,pos_req);
+            debugPrintI2("FILTRO IN ESECUZIONE: INDEX", filtro_req, "POS=", pos_req);
 
             // Legge la posizione corrente
             pcb249U2getFilterCurrentPosition();
 
             // Se la posizione correnter è quella attesa allora termina subito qui
             if(posizioneFiltro==pos_req){
-                printf("POSIZIONAMENTO FILTRO OK! -CMD:%d PF:%d\n",comando_filtro,posizioneFiltro);
+                debugPrintI2("POSIZIONAMENTO FILTRO OK. CMD:",comando_filtro,"POS",posizioneFiltro);
                 data[0]=1; // OK
                 filtro_eseguito = true;
                 data[1] = comando_filtro;  // Indice filtro
@@ -191,7 +191,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
             // Attende un eventuale busy
             if(pcb249WaitBusy(50)==false){
                 pcb249U2getFilterCurrentPosition();
-                printf("ERRORE POSIZIONAMENTO FILTRO: ATTESA BUSY! -CMD:%d PREQ:%d, PF:%d\n",comando_filtro,pos_req, posizioneFiltro);
+                debugPrint("ERRORE POSIZIONAMENTO FILTRO: ATTESA BUSY!");
                 data[0] = 0; // Errore
                 data[1] = comando_filtro;  // Indice filtro
                 data[2] = posizioneFiltro; // Posizione filtro
@@ -217,7 +217,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
             // Invia il comando
             if(!pcb249U2SetFiltroCmd(comando_filtro)){               
                 pcb249U2getFilterCurrentPosition();
-                printf("ERRORE POSIZIONAMENTO FILTRO: ERRORE COMANDO! -CMD:%d PREQ:%d, PF:%d\n",comando_filtro,target_filtro, posizioneFiltro);
+                debugPrintI2("ERRORE POSIZIONAMENTO FILTRO: ERRORE COMANDO! -CMD:",comando_filtro,"POS:",posizioneFiltro);
                 data[0] = 0; // Errore
                 data[1] = comando_filtro;  // Indice filtro
                 data[2] = posizioneFiltro; // Posizione filtro
@@ -232,7 +232,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
            // Attende un eventuale busy
            if(pcb249WaitBusy(50)==false){
                pcb249U2getFilterCurrentPosition();
-               printf("ERRORE POSIZIONAMENTO FILTRO: ATTESA BUSY DOPO COMANDO! -CMD:%d PREQ:%d, PF:%d\n",comando_filtro,target_filtro, posizioneFiltro);
+               debugPrint("ERRORE POSIZIONAMENTO FILTRO: ATTESA BUSY DOPO COMANDO!");
                data[0] = 0; // Errore
                data[1] = comando_filtro;  // Indice filtro
                data[2] = posizioneFiltro; // Posizione filtro
@@ -248,7 +248,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
 
            // Rilegge il registro di fault se necessario
            if(_TEST_BIT(PCB249U2_FAULT)){
-               printf("ERRORE POSIZIONAMENTO FILTRO: ESECUZIONE FALLITA! -CMD:%d PREQ:%d, PF:%d\n",comando_filtro,target_filtro, posizioneFiltro);
+               debugPrint("ERRORE POSIZIONAMENTO FILTRO: ESECUZIONE FALLITA!");
                data[0] = 0; // Errore
                data[1] = comando_filtro;  // Indice filtro
                data[2] = posizioneFiltro; // Posizione filtro
@@ -260,7 +260,7 @@ void pcb249U2_driver(uint32_t taskRegisters)
 
            // Verifica per un altro comando richiesto in successione
            else{
-               printf("POSIZIONAMENTO FILTRO COMPLETATA!  -CMD:%d PREQ:%d, PF:%d\n",comando_filtro,target_filtro, posizioneFiltro);
+               debugPrint("POSIZIONAMENTO FILTRO COMPLETATA!");
                data[0]=1; // OK
                filtro_eseguito = true;
            }
@@ -293,10 +293,10 @@ void pcb249U2_driver(uint32_t taskRegisters)
             // Copia ila richiesta nei dati effettivi
             back = backcolli_req;
             front = frontcolli_req;
-            printf("DRIVER ESECUZIONE COLLIMAZIONE FRONTALE: B:%d, F:%d\n",back, front);
+            debugPrintI2("DRIVER ESECUZIONE COLLIMAZIONE FRONTALE: B:", back,"F:",front);
 
             if(pcb249WaitBusy(50)==false){
-                    printf("DRIVER COLLIMAZIONE FRONTALE: TIMEOUT ATTESA BUSY\n");
+                    debugPrint("DRIVER COLLIMAZIONE FRONTALE: TIMEOUT ATTESA BUSY\n");
                     _EVCLR(_EV0_PCB249U2_COLLI);
                     continue;
             }
@@ -305,23 +305,22 @@ void pcb249U2_driver(uint32_t taskRegisters)
             if(_TEST_BIT(PCB249U2_FAULT))    pcb249U2ResetFaults();
 
             if(!pcb249U2ColliCmd(back, front)){
-                printf("DRIVER COLLIMAZIONE FRONTALE COMANDO FALLITO\n");
+                debugPrint("DRIVER COLLIMAZIONE FRONTALE COMANDO FALLITO\n");
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 continue;
             }
             _time_delay(50);
 
-            // Attesa fine operazioni e rilettura registro di Target
-            printf("DRIVER F+B ATTESA COMPLETAMENTO\n");
+            // Attesa fine operazioni e rilettura registro di Target            
             if(pcb249WaitBusy(50)==false){
-                    printf("DRIVER COLLIMAZIONE FRONTALE TIMEOUT\n");
+                    debugPrint("DRIVER COLLIMAZIONE FRONTALE TIMEOUT\n");
                     _EVCLR(_EV0_PCB249U2_COLLI);
                     continue;
             }
 
             // Fine comando
             if(_TEST_BIT(PCB249U2_FAULT)){
-                printf("DRIVER COLLIMAZIONE FRONTALE FALLITA\n");
+                debugPrint("DRIVER COLLIMAZIONE FRONTALE FALLITA\n");
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 continue;
             }
@@ -330,11 +329,11 @@ void pcb249U2_driver(uint32_t taskRegisters)
             // allora vuol dire che non ci sono altri comandi oppure che
             // il nuovo comando è uguale allo stato attuale
             if((back==backcolli_req)&&(front==frontcolli_req)){
-                printf("DRIVER COLLIMAZIONE FRONT-BACK CONCLUSA CON SUCCESSO\n");
+                debugPrint("DRIVER COLLIMAZIONE FRONT-BACK CONCLUSA CON SUCCESSO\n");
                 _EVCLR(_EV0_PCB249U2_COLLI);
                 backfront_eseguito = true;
             }else{
-                printf("DRIVER NUOVA COLLIMAZIONE FRONT-BACK IN CODA ..\n");
+                debugPrint("DRIVER NUOVA COLLIMAZIONE FRONT-BACK IN CODA ..\n");
             }
 
         }
@@ -400,7 +399,7 @@ bool pcb249U2ColliCmd(unsigned char back, unsigned char front)
 
   unsigned char buffer[4];
   int i = 20;
-  printf("pcb249U2ColliCmd: F=%d, B=%d\n",front, back);
+
   
   while(--i)
   {
@@ -453,7 +452,7 @@ bool pcb249U2SetFiltroCmd(unsigned char cmd)
   frame.address = TARGET_ADDRESS;
   frame.attempt = 10;
   frame.cmd=SER422_COMMAND;
-  printf("FILTRO: %d\n",cmd);
+
   frame.data1=_CMD1(PCB249U2_FILTER);
   frame.data2=cmd;   
   
@@ -474,7 +473,7 @@ bool pcb249U2RxSetFiltroCmd(unsigned char cmd)
   frame.address = TARGET_ADDRESS;
   frame.attempt = 10;
   frame.cmd=SER422_COMMAND;
-  printf("FILTRO: %d\n",cmd);
+
   frame.data1=_CMD1(PCB249U2_FILTER);
   frame.data2=cmd;
 
@@ -504,7 +503,7 @@ void pcb249U2ResetCalibFilterFlag(void)
 {
   // Azzera il flag di calibrazione dato che il sistema ha già acquisito i dati
   if(Ser422WriteRegister(_REGID(RG249U2_PR_CALIBRATED),0,40,&CONTEST)==_SER422_NO_ERROR){
-      printf("PCB249U2: RESET FLAG FILTRI E STORE ALL COMMAND!\n");
+
       pcb249U2StoreCmd();
       _time_delay(100);
   }
@@ -694,7 +693,7 @@ bool pcb249U2SetColli(unsigned char backin, unsigned char frontin)
 
 
     // Mette nella coda di comando il prossimo movimento
-    printf("RICHIESTA LAME B+F IN POSIZIONE B:%d, F:%d\n",backin,frontin);
+
     backcolli_req = backin;
     frontcolli_req = frontin;
     backfront_eseguito = false;
@@ -737,7 +736,7 @@ bool pcb249WaitBusy(int timeout){
         _time_delay(100);
         timeout--;
     }
-    printf("Timeout waiting pcb249WaitBusy()\n");
+
     return false;
 }
 
@@ -833,7 +832,7 @@ bool waitRxFilterCompletion(void){
         _time_delay(100);
         tmo--;
         if(!tmo){
-            printf("TIMEOUT ATTESA COMPLETAMENTO POSIZIONAMENTO FILTRO DURANTE RAGGI\n");
+
             return false;
         }
     }
@@ -852,7 +851,7 @@ bool waitRxFilterCompletion(void){
             _time_delay(100);
             tmo--;
             if(!tmo){
-               printf("TIMEOUT ATTESA COMPLETAMENTO POSIZIONAMENTO FILTRO DURANTE RAGGI\n");
+
                 return false;
             }
         }
@@ -877,14 +876,14 @@ bool wait2DBackFrontCompletion(int timeout){
         _time_delay(100);
         tmo--;
         if(!tmo){
-            printf("TIMEOUT ATTESA EVENTO COMPLETAMENTO COLLIMAZIONE FRONT+BACK DURANTE RAGGI\n");
+
             return false;
         }
     }
 
     // Se il comando è fallito, riprova a collimare
     if(!backfront_eseguito){
-        printf("RIPROVA AD ESEGUIRE IL COMANDO F+B CHE ERA FALLITO!\n");
+
         pcb249U2SetColli(backcolli_req ,frontcolli_req); // ripete il comando
         _time_delay(50);
         tmo = timeout;
@@ -892,7 +891,7 @@ bool wait2DBackFrontCompletion(int timeout){
             _time_delay(100);
             tmo--;
             if(!tmo){
-                printf("NIENTE, NON E' PROPRIO RIUSCITO A COMPETARE F+B\n");
+
                 return false;
             }
         }
@@ -900,12 +899,12 @@ bool wait2DBackFrontCompletion(int timeout){
 
     // Se infine non è riuscito allora si ferma qui
     if(!backfront_eseguito){
-        printf("COMANDO F+B COMPLETATO MA FALLITO ANCORA! \n");
+
         return false;
     }
 
     // Controllo completato con successo
-    printf("CONTROLLO F+B OK! \n");
+
     return true;
 }
 

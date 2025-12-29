@@ -37,7 +37,7 @@ static bool test_on=false;
 //  O EVENTY ASINCRONI (ERRORI, ...)
 // ___________________________________________________________________________
 void actuators_rx_devices(uint32_t parameter){
-    printf("ACTUATOR DEVICE EVENTS HANDLER STARTED\n");
+
     actuators_event_timeout = 0xFFFFFFFF;
 
     _EVCLR(_EV0_TRX_EVENT);
@@ -108,14 +108,6 @@ void managePowerEvents(void){
         mccbuffer[PWRMANAGEMENT_VBAT2] = (unsigned char) (0.604 * (float) SystemInputs.bat2V );
     }
 
-    // Solo per la stampa dello stato
-    if(memMccbuffer[PWRMANAGEMENT_STAT]!=mccbuffer[PWRMANAGEMENT_STAT]){
-        if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_POWERDOWN)          printf("POWERDOWN CONDITION!!!\n");
-        else if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_EMERGENCY)     printf("EMERGENCY CONDITION!!!\n");
-        else if(mccbuffer[PWRMANAGEMENT_STAT]==PWRMANAGEMENT_STAT_BLITERS_ON)     printf("BLITERS ON CONDITION!!!\n");
-        else printf("POWER MANAGEMENT OK\n");
-        printf("VLENZE=%d\n",vbus);
-    }
 
 
     // Aggiorna la PCB240 sullo stato di EMERGENCY per gestire al meglio
@@ -142,53 +134,7 @@ void managePowerEvents(void){
         mccGuiNotify(1,MCC_POWER_MANAGEMENT,mccbuffer,PWRMANAGEMENT_SIZE);
     }
 
-    return;
-    //---------------- IO -------------------------------------------------
-    printf("---------- INPUTS -------------------------: \n");
-    printf("VBAT1 = %d\n",SystemInputs.bat1V);
-    printf("VBAT2 = %d\n",SystemInputs.bat2V);
 
-    if(SystemInputs.CPU_XRAY_COMPLETED) printf("XRAY_COMPLETED\n");
-    if(SystemInputs.CPU_DETECTOR_ON) printf("CPU_DETECTOR_ON\n");
-    if(SystemInputs.CPU_COMPR_ENABLED) printf("CPU_COMPR_ENABLED\n");
-    if(SystemInputs.CPU_ARM_PED_UP) printf("CPU_ARM_PED_UP\n");
-    if(SystemInputs.CPU_ARM_PED_DWN) printf("CPU_ARM_PED_DWN\n");
-    if(SystemInputs.CPU_ROT_CW) printf("CPU_ROT_CW\n");
-    if(SystemInputs.CPU_ROT_CCW) printf("CPU_ROT_CCW\n");
-    if(SystemInputs.CPU_CLOSED_DOOR) printf("CPU_CLOSED_DOOR\n");
-
-    if(SystemInputs.CPU_POWER_DOWN) printf("CPU_POWER_DOWN\n");
-
-    if(SystemInputs.CPU_UPS_FAULT) printf("CPU_UPS_FAULT\n");
-    if(SystemInputs.CPU_MAINS_ON) printf("CPU_MAINS_ON\n");
-    if(SystemInputs.CPU_XRAY_REQ) printf("CPU_XRAY_REQ\n");
-    if(SystemInputs.CPU_REQ_POWER_OFF) printf("CPU_REQ_POWER_OFF\n");
-    if(SystemInputs.CPU_BATT_DISABLED) printf("CPU_BATT_DISABLED\n");
-    if(SystemInputs.CPU_LIFT_DROP) printf("CPU_LIFT_DROP\n");
-    if(SystemInputs.CPU_LIFT_ENABLED) printf("CPU_LIFT_ENABLED\n");
-    if(SystemInputs.CPU_EXT_ROT_ENA) printf("CPU_EXT_ROT_ENA\n");
-    if(SystemInputs.CPU_XRAY_ENA_ACK) printf("CPU_XRAY_ENA_ACK\n");
-    if(SystemInputs.CPU_LENZ_PED_FAULT) printf("CPU_LENZ_PED_FAULT\n");
-    if(SystemInputs.CPU_ARM_PED_FAULT) printf("CPU_ARM_PED_FAULT");
-    if(SystemInputs.CPU_XRAYPUSH_FAULT) printf("CPU_XRAYPUSH_FAULT");
-
-
-    printf("\n ------------ OUTPUTS ------------: \n");
-    if(SystemOutputs.CPU_MASTER_ENA) printf("CPU_MASTER_ENA\n");
-
-    if(SystemOutputs.CPU_LIFT_ENA) printf("CPU_LIFT_ENA\n");
-    if(SystemOutputs.CPU_ROT_ENA) printf("CPU_ROT_ENA\n");
-    if(SystemOutputs.CPU_PEND_ENA) printf("CPU_PEND_ENA\n");
-    if(SystemOutputs.CPU_COMPRESSOR_ENA) printf("CPU_COMPRESSOR_ENA\n");
-    if(SystemOutputs.CPU_XRAY_ENA) printf("CPU_XRAY_ENA\n");
-    if(SystemOutputs.CPU_BURNING) printf("CPU_BURNING\n");
-    if(SystemOutputs.CPU_LOADER_PWR_ON) printf("CPU_LOADER_PWR_ON\n");
-    if(SystemOutputs.CPU_LMP_SW1) printf("CPU_LMP_SW1\n");
-    if(SystemOutputs.CPU_LMP_SW2) printf("CPU_LMP_SW2\n");
-    if(SystemOutputs.CPU_XRAY_LED) printf("CPU_XRAY_LED\n");
-    if(SystemOutputs.CPU_DEMO_ACTIVATION) printf("CPU_DEMO_ACTIVATION\n");
-
-    printf("-------------------------------------------: \n");
 
 }
 
@@ -214,7 +160,7 @@ void manageTrxEvents(void){
         sendActuatorFrameToMaster(buffer);
         break;
     case TRX_ZERO_SETTING:
-        printf("ZERO SETTING TERMINATO: esito=%d, data=%d\n",event_code,event_data);
+        debugPrintI2("ZERO SETTING TERMINATO: esito=", event_code,"data=",event_data);
         buffer[0]= ACTUATORS_SET_TRX_ZERO;
         buffer[1]= event_code;  // Esito comando
         buffer[2] = event_data; // Dato associato all'esito
@@ -226,7 +172,8 @@ void manageTrxEvents(void){
     case TRX_MOVE_TO_POSITION:
         val = getTrxPosition(); // Legge l'angolo del Tubo
 
-        printf("TRX: POSIZIONAMENTO TERMINATO: esito=%d, data=%d\n",event_code,event_data);
+        debugPrintI2("TRX POSIZIONAMENTO TERMINATO: esito=", event_code,"data=",event_data);
+
         buffer[0]= ACTUATORS_MOVE_TRX;
         buffer[1]= event_code;  // Esito comando
         buffer[2]= event_data;
@@ -236,7 +183,9 @@ void manageTrxEvents(void){
 
     case TRX_MANUAL_MOVE_TO_POSITION:
         val = getTrxPosition(); // Legge l'angolo del Tubo
-        printf("POSIZIONAMENTO MANUALE TERMINATO:%d\n", pTrxStat->dAngolo);
+
+        debugPrintI("POSIZIONAMENTO MANUALE TERMINATO: angolo=", pTrxStat->dAngolo);
+
         buffer[0]= ACTUATORS_MOVE_MANUAL_TRX;
         buffer[1]= event_code;  // Esito comando
         buffer[2]= event_data;
@@ -246,7 +195,9 @@ void manageTrxEvents(void){
 
     case TRX_QUICK_STOP:
         val = getTrxPosition(); // Legge l'angolo del Tubo
-        printf("QUICK STOP TERMINATO: posizione=%d\n",pTrxStat->dAngolo);
+
+        debugPrintI("QUICK STOP TERMINATO: angolo=", pTrxStat->dAngolo);
+
         buffer[0]= ACTUATORS_TRX_QUICK_STOP;
         buffer[1]= event_code;  // Esito comando
         buffer[2]= event_data;  // Angolo finale
@@ -271,7 +222,8 @@ void manageTrxEvents(void){
         buffer[5]= (unsigned char) (event_data>>24);
 
         val = getTrxPosition(); // Legge l'angolo del Tubo
-        printf("TRX FAULT: Posizione:%x\n",val);
+
+        debugPrintX("TRX FAULT: Posizione=", val);
         TO_LE16(&buffer[6],val);    // Aggiunge il valore dell'angolo corrente
         sendActuatorFrameToMaster(buffer);
         break;
@@ -299,15 +251,17 @@ void manageArmEvents(void){
         break;
 
     case ARM_MOVE_TO_POSITION:
-        printf("POSIZIONAMENTO TERMINATO: esito=%d, data=%d\n",event_code,event_data);
+
+        debugPrintI2("ARM POSIZIONAMENTO TERMINATO: esito=", event_code,"data=",event_data);
+
         buffer[0]= ACTUATORS_MOVE_ARM;
         buffer[1]= event_code;  // Esito comando
         buffer[2] = event_data; // Dato associato all'esito
         sendActuatorFrameToMaster(buffer);
         break;
 
-    case ARM_MOVE_MANUAL:
-        printf("POSIZIONAMENTO MANUALE TERMINATO: esito=%d, data=%d\n",event_code,event_data);
+    case ARM_MOVE_MANUAL:        
+        debugPrintI2("ARM POSIZIONAMENTO MANUALE TERMINATO: esito=", event_code,"data=",event_data);
         buffer[0]= ACTUATORS_MOVE_MANUAL_ARM;
         buffer[1]= event_code;  // Esito comando
         buffer[2] = event_data; // Dato associato all'esito
@@ -393,12 +347,12 @@ void actuators_rx_master(uint32_t parameter){
     pArmStat    = armGetStatus();
     pTrxStat    = trxGetStatus();
 
-    printf("ACTUATOR MASTER MESSAGES HANDLER STARTED\n");
+
 
     // Init command mutex
     if (_mutex_init(&actuatorCommand.command_mutex, NULL) != MQX_OK)
     {
-      printf("%s: Mutex Init failed!!\n",DEVICE);
+
       _mqx_exit(-1);
     }
 
@@ -425,15 +379,15 @@ void masterCommandExecution(void){
     // Verify the command to be executed
     switch((actuatorEnumCommands_t) actuatorCommand.data[0]){
     case ACTUATORS_CMD_TEST:
-        printf("comando ricevuto\n");
+
         actuatorTestCommands();
         break;
     case ACTUATORS_LENZE_UNPARK:
-        printf("ACTUATORS UNPARK LENZE COMMAND\n");
+
         lenzeSetCommand(LENZE_UNLOCK_PARKING,0);
         break;
     case ACTUATORS_LENZE_PARK:
-        printf("ACTUATORS PARK LENZE COMMAND\n");
+
         lenzeSetCommand(LENZE_SET_PARKING,0);
         break;
 
@@ -446,7 +400,7 @@ void masterCommandExecution(void){
          *  data[1:2] = init position in 0.1°/unit. type short.
          *  data[2:3] = target position in 0.1°/unit.  type short.
          */
-          printf("COMANDO ARM\n");
+
         actuatorMoveArm(); // Attivazione Braccio: eventuali errori sono segnalati all'interno
         break;
 
@@ -459,7 +413,7 @@ void masterCommandExecution(void){
          *  data[3:4] = target position in 0.1°/unit.  type short.
          *  data[5] = modo calib/standard
          */
-        printf("COMANDO MANUAL ARM\n");
+
         actuatorMoveManualArm(); // Attivazione Braccio: eventuali errori sono segnalati all'interno
         break;
 
@@ -484,7 +438,7 @@ void masterCommandExecution(void){
          *  data[3]     = context index 0,1,2,3
          *  data[4] =   EXP_WIN MODE
          */
-        printf("COMANDO MANUAL TRX\n");
+
         actuatorMoveManualTrx(); // Attivazione tubo: eventuali errori sono segnalati all'interno
         break;
 
@@ -497,7 +451,7 @@ void masterCommandExecution(void){
          *  data[3]     = context index 0,1,2,3
          *  data[4] =   EXP_WIN MODE
          */
-        printf("COMANDO ZERO SETTING TRX\n");
+
         trxSetCommand(TRX_ZERO_SETTING,null);
         break;
 
@@ -653,7 +607,7 @@ void actuatorTestCommands(void){
     case 4: // Trx Position
         trxpos.targetPosition = (short) (actuatorCommand.data[2]+256*actuatorCommand.data[3]);
         trxpos.contextIndex = actuatorCommand.data[4];
-        printf("%s: TARGET:%d index=%d\n",DEVICE,trxpos.targetPosition,trxpos.contextIndex);
+
 
         trxSetCommand(TRX_MOVE_TO_POSITION, (void*) &trxpos);
 
@@ -713,14 +667,14 @@ void actuatorTestCommands(void){
 
         trxpos.targetPosition = (short) (actuatorCommand.data[2]+256*actuatorCommand.data[3]);
         trxpos.contextIndex = actuatorCommand.data[4];
-        printf("%s: TRIGGER TRX TEST CMD- TARGET:%d index=%d\n",DEVICE,trxpos.targetPosition,trxpos.contextIndex);
+
 
         trxSetCommand(TRX_MOVE_WITH_TRIGGER, (void*) &trxpos);
         break;
     case 20:
         if(test_on){
             test_on=false;
-            printf("FINE TEST TRX\n");
+
             return;
         }
 

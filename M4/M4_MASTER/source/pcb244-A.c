@@ -128,16 +128,7 @@ void pcb244_A_driver(uint32_t taskRegisters)
       mccGuiNotify(1,MCC_POTTER_ID,dati,5); // Notifica l'applicazione
     }
 
-    // Effettua una campionatura completa
-    /*
-    PCB244_A_sampleRad();
-    if(PCB244_A_GetRad1(10)){
-        rad1 = _DEVREG(RG244_A_RAD1,CONTEST) ;
-        if((rad1>radback+1)||(rad1 < radback-1)){
-            radback = rad1;
-            printf("NUOVO RAD:%d\n",rad1);
-        }
-    }*/
+
 
       // Termine della routine di driver
       STATUS.ready=1;
@@ -163,13 +154,13 @@ bool pcb244AGetAccessorio(void){
            if( (generalConfiguration.potterCfg.potId!= POTTER_2D) || (generalConfiguration.potterCfg.potDescriptor != POTTER_DESCR_18x24)) changed = true;
            generalConfiguration.potterCfg.potId = POTTER_2D; // 18x24
            generalConfiguration.potterCfg.potDescriptor = POTTER_DESCR_18x24;
-           if(changed) printf("POTTER 18x24");
+           if(changed) debugPrint("POTTER 18x24");
          break;
          case 2:
            if( (generalConfiguration.potterCfg.potId!= POTTER_2D) || (generalConfiguration.potterCfg.potDescriptor != POTTER_DESCR_24x30)) changed = true;
            generalConfiguration.potterCfg.potId = POTTER_2D ;// 24x30
            generalConfiguration.potterCfg.potDescriptor = POTTER_DESCR_24x30;
-           if(changed) printf("POTTER 24x30");
+           if(changed) debugPrint("POTTER 24x30");
          break;
          case 4:
            if( (generalConfiguration.potterCfg.potId!= POTTER_MAGNIFIER)) changed = true;
@@ -333,7 +324,6 @@ bool pcb244_A_VerifyBusy(void){
         }
     }
 
-    printf("PCB244-A: VERIFY BUSY FALLITO!\n");
     return false;
 }
 
@@ -360,11 +350,10 @@ bool pcb244_A_StartRxPre(void){
     // il comando può essere stato ricevuto correttamente.
     // Basta verificare la presenza del busy..
     if(Ser422ReadRegister(_REGID(RG244_A_SYSFLAGS0),10,&CONTEST)!=_SER422_NO_ERROR){
-        printf("Verifica BUSY attivato..\n");
+
         if(_TEST_BIT(PCB244_A_BUSY)) return true;
     }
 
-    printf("PCB244-A START PRE FALLITO!\n");
     return FALSE;
 }
 
@@ -389,12 +378,11 @@ bool pcb244_A_StartRxAec(void){
      // Se c'è stato un errore di protocollo tuttavia
      // il comando può essere stato ricevuto correttamente.
      // Basta verificare la presenza del busy..
-     if(Ser422ReadRegister(_REGID(RG244_A_SYSFLAGS0),10,&CONTEST)!=_SER422_NO_ERROR){
-         printf("Verifica BUSY attivato..\n");
+     if(Ser422ReadRegister(_REGID(RG244_A_SYSFLAGS0),10,&CONTEST)!=_SER422_NO_ERROR){         
          if(_TEST_BIT(PCB244_A_BUSY)) return true;
      }
 
-     printf("PCB244-A StartRxAec FALLITO!\n");
+
      return FALSE;
 }
 
@@ -425,11 +413,11 @@ bool pcb244_A_StartManual(bool grid_off_mode){
      // il comando può essere stato ricevuto correttamente.
      // Basta verificare la presenza del busy..
      if(Ser422ReadRegister(_REGID(RG244_A_SYSFLAGS0),10,&CONTEST)!=_SER422_NO_ERROR){
-         printf("Verifica BUSY attivato..\n");
+
          if(_TEST_BIT(PCB244_A_BUSY)) return true;
      }
 
-     printf("PCB244-A StartManual FALLITO!\n");
+
      return FALSE;
 }
 
@@ -455,17 +443,17 @@ bool pcb244_A_StartCalibTube(void){
     // il comando può essere stato ricevuto correttamente.
     // Basta verificare la presenza del busy..
     if(Ser422ReadRegister(_REGID(RG244_A_SYSFLAGS0),10,&CONTEST)!=_SER422_NO_ERROR){
-        printf("Verifica BUSY attivato..\n");
+
         if(_TEST_BIT(PCB244_A_BUSY)) return true;
     }
 
-    printf("PCB244-A StartCalibTube FALLITO!\n");
+
     return FALSE;
 }
 
 // Caricamento impulsi per l'esposimetro
 bool pcb244_A_uploadAECPulses(unsigned short pulses){
-    printf("AEC-PULSE UPLOAD PCB244-A. PULSES = %d\n", pulses);
+
     if(Ser422WriteRegister(_REGID(RG244_A_PULSES),pulses,10,&CONTEST)!=_SER422_NO_ERROR) return false;
     Ser422WriteRegister(_REGID(RG244_A_RXCMD),1,10,&CONTEST); // Questo comando potrebbe non avere risposta poichè la seriale ddell'esposimetro si disabilita
     displaySeriale = false;
@@ -474,7 +462,7 @@ bool pcb244_A_uploadAECPulses(unsigned short pulses){
 
 // Caricamento impulsi per l'esposimetro
 bool pcb244_A_uploadManualPulses(unsigned short pulses){
-    printf("MANUAL-PULSE UPLOAD PCB244-A\n");
+
     if(Ser422WriteRegister(_REGID(RG244_A_PULSES),pulses,10,&CONTEST)!=_SER422_NO_ERROR) return false;
     if(Ser422WriteRegister(_REGID(RG244_A_RXCMD),1,10,&CONTEST)!=_SER422_NO_ERROR) return false;
     return true;
@@ -598,7 +586,7 @@ bool PCB244_A_GetPreRad(int attempt){
         if((_DEVREGL(RG244_A_SETTINGS,CONTEST) & ENABLE_RD_RAD)) break;
      }
      if(!attempt) return false;
- printf("READ RAD abilitato\n\r");
+
      // Legge i RAD campionati
      if(!PCB244_A_GetRad1(10)) return false;
      if(!PCB244_A_GetRad5(10)) return false;
@@ -623,11 +611,9 @@ bool PCB244_A_setDetectorField(unsigned char val){
      frame.data2=val;
      Ser422Send(&frame, SER422_BLOCKING, CONTEST.ID);
 
-     if(frame.retcode==SER422_COMMAND_OK) {
-         printf("PCB244_A: CAMPO ESPOSIMETRO N:%d OK\n", val);
+     if(frame.retcode==SER422_COMMAND_OK) {         
          return true;
      }
-    printf("PCB244_A: CAMPO ESPOSIMETRO N:%d NOK\n", val);
 
      return FALSE;
 }
@@ -646,10 +632,9 @@ bool PCB244_A_sampleRad(void){
      Ser422Send(&frame, SER422_BLOCKING, CONTEST.ID);
 
      if(frame.retcode==SER422_COMMAND_OK) {
-         printf("PCB244_A: Campionamento RAD OK\n");
+
          return true;
      }
-     printf("PCB244_A: Campionamento RAD NOK\n");
 
      return FALSE;
 }
@@ -661,7 +646,7 @@ bool PCB244_A_setOffset(unsigned short val){
 
     if(Ser422WriteRegister(_REGID(RG244_A_OFFSET),val,10,&CONTEST)!=_SER422_NO_ERROR)
     {
-        printf("PCB244_A: Scrittura Offset NOK\n");
+
         return false;
     }
 
@@ -677,10 +662,10 @@ bool PCB244_A_setOffset(unsigned short val){
      Ser422Send(&frame, SER422_BLOCKING, CONTEST.ID);
 
      if(frame.retcode==SER422_COMMAND_OK) {
-         printf("PCB244_A: Impostazione Offset OK\n");
+
          return true;
      }
-     printf("PCB244_A: Impostazione Offset NOK\n");
+
 
      return FALSE;
 }
@@ -713,7 +698,6 @@ bool PCB244_A_zeroOffset(void){
     // Calcola offset
     if(rad5 > 1000){
         vfreq = (rad1 * 5 *2/(1024));
-        printf("PRE AZZERAMENTO OFFSET:RAD1=%f, RAD5=%f, VFREQ1=%f(mV) \n", rad1, rad5, vfreq*1000);
 
         offset =4096 * ( vfreq / (5*0.22)) ;
         PCB244_A_setOffset(offset);
@@ -725,11 +709,11 @@ bool PCB244_A_zeroOffset(void){
         rad5 = (float) _DEVREG(RG244_A_RAD5,CONTEST)/4;
 
         vfreq = (rad5 * 5 /(1024*4.9));
-        printf("STEP-1: RAD1=%f, RAD5=%f, VFREQ5=%f(mV), OFFS=%d\n", rad1, rad5, vfreq*1000,offset);
+
 
     }else{
         vfreq = (rad5 * 5 /(1024*4.9));
-        printf("PRE AZZERAMENTO OFFSET:RAD1=%f, RAD5=%f, VFREQ5=%f(mV) \n", rad1, rad5, vfreq*1000);
+
     }
 
     // calcola l'offset in due step partendo da rad
@@ -742,7 +726,7 @@ bool PCB244_A_zeroOffset(void){
     rad1 = (float) _DEVREG(RG244_A_RAD1,CONTEST)/4;
     rad5 = (float) _DEVREG(RG244_A_RAD5,CONTEST)/4;
     vfreq = (rad5 * 5 /(1024*4.9));
-    printf("AZZERAMENTO OFFSET ESEGUITO:RAD1=%f, RAD5=%f, VFREQ5=%f(mV) \n", rad1, rad5, vfreq*1000);
+
     return true;
 
 }
@@ -784,14 +768,14 @@ bool PCB244_A_readRxStat(void){
     if(Ser422ReadRegister(_REGID(RG244_A_RXSTAT),10,&CONTEST)==_SER422_NO_ERROR){
 
         switch(_DEVREGL(RG244_A_RXSTAT,CONTEST) ){
-            case 1: printf("FINE ESPOSIMETRO PER IMPULSI\n");return true;
-            case 2: printf("FINE ESPOSIMETRO PER TIMEOUT\n");break;
-            case 3: printf("FINE ESPOSIMETRO PER SERIALE\n");break;
-            case 4: printf("FINE ESPOSIMETRO PER DETECTOR ON\n");break;
-            case 5: printf("FINE ESPOSIMETRO PER SINGLE PULSE\n");break;
+            case 1: debugPrint("FINE ESPOSIMETRO PER IMPULSI\n");return true;
+            case 2: debugPrint("FINE ESPOSIMETRO PER TIMEOUT\n");break;
+            case 3: debugPrint("FINE ESPOSIMETRO PER SERIALE\n");break;
+            case 4: debugPrint("FINE ESPOSIMETRO PER DETECTOR ON\n");break;
+            case 5: debugPrint("FINE ESPOSIMETRO PER SINGLE PULSE\n");break;
         }
     }else{
-        printf("IMPOSSIBILE VERIFICARE IL FINE STATO DELL'ESPOSIMETRO\n");
+        debugPrint("IMPOSSIBILE VERIFICARE IL FINE STATO DELL'ESPOSIMETRO\n");
     }
 
 
@@ -824,10 +808,10 @@ void pcb244A_Start2dGrid(unsigned char nTest){
      Ser422Send(&frame, SER422_BLOCKING, CONTEST.ID);
 
      if(frame.retcode==SER422_COMMAND_OK) {
-         printf("PCB244_A: Test grid activated, nTEST = %d\n", nTest);
+
          return ;
      }
-     printf("PCB244_A: Test grid activated not activated\n");
+
 
      return ;
 

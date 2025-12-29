@@ -1781,13 +1781,11 @@ void mcc_rtc(void){
             break;
         }
         num = (int)mcc_cmd.buffer[2] + (int)mcc_cmd.buffer[3]*256;
-        sprintf(buffer, "%s %04d-%02d-%02d %02d:%02d:%02d",getWeekdayStr(mcc_cmd.buffer[1]), num,mcc_cmd.buffer[4],mcc_cmd.buffer[5],mcc_cmd.buffer[6],mcc_cmd.buffer[7],mcc_cmd.buffer[8]);
-        printf("  set date: %s\n", buffer);
+        sprintf(buffer, "%s %04d-%02d-%02d %02d:%02d:%02d",getWeekdayStr(mcc_cmd.buffer[1]), num,mcc_cmd.buffer[4],mcc_cmd.buffer[5],mcc_cmd.buffer[6],mcc_cmd.buffer[7],mcc_cmd.buffer[8]);        
         rtcSetDate(buffer);
         break;
     case 2:
-        if ((pDate = rtcGetDate()) == NULL) break;
-        printf("  got date: %s\n", pDate);
+        if ((pDate = rtcGetDate()) == NULL) break;        
         break;
     }
 
