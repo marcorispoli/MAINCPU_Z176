@@ -24,8 +24,7 @@ GWinObj::GWinObj()
 void GWinObj::setNewPage(int pg, int prevPg, int param)
 {
 
-    if(changePagePending) {
-        PRINT(QString("<GWinRoot->setNewPage> RICORSIVO. ORIGINE:%1, DESTINAZIONE:%2").arg(curPage).arg(pg));
+    if(changePagePending) {        
         return;
     }
 
@@ -41,7 +40,7 @@ void GWinObj::setNewPage(int pg, int prevPg, int param)
 
     // Salva il codice della pagina corrente
     parentPage = prevPg;
-    PRINT(QString("<GWinRoot->setNewPage> (A): CURPG:%1 PARENT:%2, REQPG:%3").arg(curPage).arg(parentPage).arg(pg));
+
 
     // Invia all'ECO l'ordine del cambio pagina
     emit setNewPageEcho(pg,parentPage,param);
